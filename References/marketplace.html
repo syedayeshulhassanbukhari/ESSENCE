@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ESSENCE - Neo-Brutalism Perfume Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#000000",
+                        "accent-pink": "#FF00FF",
+                        "accent-blue": "#00F0FF",
+                        "accent-yellow": "#FFFF00",
+                        "accent-green": "#00FF66",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#121212",
+                    },
+                    fontFamily: {
+                        display: ["'Space Grotesk'", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'neo': '4px 4px 0px 0px rgba(0,0,0,1)',
+                        'neo-hover': '8px 8px 0px 0px rgba(0,0,0,1)',
+                        'neo-dark': '4px 4px 0px 0px rgba(255,255,255,1)',
+                    },
+                    borderRadius: {
+                        DEFAULT: "0px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .neo-border {
+            border: 3px solid #000000;
+        }
+        .dark .neo-border {
+            border: 3px solid #FFFFFF;
+        }
+        .neo-shadow {
+            box-shadow: 6px 6px 0px 0px #000000;
+        }
+        .dark .neo-shadow {
+            box-shadow: 6px 6px 0px 0px #FFFFFF;
+        }
+        .neo-shadow-sm {
+            box-shadow: 3px 3px 0px 0px #000000;
+        }
+        .dark .neo-shadow-sm {
+            box-shadow: 3px 3px 0px 0px #FFFFFF;
+        }::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff;
+            border-left: 3px solid #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #000;
+            border: 2px solid #fff;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #121212;
+            border-left: 3px solid #fff;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #fff;
+            border: 2px solid #121212;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-primary dark:text-white transition-colors duration-200">
+<nav class="border-b-4 border-primary dark:border-white sticky top-0 bg-white dark:bg-background-dark z-50">
+<div class="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-12">
+<a class="text-4xl font-black tracking-tighter uppercase italic" href="#">ESSENCE.</a>
+<div class="hidden md:flex gap-8">
+<a class="text-xl font-bold uppercase hover:underline decoration-4" href="#">Shop</a>
+<a class="text-xl font-bold uppercase hover:underline decoration-4" href="#">Discover</a>
+<a class="text-xl font-bold uppercase hover:underline decoration-4" href="#">Archives</a>
+<a class="text-xl font-bold uppercase hover:underline decoration-4" href="#">About</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="neo-border p-2 neo-shadow-sm active:translate-x-1 active:translate-y-1 active:shadow-none transition-all" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-symbols-outlined block dark:hidden">dark_mode</span>
+<span class="material-symbols-outlined hidden dark:block">light_mode</span>
+</button>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-3xl cursor-pointer">search</span>
+<span class="material-symbols-outlined text-3xl cursor-pointer">shopping_bag</span>
+<span class="material-symbols-outlined text-3xl cursor-pointer">menu</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-[1440px] mx-auto p-6 lg:p-12">
+<div class="flex flex-col lg:flex-row gap-12">
+<aside class="w-full lg:w-72 shrink-0">
+<div class="sticky top-32">
+<h2 class="text-3xl font-black uppercase mb-8 italic">Filters</h2>
+<div class="space-y-8">
+<section>
+<h3 class="text-lg font-bold uppercase mb-4">Category</h3>
+<div class="flex flex-col gap-3">
+<button class="neo-border py-2 px-4 text-left font-bold uppercase bg-accent-yellow text-black neo-shadow-sm">All Scents</button>
+<button class="neo-border py-2 px-4 text-left font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">Floral</button>
+<button class="neo-border py-2 px-4 text-left font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">Woody</button>
+<button class="neo-border py-2 px-4 text-left font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">Oriental</button>
+<button class="neo-border py-2 px-4 text-left font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">Fresh</button>
+</div>
+</section>
+<section>
+<h3 class="text-lg font-bold uppercase mb-4">Intensity</h3>
+<div class="grid grid-cols-2 gap-3">
+<button class="neo-border py-2 px-2 text-center text-sm font-bold uppercase bg-black text-white dark:bg-white dark:text-black">Subtle</button>
+<button class="neo-border py-2 px-2 text-center text-sm font-bold uppercase">Strong</button>
+<button class="neo-border py-2 px-2 text-center text-sm font-bold uppercase">Vibrant</button>
+<button class="neo-border py-2 px-2 text-center text-sm font-bold uppercase">Heavy</button>
+</div>
+</section>
+<section>
+<h3 class="text-lg font-bold uppercase mb-4">Price Range</h3>
+<input class="w-full accent-primary dark:accent-white bg-transparent h-2 border-2 border-black dark:border-white appearance-none cursor-pointer" type="range"/>
+<div class="flex justify-between mt-2 font-black uppercase italic">
+<span>$0</span>
+<span>$500+</span>
+</div>
+</section>
+</div>
+</div>
+</aside>
+<div class="flex-1">
+<header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<p class="font-bold uppercase tracking-widest text-accent-pink dark:text-accent-blue mb-2">Curated Collection</p>
+<h1 class="text-6xl md:text-8xl font-black uppercase leading-none">Catalog<span class="text-accent-blue dark:text-accent-pink">.24</span></h1>
+</div>
+<div class="neo-border p-4 bg-white dark:bg-background-dark neo-shadow inline-block">
+<span class="font-bold uppercase">Sort by: </span>
+<select class="border-none focus:ring-0 font-black uppercase bg-transparent p-0 cursor-pointer">
+<option>Newest First</option>
+<option>Price: Low-High</option>
+<option>Most Intense</option>
+</select>
+</div>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+<div class="group relative">
+<div class="neo-border bg-accent-blue dark:bg-blue-900 h-[400px] overflow-hidden neo-shadow transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 group-hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+<img alt="Minimalist perfume bottle on blue background" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARs5-kfpCkWenceZ4aVeTZBLINXYN5TQ7QfgZIYXrK0wbuwN7j48MS3qlAJcBDt799iQt8MzEzVJaPAoqC4OlQaCuW9jFnFZGBKstfgKBxgRWNXE-LHmRSJYrkgo_b9yNS0_YteyXnIwHBnn2oE782sHsbUxm_3KqoeVXoApkCIwDtOw5dd2LPUqWigyHFO43aYJ6tePM6gzIQn2M3VkAP24GhIme6q5qOCXbkPJGuG9IXRc1_sa4EZ__HlrB0W2t4GqhFdx5mebU"/>
+<div class="absolute top-4 right-4 bg-white text-black neo-border px-4 py-2 font-black text-xl neo-shadow-sm">
+                                $120
+                            </div>
+</div>
+<div class="mt-6">
+<h3 class="text-2xl font-black uppercase italic">Electric Petal</h3>
+<p class="font-bold uppercase opacity-60">Floral / Ozone / Neon</p>
+<button class="mt-4 w-full neo-border py-3 px-6 font-black uppercase bg-black text-white dark:bg-white dark:text-black hover:bg-accent-pink hover:text-black transition-colors">Add to Vault</button>
+</div>
+</div>
+<div class="group relative md:col-span-2 xl:col-span-1">
+<div class="neo-border bg-accent-pink dark:bg-pink-900 h-[400px] overflow-hidden neo-shadow transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 group-hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+<img alt="Amber perfume bottle on pink background" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLgv9lyr1-brQGNHgQG6tR_hJ81FSd9zTcoLc91-g7GiH_q2P-JMEX9M8XI6fZePHQxBAPqmr36HshXvXggl3l2rEjikdAr2QHirTHMUlkx8wwL28jr9-56JxkRMQJaGjvEjAsMKGWq3svotmf0rXVZdgNtECSy1FxKGJ2QA45_wQ7GYRwBIzreMxz8dPMuddfbcTExTQTHFzJI-E_C7ZrYCMKJlgxjCZvru5yO0r4ih4l3_CcQho9ycN6Velg51dX8SYEuvdGTaA"/>
+<div class="absolute top-4 right-4 bg-white text-black neo-border px-4 py-2 font-black text-xl neo-shadow-sm">
+                                $185
+                            </div>
+<div class="absolute bottom-4 left-4 bg-accent-yellow text-black neo-border px-2 py-1 font-bold text-xs uppercase">
+                                Best Seller
+                            </div>
+</div>
+<div class="mt-6">
+<h3 class="text-2xl font-black uppercase italic">Nuclear Amber</h3>
+<p class="font-bold uppercase opacity-60">Resin / Smoke / Static</p>
+<button class="mt-4 w-full neo-border py-3 px-6 font-black uppercase bg-black text-white dark:bg-white dark:text-black hover:bg-accent-yellow hover:text-black transition-colors">Add to Vault</button>
+</div>
+</div>
+<div class="group relative">
+<div class="neo-border bg-accent-yellow h-[400px] overflow-hidden neo-shadow transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 group-hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+<img alt="Dark perfume bottle on yellow background" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa1xa1NBBpMxGxPUsAjLSEfNiPKdQlN5ITpVIHuxQI2N0Ny6vbw7obEHuj8XkgoFPBcAYmPfMufMd-_4YnftXzCtno66LNHfd0oabiYDIFiAQzYC-l4Koffy-33zcktnk1R0ZEsdsRH4HCUotVZOVVLQYyWpMO0Su9Mr_mD9CXw5jnfqJRAL6lxwZfQQK58UGhqElLldhI8NE8DifWTiO2DJkfqWbPmP2bf2U0ffc0JNZsZIWteFfmXeo21gOD0CZV20i-bALc3mg"/>
+<div class="absolute top-4 right-4 bg-white text-black neo-border px-4 py-2 font-black text-xl neo-shadow-sm">
+                                $95
+                            </div>
+</div>
+<div class="mt-6">
+<h3 class="text-2xl font-black uppercase italic">Void Water</h3>
+<p class="font-bold uppercase opacity-60">Mineral / Cold / Salt</p>
+<button class="mt-4 w-full neo-border py-3 px-6 font-black uppercase bg-black text-white dark:bg-white dark:text-black hover:bg-accent-blue hover:text-black transition-colors">Add to Vault</button>
+</div>
+</div>
+<div class="group relative">
+<div class="neo-border bg-accent-green h-[400px] overflow-hidden neo-shadow transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 group-hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+<img alt="Clear perfume bottle on green background" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3cCICX72C5L10hxqMD3G-g2tagOlIAl21xzH1-Yyy2F3-tFAFLmoc12iB0fCji3ZCf8WY8MswLO7czBhasEpkRVMcCOu32j_VN5XoJ7ttb1RA1lfHs_lSrdl3AQnYE_v2GdN4bJ3dMyxWU-qLqddhAl8NKdGT4Z0d9lqHrbXEiKDwOLU8BxWye8l9vWCHmH-nOHhcFprnik18IeGH14i5gekhgUTzOqpI11636v6D1gGdSp_xcnp6WcqWBTC4QlfBgVKjZA4uiiQ"/>
+<div class="absolute top-4 right-4 bg-white text-black neo-border px-4 py-2 font-black text-xl neo-shadow-sm">
+                                $145
+                            </div>
+</div>
+<div class="mt-6">
+<h3 class="text-2xl font-black uppercase italic">Glitch Moss</h3>
+<p class="font-bold uppercase opacity-60">Damp Earth / Chrome / Ink</p>
+<button class="mt-4 w-full neo-border py-3 px-6 font-black uppercase bg-black text-white dark:bg-white dark:text-black hover:bg-accent-green hover:text-black transition-colors">Add to Vault</button>
+</div>
+</div>
+<div class="group relative md:mt-12 xl:mt-0">
+<div class="neo-border bg-white dark:bg-zinc-800 h-[400px] overflow-hidden neo-shadow transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 group-hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+<img alt="Perfume bottle with minimalist design" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA48d_GqQgG9YJ07wXYZ3Ln147KcogzlTsKLut7nbCiqRV6AkOXMRy95ac8WX_g5FfPYZyi8cYV0G2-vL3GpTTgvObMdMhB-s32sDnZ6OyKqPcl81sDjt1GiXkYTPKSLkkXXISRR7y148N1wLP2VFor-6uxiF0b3L4BzeBANVSfA5pcaz-dEWG-PyobdkNGkw5KjYuJz3N_MGiUjlp09k6-Gf7yvJpMT8T_uSB0V6Ll0knQayEiOeaLXOzr9FGDthf1vyOInqLsiM8"/>
+<div class="absolute top-4 right-4 bg-white text-black neo-border px-4 py-2 font-black text-xl neo-shadow-sm">
+                                $210
+                            </div>
+</div>
+<div class="mt-6">
+<h3 class="text-2xl font-black uppercase italic">Abstract Paper</h3>
+<p class="font-bold uppercase opacity-60">White Musk / Wood / Fiber</p>
+<button class="mt-4 w-full neo-border py-3 px-6 font-black uppercase bg-black text-white dark:bg-white dark:text-black hover:bg-gray-400 hover:text-black transition-colors">Add to Vault</button>
+</div>
+</div>
+<div class="group relative">
+<div class="neo-border bg-black h-[400px] overflow-hidden neo-shadow transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 group-hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+<img alt="Dark glass perfume bottle" class="w-full h-full object-cover contrast-150 grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-ue9Zo4tuPHerU0y_VtwqkqguXgv5Ub48_u-A9MZYc90_E-_dQx6PH7ELhwPUFAsZdrV8LnkvDdF4LI8HUSWDx6Fk_cUa0VLBhUsoS7tTV4xbYrNor3u_FDQ9Pjxgg7u-BHC7Uu7ifmyYLZEleuRhWDOtJ1e5isYj9WQYVpctncg12LOZEH0-rv_WWj7izR1_DjN2fgAaH3eJ8Q1he83JFMFe8vtvarkFnaEVYYFixCeZg2HmBhQzGvz7rOuMbPPrXdn2E7w1nRo"/>
+<div class="absolute top-4 right-4 bg-white text-black neo-border px-4 py-2 font-black text-xl neo-shadow-sm">
+                                $300
+                            </div>
+</div>
+<div class="mt-6">
+<h3 class="text-2xl font-black uppercase italic">Black Hole</h3>
+<p class="font-bold uppercase opacity-60">Darkness / Velvet / Gravity</p>
+<button class="mt-4 w-full neo-border py-3 px-6 font-black uppercase bg-black text-white dark:bg-white dark:text-black hover:bg-white hover:text-black transition-colors">Add to Vault</button>
+</div>
+</div>
+</div>
+<div class="mt-20 flex justify-center">
+<button class="neo-border py-6 px-12 text-3xl font-black uppercase italic neo-shadow hover:bg-accent-blue dark:hover:bg-accent-pink transition-all active:translate-x-1 active:translate-y-1 active:shadow-none">
+                        Load More Entries +
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-20 border-t-4 border-primary dark:border-white">
+<div class="max-w-[1440px] mx-auto px-6 py-12">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-2">
+<h2 class="text-5xl font-black uppercase italic mb-6">Stay Obsessed.</h2>
+<p class="text-xl font-bold uppercase mb-8 max-w-md">Join our sensory newsletter for drops that defy the mainstream. No spam, just pure essence.</p>
+<div class="flex gap-0">
+<input class="neo-border border-r-0 w-full px-6 py-4 font-bold bg-transparent focus:ring-0 outline-none" placeholder="YOUR@EMAIL.COM" type="email"/>
+<button class="neo-border px-8 py-4 bg-black text-white dark:bg-white dark:text-black font-black uppercase">Join</button>
+</div>
+</div>
+<div>
+<h4 class="font-black uppercase text-xl mb-6 italic underline decoration-4">Navigation</h4>
+<ul class="space-y-4 font-bold uppercase">
+<li><a class="hover:text-accent-pink" href="#">Archive</a></li>
+<li><a class="hover:text-accent-pink" href="#">Wholesale</a></li>
+<li><a class="hover:text-accent-pink" href="#">Collaborations</a></li>
+<li><a class="hover:text-accent-pink" href="#">Careers</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-black uppercase text-xl mb-6 italic underline decoration-4">Socials</h4>
+<ul class="space-y-4 font-bold uppercase">
+<li><a class="hover:text-accent-blue" href="#">Instagram</a></li>
+<li><a class="hover:text-accent-blue" href="#">TikTok</a></li>
+<li><a class="hover:text-accent-blue" href="#">Behance</a></li>
+<li><a class="hover:text-accent-blue" href="#">Twitter / X</a></li>
+</ul>
+</div>
+</div>
+<div class="mt-20 flex flex-col md:flex-row justify-between items-center gap-6 border-t-4 border-primary dark:border-white pt-8">
+<p class="font-black uppercase italic">© 2024 ESSENCE FRAGRANCE LAB. ALL RIGHTS RESERVED.</p>
+<div class="flex gap-8 font-black uppercase text-sm">
+<a href="#">Privacy Policy</a>
+<a href="#">Terms of Scent</a>
+<a href="#">Cookies</a>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>
