@@ -75,6 +75,11 @@ class AppHeader extends StatelessWidget {
       {'label': 'Marketplace', 'route': '/marketplace'},
     ];
 
+    final navTextStyle = Theme.of(context).textTheme.labelMedium?.copyWith(
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.0,
+        );
+
     return items
         .map(
           (item) => Padding(
@@ -85,6 +90,10 @@ class AppHeader extends StatelessWidget {
               backgroundColor: AppTheme.white,
               textColor: AppTheme.black,
               height: 40,
+              textStyle: navTextStyle,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppTheme.spacing4,
+              ),
             ),
           ),
         )

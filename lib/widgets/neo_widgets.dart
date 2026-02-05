@@ -11,6 +11,8 @@ class NeoButton extends StatefulWidget {
   final bool isFullWidth;
   final bool italic;
   final bool isLoading;
+  final TextStyle? textStyle;
+  final EdgeInsetsGeometry? padding;
 
   const NeoButton({
     required this.label,
@@ -21,6 +23,8 @@ class NeoButton extends StatefulWidget {
     this.isFullWidth = false,
     this.italic = false,
     this.isLoading = false,
+    this.textStyle,
+    this.padding,
     super.key,
   });
 
@@ -59,20 +63,27 @@ class _NeoButtonState extends State<NeoButton> {
             border: Border.all(color: borderColor, width: AppTheme.borderWidth),
             boxShadow: shadow,
           ),
-          child: Center(
-            child: widget.isLoading
-                ? SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(color: textColor),
-                  )
-                : Text(
-                    widget.label.toUpperCase(),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: textColor,
-                          fontStyle: widget.italic ? FontStyle.italic : FontStyle.normal,
-                        ),
-                  ),
+          child: Padding(
+            padding: widget.padding ??
+                const EdgeInsets.symmetric(horizontal: AppTheme.spacing4),
+            child: Center(
+              child: widget.isLoading
+                  ? SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(color: textColor),
+                    )
+                  : Text(
+                      widget.label.toUpperCase(),
+                      style: (widget.textStyle ??
+                              Theme.of(context).textTheme.titleLarge)
+                          ?.copyWith(
+                        color: textColor,
+                        fontStyle:
+                            widget.italic ? FontStyle.italic : FontStyle.normal,
+                      ),
+                    ),
+            ),
           ),
         ),
       ),
