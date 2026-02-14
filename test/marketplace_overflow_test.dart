@@ -50,29 +50,43 @@ bool _hasOverflow(List<FlutterErrorDetails> errors) {
   );
 }
 
-testWidgets(
-  'Marketplace layout has no overflow on desktop, tablet, and mobile',
-  (tester) async {
-    final errors = <FlutterErrorDetails>[];
-    final original = FlutterError.onError;
+Future<List<FlutterErrorDetails>> _captureFlutterErrors(
+  Future<void> Function() action,
+) async {
+  final errors = <FlutterErrorDetails>[];
+  final original = FlutterError.onError;
 
-    FlutterError.onError = (details) {
-      errors.add(details);
-    };
+  FlutterError.onError = (details) {
+    errors.add(details);
+  };
 
-    addTearDown(() {
-      FlutterError.onError = original;
-    });
+  try {
+    await action();
+  } finally {
+    FlutterError.onError = original;
+  }
 
-    await _pumpMarketplace(tester, const Size(1440, 900));
-    expect(_hasOverflow(errors), isFalse);
-    errors.clear();
+  return errors;
+}
 
-    await _pumpMarketplace(tester, const Size(900, 800));
-    expect(_hasOverflow(errors), isFalse);
-    errors.clear();
+void main() {
+  testWidgets(
+    'Marketplace layout has no overflow on desktop, tablet, and mobile',
+    (tester) async {
+      final desktopErrors = await _captureFlutterErrors(
+        () => _pumpMarketplace(tester, const Size(1440, 900)),
+      );
+      expect(_hasOverflow(desktopErrors), isFalse);
 
-    await _pumpMarketplace(tester, const Size(390, 844));
-    expect(_hasOverflow(errors), isFalse);
-  },
-);
+      final tabletErrors = await _captureFlutterErrors(
+        () => _pumpMarketplace(tester, const Size(900, 800)),
+      );
+      expect(_hasOverflow(tabletErrors), isFalse);
+
+      final mobileErrors = await _captureFlutterErrors(
+        () => _pumpMarketplace(tester, const Size(390, 844)),
+      );
+      expect(_hasOverflow(mobileErrors), isFalse);
+    },
+  );
+}

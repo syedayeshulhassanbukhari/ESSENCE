@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/foundation.dart';
 import '../models/marketplace_product.dart';
 import '../providers/marketplace_catalog_provider.dart';
 import '../providers/marketplace_filter_provider.dart';
@@ -43,102 +42,62 @@ class MarketplaceScreen extends StatelessWidget {
 
           return Scaffold(
             backgroundColor: bgColor,
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      headerWidget,
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppTheme.spacing4.w,
-                          vertical: AppTheme.spacing6.h,
-                        ),
-                        child: isSmall
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildMobileFiltersPanel(context, filters),
-                                  SizedBox(height: AppTheme.spacing6.h),
-                                  _buildProductsSection(
-                                    context,
-                                    isSmall,
-                                    filters,
-                                    products,
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Sidebar (Desktop/Tablet)
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxWidth: sidebarWidth,
-                                    ),
-                                    child: _buildFiltersSidebar(
-                                      context,
-                                      filters,
-                                      showTitle: true,
-                                    ),
-                                  ),
-                                  SizedBox(width: AppTheme.spacing6.w),
-                                  // Products Grid
-                                  Expanded(
-                                    child: _buildProductsSection(
-                                      context,
-                                      isSmall,
-                                      filters,
-                                      products,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                      ),
-                      footerWidget,
-                    ],
-                  ),
-                ),
-                if (kDebugMode)
-                  Positioned(
-                    right: AppTheme.spacing4.w,
-                    bottom: AppTheme.spacing4.h,
-                    child: _buildDebugSizeBadge(
-                      context,
-                      isSmall: isSmall,
-                      isMedium: isMedium,
-                      isLarge: isLarge,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  headerWidget,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppTheme.spacing4.w,
+                      vertical: AppTheme.spacing6.h,
                     ),
+                    child: isSmall
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildMobileFiltersPanel(context, filters),
+                              SizedBox(height: AppTheme.spacing6.h),
+                              _buildProductsSection(
+                                context,
+                                isSmall,
+                                filters,
+                                products,
+                              ),
+                            ],
+                          )
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Sidebar (Desktop/Tablet)
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: sidebarWidth,
+                                ),
+                                child: _buildFiltersSidebar(
+                                  context,
+                                  filters,
+                                  showTitle: true,
+                                ),
+                              ),
+                              SizedBox(width: AppTheme.spacing6.w),
+                              // Products Grid
+                              Expanded(
+                                child: _buildProductsSection(
+                                  context,
+                                  isSmall,
+                                  filters,
+                                  products,
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
-              ],
+                  footerWidget,
+                ],
+              ),
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildDebugSizeBadge(
-    BuildContext context, {
-    required bool isSmall,
-    required bool isMedium,
-    required bool isLarge,
-  }) {
-    final size = MediaQuery.sizeOf(context);
-    final label = isSmall ? 'SM' : (isMedium ? 'MD' : 'LG');
-
-    return NeoCard(
-      backgroundColor: AppTheme.white,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppTheme.spacing4.w,
-        vertical: AppTheme.spacing2.h,
-      ),
-      child: Text(
-        '${size.width.toStringAsFixed(0)}x${size.height.toStringAsFixed(0)} $label',
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppTheme.black,
-              fontWeight: FontWeight.w700,
-            ),
       ),
     );
   }
@@ -376,6 +335,7 @@ class MarketplaceScreen extends StatelessWidget {
     final responsive = context.watch<ResponsiveProvider>();
     final isLarge = responsive.isLarge;
     final isMedium = responsive.isMedium;
+    final desiredColumns = isSmall ? 1 : (isMedium ? 2 : 3);
 
     final accentColor =
         brightness == Brightness.light ? AppTheme.accentPink : AppTheme.accentCyan;
@@ -458,16 +418,31 @@ class MarketplaceScreen extends StatelessWidget {
           ),
         ),
         // Products Grid
-        GridView.count(
-          crossAxisCount: isSmall ? 1 : (isMedium ? 2 : 3),
-          childAspectRatio: isSmall ? 0.9 : (isMedium ? 0.8 : 0.75),
-          mainAxisSpacing: AppTheme.spacing6,
-          crossAxisSpacing: AppTheme.spacing6,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: products
-              .map((product) => _MarketplaceProductCard(product: product))
-              .toList(),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final columns = _resolveGridColumns(
+              constraints.maxWidth,
+              desiredColumns,
+            );
+            final tileHeight = isSmall
+                ? 420.h
+                : (isMedium ? 440.h : 460.h);
+
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: columns,
+                mainAxisSpacing: AppTheme.spacing6,
+                crossAxisSpacing: AppTheme.spacing6,
+                mainAxisExtent: tileHeight,
+              ),
+              itemCount: products.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return _MarketplaceProductCard(product: products[index]);
+              },
+            );
+          },
         ),
         // Load More Button
         Center(
@@ -506,6 +481,17 @@ class MarketplaceScreen extends StatelessWidget {
       ],
     );
   }
+
+  int _resolveGridColumns(double maxWidth, int desiredColumns) {
+    const minTileWidth = 300.0;
+    var columns = desiredColumns;
+
+    while (columns > 1 && (maxWidth / columns) < minTileWidth) {
+      columns -= 1;
+    }
+
+    return columns;
+  }
 }
 
 class _MarketplaceProductCard extends StatelessWidget {
@@ -518,6 +504,9 @@ class _MarketplaceProductCard extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     final defaultTextColor =
         brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final isSmall = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isSmall,
+    );
 
     final Color bgColor = product.bgColor;
     final String imageUrl = product.imageUrl;
@@ -532,110 +521,129 @@ class _MarketplaceProductCard extends StatelessWidget {
     return NeoCard(
       backgroundColor: bgColor,
       padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 220,
-            width: double.infinity,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  top: AppTheme.spacing2,
-                  right: AppTheme.spacing2,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppTheme.spacing4,
-                      vertical: AppTheme.spacing2,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            children: [
+              Expanded(
+                flex: 6,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
                     ),
-                    decoration: BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border.all(
-                        color: defaultTextColor,
-                        width: AppTheme.borderWidth,
-                      ),
-                    ),
-                    child: Text(
-                        product.priceLabel,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: AppTheme.black,
+                    Positioned(
+                      top: AppTheme.spacing2,
+                      right: AppTheme.spacing2,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppTheme.spacing4,
+                          vertical: AppTheme.spacing2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border.all(
+                            color: defaultTextColor,
+                            width: AppTheme.borderWidth,
                           ),
-                    ),
-                  ),
-                ),
-                if (isBestSeller)
-                  Positioned(
-                    bottom: AppTheme.spacing2,
-                    left: AppTheme.spacing2,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppTheme.spacing2,
-                        vertical: AppTheme.spacing2 / 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryYellow,
-                        border: Border.all(
-                          color: defaultTextColor,
-                          width: AppTheme.borderWidth,
+                        ),
+                        child: Text(
+                          product.priceLabel,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                color: AppTheme.black,
+                              ),
                         ),
                       ),
-                      child: Text(
-                        'Best Seller'.toUpperCase(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall
-                            ?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.black,
+                    ),
+                    if (isBestSeller)
+                      Positioned(
+                        bottom: AppTheme.spacing2,
+                        left: AppTheme.spacing2,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppTheme.spacing2,
+                            vertical: AppTheme.spacing2 / 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryYellow,
+                            border: Border.all(
+                              color: defaultTextColor,
+                              width: AppTheme.borderWidth,
                             ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(AppTheme.spacing4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: AppTheme.spacing2,
-              children: [
-                Text(
-                  product.name,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: textColor,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                      ),
-                ),
-                Text(
-                  product.category,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: textColor.withValues(
-                          alpha: 0.7,
+                          ),
+                          child: Text(
+                            'Best Seller'.toUpperCase(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppTheme.black,
+                                ),
+                          ),
                         ),
-                        fontWeight: FontWeight.w700,
                       ),
+                  ],
                 ),
-                SizedBox(height: AppTheme.spacing2),
-                NeoButton(
-                  label: 'Add to Vault',
-                  onPressed: () {},
-                  backgroundColor: AppTheme.black,
-                  textColor: AppTheme.white,
-                  height: 48,
-                  isFullWidth: true,
+              ),
+              Expanded(
+                flex: 5,
+                child: Padding(
+                  padding: EdgeInsets.all(
+                    AppTheme.spacing4.w,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: textColor,
+                                  fontWeight: FontWeight.w900,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                          ),
+                          SizedBox(height: AppTheme.spacing2.h),
+                          Text(
+                            product.category,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: textColor.withValues(
+                                    alpha: 0.7,
+                                  ),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                          ),
+                        ],
+                      ),
+                      NeoButton(
+                        label: 'Add to Vault',
+                        onPressed: () {},
+                        backgroundColor: AppTheme.black,
+                        textColor: AppTheme.white,
+                        height: isSmall ? 44.h : 48.h,
+                        isFullWidth: true,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
