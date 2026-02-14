@@ -5,6 +5,7 @@ import '../models/marketplace_product.dart';
 import '../providers/marketplace_catalog_provider.dart';
 import '../providers/marketplace_filter_provider.dart';
 import '../providers/responsive_provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
@@ -25,9 +26,10 @@ class MarketplaceScreen extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final brightness = Theme.of(context).brightness;
+          final colors = context.watch<ThemeProvider>().colors;
           final bgColor = brightness == Brightness.light
-              ? AppTheme.backgroundLight
-              : AppTheme.backgroundDark;
+              ? colors.backgroundLight
+              : colors.backgroundDark;
           final responsive = context.watch<ResponsiveProvider>();
           final isSmall = responsive.isSmall;
           final isMedium = responsive.isMedium;
@@ -108,8 +110,9 @@ class MarketplaceScreen extends StatelessWidget {
     {required bool showTitle}
   ) {
     final brightness = Theme.of(context).brightness;
+    final colors = context.watch<ThemeProvider>().colors;
     final textColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+        brightness == Brightness.light ? colors.black : colors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,8 +148,9 @@ class MarketplaceScreen extends StatelessWidget {
     MarketplaceFilterProvider filters,
   ) {
     final brightness = Theme.of(context).brightness;
+    final colors = context.watch<ThemeProvider>().colors;
     final textColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+        brightness == Brightness.light ? colors.black : colors.white;
 
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -180,8 +184,9 @@ class MarketplaceScreen extends StatelessWidget {
     ValueChanged<String> onChanged,
   ) {
     final brightness = Theme.of(context).brightness;
+    final colors = context.watch<ThemeProvider>().colors;
     final textColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+        brightness == Brightness.light ? colors.black : colors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +201,7 @@ class MarketplaceScreen extends StatelessWidget {
           return GestureDetector(
             onTap: () => onChanged(option),
             child: NeoCard(
-              backgroundColor: isSelected ? AppTheme.primaryYellow : null,
+              backgroundColor: isSelected ? colors.primaryYellow : null,
               shadow: isSelected,
               shadowOffset: AppTheme.shadowSmall,
               padding: const EdgeInsets.symmetric(
@@ -206,7 +211,7 @@ class MarketplaceScreen extends StatelessWidget {
               child: Text(
                 option.toUpperCase(),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: isSelected ? AppTheme.black : textColor,
+                      color: isSelected ? colors.black : textColor,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -222,8 +227,9 @@ class MarketplaceScreen extends StatelessWidget {
     MarketplaceFilterProvider filters,
   ) {
     final brightness = Theme.of(context).brightness;
+    final colors = context.watch<ThemeProvider>().colors;
     final borderColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+        brightness == Brightness.light ? colors.black : colors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +264,7 @@ class MarketplaceScreen extends StatelessWidget {
                       vertical: AppTheme.spacing2 * 0.75,
                     ),
                     decoration: BoxDecoration(
-                      color: isSelected ? AppTheme.black : Colors.transparent,
+                      color: isSelected ? colors.black : Colors.transparent,
                       border: Border.all(
                         color: borderColor,
                         width: AppTheme.borderWidth,
@@ -269,7 +275,7 @@ class MarketplaceScreen extends StatelessWidget {
                         intensity.toUpperCase(),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color:
-                                  isSelected ? AppTheme.white : borderColor,
+                                  isSelected ? colors.white : borderColor,
                               fontWeight: FontWeight.w700,
                               fontSize: 12,
                             ),
@@ -289,6 +295,7 @@ class MarketplaceScreen extends StatelessWidget {
     BuildContext context,
     MarketplaceFilterProvider filters,
   ) {
+    final colors = context.watch<ThemeProvider>().colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: AppTheme.spacing2,
@@ -302,7 +309,7 @@ class MarketplaceScreen extends StatelessWidget {
           min: 0,
           max: 500,
           onChanged: (value) => filters.setPriceRange(value),
-          activeColor: AppTheme.primaryYellow,
+          activeColor: colors.primaryYellow,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -330,15 +337,18 @@ class MarketplaceScreen extends StatelessWidget {
     List<MarketplaceProduct> products,
   ) {
     final brightness = Theme.of(context).brightness;
+    final colors = context.watch<ThemeProvider>().colors;
     final textColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+        brightness == Brightness.light ? colors.black : colors.white;
     final responsive = context.watch<ResponsiveProvider>();
     final isLarge = responsive.isLarge;
     final isMedium = responsive.isMedium;
     final desiredColumns = isSmall ? 1 : (isMedium ? 2 : 3);
 
     final accentColor =
-        brightness == Brightness.light ? AppTheme.accentPink : AppTheme.accentCyan;
+      brightness == Brightness.light
+        ? colors.accentPink
+        : colors.accentCyan;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -465,8 +475,8 @@ class MarketplaceScreen extends StatelessWidget {
           child: NeoButton(
             label: 'Add Your Perfume',
             onPressed: () {},
-            backgroundColor: AppTheme.white,
-            textColor: AppTheme.black,
+            backgroundColor: colors.white,
+            textColor: colors.black,
             italic: true,
             height: 56,
             padding: const EdgeInsets.symmetric(
@@ -502,8 +512,9 @@ class _MarketplaceProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final colors = context.watch<ThemeProvider>().colors;
     final defaultTextColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+      brightness == Brightness.light ? colors.black : colors.white;
     final isSmall = context.select<ResponsiveProvider, bool>(
       (provider) => provider.isSmall,
     );
@@ -514,9 +525,9 @@ class _MarketplaceProductCard extends StatelessWidget {
 
     // Ensure good contrast on very dark backgrounds
     final Color textColor =
-        (bgColor == AppTheme.black && brightness == Brightness.light)
-            ? AppTheme.white
-            : defaultTextColor;
+      (bgColor == colors.black && brightness == Brightness.light)
+        ? colors.white
+        : defaultTextColor;
 
     return NeoCard(
       backgroundColor: bgColor,
@@ -543,7 +554,7 @@ class _MarketplaceProductCard extends StatelessWidget {
                           vertical: AppTheme.spacing2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppTheme.white,
+                          color: colors.white,
                           border: Border.all(
                             color: defaultTextColor,
                             width: AppTheme.borderWidth,
@@ -556,7 +567,7 @@ class _MarketplaceProductCard extends StatelessWidget {
                               .titleMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.w900,
-                                color: AppTheme.black,
+                                color: colors.black,
                               ),
                         ),
                       ),
@@ -571,7 +582,7 @@ class _MarketplaceProductCard extends StatelessWidget {
                             vertical: AppTheme.spacing2 / 2,
                           ),
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryYellow,
+                            color: colors.primaryYellow,
                             border: Border.all(
                               color: defaultTextColor,
                               width: AppTheme.borderWidth,
@@ -584,7 +595,7 @@ class _MarketplaceProductCard extends StatelessWidget {
                                 .labelSmall
                                 ?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: AppTheme.black,
+                                  color: colors.black,
                                 ),
                           ),
                         ),
@@ -621,9 +632,7 @@ class _MarketplaceProductCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: textColor.withValues(
-                                    alpha: 0.7,
-                                  ),
+                                  color: textColor.withOpacity(0.7),
                                   fontWeight: FontWeight.w700,
                                 ),
                           ),
@@ -632,8 +641,8 @@ class _MarketplaceProductCard extends StatelessWidget {
                       NeoButton(
                         label: 'Add to Vault',
                         onPressed: () {},
-                        backgroundColor: AppTheme.black,
-                        textColor: AppTheme.white,
+                        backgroundColor: colors.black,
+                        textColor: colors.white,
                         height: isSmall ? 44.h : 48.h,
                         isFullWidth: true,
                       ),

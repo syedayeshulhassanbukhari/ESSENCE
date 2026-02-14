@@ -5,6 +5,7 @@ import '../widgets/neo_widgets.dart';
 import '../providers/auth_ui_provider.dart';
 import '../providers/responsive_provider.dart';
 import '../providers/auth_controller.dart';
+import '../providers/theme_provider.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -31,14 +32,15 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Builder(
         builder: (context) {
           final brightness = Theme.of(context).brightness;
+          final colors = context.watch<ThemeProvider>().colors;
           final borderColor =
-              brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+              brightness == Brightness.light ? colors.black : colors.white;
           final isSmall = context.select<ResponsiveProvider, bool>(
             (provider) => provider.isSmall,
           );
 
           return Scaffold(
-            backgroundColor: AppTheme.backgroundLight,
+            backgroundColor: colors.backgroundLight,
             body: isSmall
                 ? _buildMobileLayout(context)
                 : Row(
@@ -48,7 +50,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         flex: 5,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: AppTheme.black,
+                            color: colors.black,
                             border: Border(
                               right: BorderSide(
                                 color: borderColor,
@@ -83,12 +85,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                 top: AppTheme.spacing4,
                                 left: AppTheme.spacing4,
                                 child: NeoCard(
-                                  backgroundColor: AppTheme.white,
+                                  backgroundColor: colors.white,
                                   shadow: true,
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.flare, color: AppTheme.black),
+                                      Icon(Icons.flare, color: colors.black),
                                       SizedBox(width: AppTheme.spacing2),
                                       Text(
                                         'ESSENCE',
@@ -96,7 +98,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                             .textTheme
                                             .titleLarge
                                             ?.copyWith(
-                                              color: AppTheme.black,
+                                              color: colors.black,
                                               fontWeight: FontWeight.w900,
                                             ),
                                       ),
@@ -109,7 +111,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 bottom: AppTheme.spacing4,
                                 left: AppTheme.spacing4,
                                 child: NeoCard(
-                                  backgroundColor: AppTheme.primaryYellow,
+                                  backgroundColor: colors.primaryYellow,
                                   shadow: true,
                                   child: Text(
                                     'Scents for the Bold',
@@ -117,7 +119,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         .textTheme
                                         .headlineMedium
                                         ?.copyWith(
-                                          color: AppTheme.black,
+                                          color: colors.black,
                                           fontStyle: FontStyle.italic,
                                         ),
                                   ),
@@ -209,6 +211,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Widget _buildMobileLayout(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacing4),
@@ -217,16 +220,16 @@ class _AuthScreenState extends State<AuthScreen> {
           children: [
             SizedBox(height: AppTheme.spacing4),
             NeoCard(
-              backgroundColor: AppTheme.black,
+              backgroundColor: colors.black,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.flare, color: AppTheme.white),
+                  Icon(Icons.flare, color: colors.white),
                   SizedBox(width: AppTheme.spacing2),
                   Text(
                     'ESSENCE',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppTheme.white,
+                          color: colors.white,
                           fontWeight: FontWeight.w900,
                         ),
                   ),
@@ -243,7 +246,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _buildLoginForm(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final bgColor = brightness == Brightness.light ? AppTheme.white : AppTheme.backgroundDark;
+    final colors = context.watch<ThemeProvider>().colors;
+    final bgColor =
+      brightness == Brightness.light ? colors.white : colors.backgroundDark;
 
     return Container(
       color: bgColor,
@@ -266,7 +271,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _buildLoginFormContent(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final colors = context.watch<ThemeProvider>().colors;
+    final textColor =
+      brightness == Brightness.light ? colors.black : colors.white;
     final ui = context.watch<AuthUiProvider>();
 
     return Column(
@@ -282,13 +289,13 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         SizedBox(height: AppTheme.spacing2),
         NeoCard(
-          backgroundColor: AppTheme.primaryYellow,
+          backgroundColor: colors.primaryYellow,
           padding: const EdgeInsets.all(AppTheme.spacing4),
           shadow: false,
           child: Text(
             'Login to access your exclusive perfume vault.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.black,
+                  color: colors.black,
             ),
           ),
         ),
@@ -300,8 +307,8 @@ class _AuthScreenState extends State<AuthScreen> {
             if (ui.isLoading) return;
             _signInWithGoogle(context);
           },
-          backgroundColor: AppTheme.white,
-          textColor: AppTheme.black,
+          backgroundColor: colors.white,
+          textColor: colors.black,
           isFullWidth: true,
         ),
         SizedBox(height: AppTheme.spacing4),
@@ -350,12 +357,18 @@ class _AuthScreenState extends State<AuthScreen> {
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: ui.rememberMe ? AppTheme.primaryYellow : AppTheme.white,
-                      border: Border.all(color: AppTheme.black, width: 2),
+                      color: ui.rememberMe
+                          ? colors.primaryYellow
+                          : colors.white,
+                      border: Border.all(color: colors.black, width: 2),
                     ),
                     child: ui.rememberMe
                         ? Center(
-                            child: Icon(Icons.check, size: 16, color: AppTheme.black),
+                            child: Icon(
+                              Icons.check,
+                              size: 16,
+                              color: colors.black,
+                            ),
                           )
                         : null,
                   ),
@@ -389,8 +402,8 @@ class _AuthScreenState extends State<AuthScreen> {
             if (ui.isLoading) return;
             _signInWithEmail(context);
           },
-          backgroundColor: AppTheme.primaryYellow,
-          textColor: AppTheme.black,
+          backgroundColor: colors.primaryYellow,
+          textColor: colors.black,
           isFullWidth: true,
           isLoading: ui.isLoading,
         ),

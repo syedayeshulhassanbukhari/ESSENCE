@@ -14,10 +14,13 @@ class AppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final brightness = Theme.of(context).brightness;
-    final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final textColor =
+      brightness == Brightness.light ? colors.black : colors.white;
     // Discover.html nav: border is black; dark border is primary yellow
-    final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+    final borderColor =
+      brightness == Brightness.light ? colors.black : colors.primaryYellow;
     final isSmall = context.select<ResponsiveProvider, bool>(
       (provider) => provider.isSmall,
     );
@@ -50,11 +53,11 @@ class AppHeader extends StatelessWidget {
               return NeoIconButton(
                 icon: themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
                 backgroundColor: themeProvider.isDarkMode
-                    ? AppTheme.primaryYellow
-                    : AppTheme.white,
+                  ? colors.primaryYellow
+                  : colors.white,
                 iconColor: themeProvider.isDarkMode
-                    ? AppTheme.black
-                    : AppTheme.black,
+                  ? colors.black
+                  : colors.black,
                 onPressed: () => themeProvider.toggleDarkMode(),
               );
             },
@@ -73,6 +76,7 @@ class AppHeader extends StatelessWidget {
   }
 
   List<Widget> _buildNavButtons(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final items = const [
       {'label': 'Home', 'route': '/home'},
       {'label': 'Discover', 'route': '/discover'},
@@ -91,8 +95,8 @@ class AppHeader extends StatelessWidget {
             child: NeoButton(
               label: item['label'] as String,
               onPressed: () => _onNavTap(context, item['route'] as String),
-              backgroundColor: AppTheme.white,
-              textColor: AppTheme.black,
+              backgroundColor: colors.white,
+              textColor: colors.black,
               height: 40.h,
               textStyle: navTextStyle,
               padding: EdgeInsets.symmetric(
@@ -110,12 +114,13 @@ class _UserProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final user = FirebaseAuth.instance.currentUser;
     final brightness = Theme.of(context).brightness;
     final borderColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+      brightness == Brightness.light ? colors.black : colors.primaryYellow;
     final bgColor =
-        brightness == Brightness.light ? AppTheme.white : AppTheme.zinc900;
+      brightness == Brightness.light ? colors.white : colors.zinc900;
 
     final photoUrl = user?.photoURL;
     final avatar = Container(
@@ -124,7 +129,9 @@ class _UserProfileAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         border: Border.all(color: borderColor, width: AppTheme.borderWidth),
-        boxShadow: [AppTheme.neoShadow(brightness, offset: AppTheme.shadowSmall)],
+        boxShadow: [
+          AppTheme.neoShadow(colors, brightness, offset: AppTheme.shadowSmall),
+        ],
       ),
       child: Center(
         child: ClipOval(
@@ -137,15 +144,16 @@ class _UserProfileAvatar extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) => Icon(
                     Icons.person,
                     color: brightness == Brightness.light
-                        ? AppTheme.black
-                        : AppTheme.white,
+                        ? colors.black
+                        : colors.white,
                     size: 24.sp,
                   ),
                 )
               : Icon(
                   Icons.person,
-                  color:
-                      brightness == Brightness.light ? AppTheme.black : AppTheme.white,
+                  color: brightness == Brightness.light
+                      ? colors.black
+                      : colors.white,
                   size: 24.sp,
                 ),
         ),
@@ -210,9 +218,11 @@ class AppFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final brightness = Theme.of(context).brightness;
     // Discover.html footer: light border black; dark border primary yellow
-    final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+    final borderColor =
+        brightness == Brightness.light ? colors.black : colors.primaryYellow;
     final isSmall = context.select<ResponsiveProvider, bool>(
       (provider) => provider.isSmall,
     );
@@ -371,7 +381,10 @@ class SectionDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = Theme.of(context).brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+    final colors = context.watch<ThemeProvider>().colors;
+    final borderColor = Theme.of(context).brightness == Brightness.light
+        ? colors.black
+        : colors.primaryYellow;
     return Container(
       height: AppTheme.borderWidth,
       color: borderColor,

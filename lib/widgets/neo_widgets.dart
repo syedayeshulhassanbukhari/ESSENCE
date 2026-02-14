@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 
 // ===== NEO BUTTON =====
@@ -37,13 +39,16 @@ class _NeoButtonState extends State<NeoButton> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final brightness = Theme.of(context).brightness;
-    final bgColor = widget.backgroundColor ?? AppTheme.primaryYellow;
-    final textColor = widget.textColor ?? AppTheme.black;
+    final bgColor = widget.backgroundColor ?? colors.primaryYellow;
+    final textColor = widget.textColor ?? colors.black;
     // Discover.html: neo-border is black; dark neo-border is primary yellow
-    final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
-    
-    final shadow = _isPressed ? <BoxShadow>[] : [AppTheme.neoShadow(brightness)];
+    final borderColor =
+      brightness == Brightness.light ? colors.black : colors.primaryYellow;
+
+    final shadow =
+      _isPressed ? <BoxShadow>[] : [AppTheme.neoShadow(colors, brightness)];
     final offset = _isPressed ? Offset(2, 2) : Offset.zero;
 
     return GestureDetector(
@@ -110,16 +115,21 @@ class NeoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final brightness = Theme.of(context).brightness;
     // Discover.html: neo-border is black; dark neo-border is primary yellow
-    final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
-    final bgColor = backgroundColor ?? (brightness == Brightness.light ? AppTheme.white : AppTheme.zinc900);
+    final borderColor =
+      brightness == Brightness.light ? colors.black : colors.primaryYellow;
+    final bgColor = backgroundColor ??
+      (brightness == Brightness.light ? colors.white : colors.zinc900);
 
     return Container(
       decoration: BoxDecoration(
         color: bgColor,
         border: Border.all(color: borderColor, width: AppTheme.borderWidth),
-        boxShadow: shadow ? [AppTheme.neoShadow(brightness, offset: shadowOffset)] : [],
+        boxShadow: shadow
+          ? [AppTheme.neoShadow(colors, brightness, offset: shadowOffset)]
+          : [],
       ),
       padding: padding,
       child: child,
@@ -167,10 +177,13 @@ class _NeoInputState extends State<NeoInput> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final brightness = Theme.of(context).brightness;
     // Discover.html: neo-border is black; dark neo-border is primary yellow
-    final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
-    final bgColor = brightness == Brightness.light ? AppTheme.white : AppTheme.zinc900;
+    final borderColor =
+      brightness == Brightness.light ? colors.black : colors.primaryYellow;
+    final bgColor =
+      brightness == Brightness.light ? colors.white : colors.zinc900;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +199,15 @@ class _NeoInputState extends State<NeoInput> {
           decoration: BoxDecoration(
             color: bgColor,
             border: Border.all(color: borderColor, width: AppTheme.borderWidth),
-            boxShadow: _focusNode.hasFocus ? [AppTheme.neoShadow(brightness, offset: AppTheme.shadowSmall)] : [],
+            boxShadow: _focusNode.hasFocus
+                ? [
+                    AppTheme.neoShadow(
+                      colors,
+                      brightness,
+                      offset: AppTheme.shadowSmall,
+                    )
+                  ]
+                : [],
           ),
           child: TextField(
             controller: widget.controller,
@@ -224,20 +245,22 @@ class NeoBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final brightness = Theme.of(context).brightness;
     // Discover.html: neo-border is black; dark neo-border is primary yellow
-    final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+    final borderColor =
+        brightness == Brightness.light ? colors.black : colors.primaryYellow;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing2, vertical: 4),
       decoration: BoxDecoration(
-        color: backgroundColor ?? AppTheme.primaryYellow,
+        color: backgroundColor ?? colors.primaryYellow,
         border: Border.all(color: borderColor, width: 1.5),
       ),
       child: Text(
         label.toUpperCase(),
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: textColor ?? AppTheme.black,
+              color: textColor ?? colors.black,
               fontWeight: FontWeight.w700,
             ),
       ),
@@ -269,15 +292,24 @@ class _NeoIconButtonState extends State<NeoIconButton> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final brightness = Theme.of(context).brightness;
     // In dark mode, outlines use the primary yellow neo-border.
     final borderColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
-    final bgColor = widget.backgroundColor ?? AppTheme.white;
+      brightness == Brightness.light ? colors.black : colors.primaryYellow;
+    final bgColor = widget.backgroundColor ?? colors.white;
     final iconColor = widget.iconColor ??
-        (brightness == Brightness.light ? AppTheme.black : AppTheme.white);
+      (brightness == Brightness.light ? colors.black : colors.white);
 
-    final shadow = _isPressed ? <BoxShadow>[] : [AppTheme.neoShadow(brightness, offset: AppTheme.shadowSmall)];
+    final shadow = _isPressed
+        ? <BoxShadow>[]
+        : [
+            AppTheme.neoShadow(
+              colors,
+              brightness,
+              offset: AppTheme.shadowSmall,
+            )
+          ];
     final offset = _isPressed ? const Offset(1, 1) : Offset.zero;
 
     return GestureDetector(

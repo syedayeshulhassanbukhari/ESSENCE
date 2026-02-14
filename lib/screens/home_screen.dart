@@ -7,6 +7,7 @@ import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
 import '../widgets/marquee_text.dart';
 import '../providers/responsive_provider.dart';
+import '../providers/theme_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final bgColor = brightness == Brightness.light ? AppTheme.backgroundLight : AppTheme.backgroundDark;
+    final colors = context.watch<ThemeProvider>().colors;
+    final bgColor = brightness == Brightness.light
+        ? colors.backgroundLight
+        : colors.backgroundDark;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -37,10 +41,11 @@ class HomeScreen extends StatelessWidget {
 
 Widget _buildHeroSection(BuildContext context) {
   final brightness = Theme.of(context).brightness;
+  final colors = context.watch<ThemeProvider>().colors;
   final textColor =
-      brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    brightness == Brightness.light ? colors.black : colors.white;
   final joinBackground =
-      brightness == Brightness.light ? AppTheme.white : AppTheme.zinc800;
+    brightness == Brightness.light ? colors.white : colors.zinc800;
   final responsive = context.watch<ResponsiveProvider>();
   final isSmall = responsive.isSmall;
   final isWide = responsive.isLarge;
@@ -71,11 +76,11 @@ Widget _buildHeroSection(BuildContext context) {
         ),
         const SizedBox(height: 8),
         Container(
-          color: AppTheme.primaryYellow,
+          color: colors.primaryYellow,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'REDEFINED.',
-            style: heroHeadingStyle.copyWith(color: AppTheme.black),
+            style: heroHeadingStyle.copyWith(color: colors.black),
           ),
         ),
         const SizedBox(height: AppTheme.spacing6),
@@ -86,13 +91,13 @@ Widget _buildHeroSection(BuildContext context) {
           ),
           decoration: BoxDecoration(
             color: brightness == Brightness.light
-                ? AppTheme.backgroundLight
-                : AppTheme.backgroundDark,
+                ? colors.backgroundLight
+                : colors.backgroundDark,
             border: Border(
               left: BorderSide(
                 color: brightness == Brightness.light
-                    ? AppTheme.black
-                    : AppTheme.primaryYellow,
+                    ? colors.black
+                    : colors.primaryYellow,
                 width: AppTheme.borderWidth,
               ),
             ),
@@ -113,8 +118,8 @@ Widget _buildHeroSection(BuildContext context) {
               child: NeoButton(
                 label: 'Shop Marketplace',
                 onPressed: () {},
-                backgroundColor: AppTheme.primaryYellow,
-                textColor: AppTheme.black,
+                backgroundColor: colors.primaryYellow,
+                textColor: colors.black,
               ),
             ),
             if (!isSmall) const SizedBox(width: AppTheme.spacing4),
@@ -125,8 +130,8 @@ Widget _buildHeroSection(BuildContext context) {
                   onPressed: () {},
                   backgroundColor: joinBackground,
                   textColor: brightness == Brightness.light
-                      ? AppTheme.black
-                      : AppTheme.white,
+                      ? colors.black
+                      : colors.white,
                 ),
               ),
           ],
@@ -137,8 +142,8 @@ Widget _buildHeroSection(BuildContext context) {
 
   return Container(
     color: brightness == Brightness.light
-        ? AppTheme.backgroundLight
-        : AppTheme.black,
+      ? colors.backgroundLight
+      : colors.black,
     child: ResponsiveLayout(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing6),
@@ -175,9 +180,10 @@ Widget _buildHeroSection(BuildContext context) {
 }
 
 Widget _buildHeroImageCard(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final borderColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+  final brightness = Theme.of(context).brightness;
+  final colors = context.watch<ThemeProvider>().colors;
+  final borderColor =
+    brightness == Brightness.light ? colors.black : colors.primaryYellow;
 
     return AspectRatio(
       aspectRatio: 3 / 4,
@@ -191,7 +197,7 @@ Widget _buildHeroImageCard(BuildContext context) {
             top: 0,
             child: Container(
               decoration: BoxDecoration(
-                color: AppTheme.primaryYellow,
+                color: colors.primaryYellow,
                 border: Border.all(
                   color: borderColor,
                   width: AppTheme.borderWidth,
@@ -206,9 +212,9 @@ Widget _buildHeroImageCard(BuildContext context) {
             bottom: 0,
             child: Container(
               decoration: BoxDecoration(
-                color: AppTheme.white,
+                color: colors.white,
                 border: Border.all(
-                  color: AppTheme.black,
+                  color: colors.black,
                   width: AppTheme.borderWidth,
                 ),
               ),
@@ -223,7 +229,7 @@ Widget _buildHeroImageCard(BuildContext context) {
             bottom: -AppTheme.spacing4,
             left: AppTheme.spacing6,
             child: NeoCard(
-              backgroundColor: AppTheme.black,
+              backgroundColor: colors.black,
               padding: const EdgeInsets.symmetric(
                 horizontal: AppTheme.spacing4,
                 vertical: AppTheme.spacing2,
@@ -231,7 +237,7 @@ Widget _buildHeroImageCard(BuildContext context) {
               child: Text(
                 'EST. 2024',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppTheme.white,
+                      color: colors.white,
                       fontStyle: FontStyle.italic,
                     ),
               ),
@@ -244,7 +250,9 @@ Widget _buildHeroImageCard(BuildContext context) {
 
   Widget _buildFeaturedSection(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final colors = context.watch<ThemeProvider>().colors;
+    final textColor =
+        brightness == Brightness.light ? colors.black : colors.white;
     final responsive = context.watch<ResponsiveProvider>();
     final isSmall = responsive.isSmall;
     final isMedium = responsive.isMedium;
@@ -306,11 +314,13 @@ Widget _buildHeroImageCard(BuildContext context) {
     bool isSoldOut = false,
   }) {
     final brightness = Theme.of(context).brightness;
-    final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final colors = context.watch<ThemeProvider>().colors;
+    final textColor =
+        brightness == Brightness.light ? colors.black : colors.white;
 
     return NeoCard(
       backgroundColor:
-          brightness == Brightness.light ? AppTheme.white : AppTheme.zinc900,
+          brightness == Brightness.light ? colors.white : colors.zinc900,
       padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -367,8 +377,8 @@ Widget _buildHeroImageCard(BuildContext context) {
                   label: isSoldOut ? 'Waitlist' : 'Add to Cart',
                   onPressed: () {},
                   backgroundColor:
-                      isSoldOut ? const Color(0xFFCCCCCC) : AppTheme.black,
-                  textColor: AppTheme.white,
+                      isSoldOut ? const Color(0xFFCCCCCC) : colors.black,
+                    textColor: colors.white,
                   height: 48,
                   isFullWidth: true,
                 ),
@@ -381,16 +391,17 @@ Widget _buildHeroImageCard(BuildContext context) {
   }
 
   Widget _buildMarqueeSection(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     // Match HTML marquee: font-display (Syne), text-4xl, uppercase, primary yellow
     final textStyle = GoogleFonts.syne(
       fontSize: 36,
       fontWeight: FontWeight.w800,
       letterSpacing: 0,
-      color: AppTheme.primaryYellow,
+      color: colors.primaryYellow,
     );
 
     return Container(
-      color: AppTheme.black,
+      color: colors.black,
       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing4),
       child: MarqueeText(
         text:
@@ -403,6 +414,7 @@ Widget _buildHeroImageCard(BuildContext context) {
   }
 
   Widget _buildCommunitySection(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
     final isSmall = context.select<ResponsiveProvider, bool>(
       (provider) => provider.isSmall,
     );
@@ -415,14 +427,14 @@ Widget _buildHeroImageCard(BuildContext context) {
                 children: [
                   Expanded(
                     child: NeoCard(
-                      backgroundColor: AppTheme.primaryYellow,
+                      backgroundColor: colors.primaryYellow,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'The\nCommunity\nVault',
                             style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  color: AppTheme.black,
+                                  color: colors.black,
                                   height: 0.9,
                                 ),
                           ),
@@ -430,15 +442,15 @@ Widget _buildHeroImageCard(BuildContext context) {
                           Text(
                             'Our community votes on which discontinued scents get resurrected.',
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: AppTheme.black,
+                                  color: colors.black,
                                 ),
                           ),
                           SizedBox(height: AppTheme.spacing4),
                           NeoButton(
                             label: 'Enter The Vault',
                             onPressed: () {},
-                            backgroundColor: AppTheme.black,
-                            textColor: AppTheme.white,
+                            backgroundColor: colors.black,
+                            textColor: colors.white,
                           ),
                         ],
                       ),
@@ -489,21 +501,21 @@ Widget _buildHeroImageCard(BuildContext context) {
             : Column(
                 children: [
                   NeoCard(
-                    backgroundColor: AppTheme.primaryYellow,
+                    backgroundColor: colors.primaryYellow,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'The Community Vault',
                           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                color: AppTheme.black,
+                                color: colors.black,
                               ),
                         ),
                         SizedBox(height: AppTheme.spacing4),
                         Text(
                           'Our community votes on which discontinued scents get resurrected. Have your say in the future of fragrance.',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.black,
+                              color: colors.black,
                               ),
                         ),
                         SizedBox(height: AppTheme.spacing4),
@@ -560,8 +572,9 @@ Widget _buildHeroImageCard(BuildContext context) {
     required IconData icon,
   }) {
     final brightness = Theme.of(context).brightness;
+    final colors = context.watch<ThemeProvider>().colors;
     final borderColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+        brightness == Brightness.light ? colors.black : colors.primaryYellow;
 
     return NeoCard(
       child: Column(
@@ -570,10 +583,10 @@ Widget _buildHeroImageCard(BuildContext context) {
           Container(
             padding: const EdgeInsets.all(AppTheme.spacing2),
             decoration: BoxDecoration(
-              color: AppTheme.primaryYellow,
+              color: colors.primaryYellow,
               border: Border.all(color: borderColor, width: AppTheme.borderWidth / 2),
             ),
-            child: Icon(icon, color: AppTheme.black, size: 28),
+            child: Icon(icon, color: colors.black, size: 28),
           ),
           SizedBox(height: AppTheme.spacing4),
           Text(
@@ -594,9 +607,12 @@ Widget _buildHeroImageCard(BuildContext context) {
 
   Widget _buildNewsletterSection(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final colors = context.watch<ThemeProvider>().colors;
+    final textColor =
+      brightness == Brightness.light ? colors.black : colors.white;
     // Newsletter input border: black in light mode, primary yellow in dark mode like discover.html
-    final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
+    final borderColor =
+      brightness == Brightness.light ? colors.black : colors.primaryYellow;
     final isSmall = context.select<ResponsiveProvider, bool>(
       (provider) => provider.isSmall,
     );
@@ -646,8 +662,8 @@ Widget _buildHeroImageCard(BuildContext context) {
                   NeoButton(
                     label: 'Join',
                     onPressed: () {},
-                    backgroundColor: AppTheme.black,
-                    textColor: AppTheme.white,
+                    backgroundColor: colors.black,
+                    textColor: colors.white,
                     height: 56,
                     isFullWidth: true,
                   ),
@@ -680,8 +696,8 @@ Widget _buildHeroImageCard(BuildContext context) {
                     child: NeoButton(
                       label: 'Join',
                       onPressed: () {},
-                      backgroundColor: AppTheme.black,
-                      textColor: AppTheme.white,
+                      backgroundColor: colors.black,
+                      textColor: colors.white,
                       height: 56,
                     ),
                   ),

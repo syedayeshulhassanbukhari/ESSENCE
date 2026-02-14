@@ -13,11 +13,21 @@ class DiscoverProvider extends ChangeNotifier {
   bool _isLoading = false;
   String _errorMessage = '';
   String _lastQuery = '';
+  bool _hasLoaded = false;
 
   List<FragellaFragrance> get results => List.unmodifiable(_results);
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   String get lastQuery => _lastQuery;
+  bool get hasLoaded => _hasLoaded;
+
+  void ensureInitialLoad({required String query}) {
+    if (_hasLoaded || _isLoading) {
+      return;
+    }
+    _hasLoaded = true;
+    search(query: query);
+  }
 
   Future<void> search({required String query, int limit = 10}) async {
     _lastQuery = query;

@@ -1,21 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../providers/theme_provider.dart';
+
 class AppTheme {
-  // ===== NEO-BRUTALISM COLOR PALETTE =====
-  // Matches tailwind primary "#facc15" from discover.html
-  static const Color primaryYellow = Color(0xFFFACC15);
-  static const Color accentPink = Color(0xFFFF00FF);
-  static const Color accentCyan = Color(0xFF00F0FF);
-  static const Color accentGreen = Color(0xFF00FF66);
-  static const Color backgroundLight = Color(0xFFFFFFFF);
-  // Matches "background-dark" #0a0a0a from discover.html
-  static const Color backgroundDark = Color(0xFF0A0A0A);
-  static const Color black = Color(0xFF000000);
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color zinc800 = Color(0xFF27272A);
-  static const Color zinc900 = Color(0xFF18181B);
-  static const Color gray400 = Color(0xFFA3A3A3);
 
   // ===== SPACING SCALE =====
   static const double spacing2 = 8.0;
@@ -34,42 +23,42 @@ class AppTheme {
   static const double shadowSmall = 3.0;
 
   // Light theme
-  static ThemeData lightTheme() {
+  static ThemeData lightTheme(ThemeColors colors) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: backgroundLight,
-      textTheme: _textTheme(Brightness.light),
+      scaffoldBackgroundColor: colors.backgroundLight,
+      textTheme: _textTheme(colors, Brightness.light),
       colorScheme: ColorScheme.light(
-        primary: primaryYellow,
-        secondary: accentPink,
-        tertiary: accentCyan,
-        surface: white,
+        primary: colors.primaryYellow,
+        secondary: colors.accentPink,
+        tertiary: colors.accentCyan,
+        surface: colors.white,
         error: Colors.red,
       ),
     );
   }
 
   // Dark theme
-  static ThemeData darkTheme() {
+  static ThemeData darkTheme(ThemeColors colors) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: backgroundDark,
-      textTheme: _textTheme(Brightness.dark),
+      scaffoldBackgroundColor: colors.backgroundDark,
+      textTheme: _textTheme(colors, Brightness.dark),
       colorScheme: ColorScheme.dark(
-        primary: primaryYellow,
-        secondary: accentPink,
-        tertiary: accentCyan,
-        surface: zinc900,
+        primary: colors.primaryYellow,
+        secondary: colors.accentPink,
+        tertiary: colors.accentCyan,
+        surface: colors.zinc900,
         error: Colors.red,
       ),
     );
   }
 
   // Typography
-  static TextTheme _textTheme(Brightness brightness) {
-    final color = brightness == Brightness.light ? black : white;
+  static TextTheme _textTheme(ThemeColors colors, Brightness brightness) {
+    final color = brightness == Brightness.light ? colors.black : colors.white;
     return TextTheme(
       displayLarge: GoogleFonts.spaceGrotesk(
         fontSize: 72,
@@ -126,7 +115,9 @@ class AppTheme {
         fontSize: 12,
         fontWeight: FontWeight.w400,
         // Use a zinc-400 style gray in dark mode for subtitles
-        color: brightness == Brightness.light ? Color(0xFF666666) : Color(0xFFA1A1AA),
+        color: brightness == Brightness.light
+            ? const Color(0xFF666666)
+            : const Color(0xFFA1A1AA),
       ),
       labelLarge: GoogleFonts.spaceGrotesk(
         fontSize: 14,
@@ -138,12 +129,14 @@ class AppTheme {
 
   // Neo shadow helper
   static BoxShadow neoShadow(
+    ThemeColors colors,
     Brightness brightness, {
     double offset = shadowMedium,
   }) {
     return BoxShadow(
       // Discover.html: .neo-shadow is black; .dark .neo-shadow is primary yellow
-      color: brightness == Brightness.light ? black : primaryYellow,
+      color:
+          brightness == Brightness.light ? colors.black : colors.primaryYellow,
       offset: Offset(offset, offset),
       blurRadius: 0,
       spreadRadius: 0,
@@ -152,6 +145,7 @@ class AppTheme {
 
   // Neo border decoration
   static BoxDecoration neoBorder(
+    ThemeColors colors,
     Brightness brightness, {
     Color? backgroundColor,
     bool shadow = false,
@@ -159,14 +153,16 @@ class AppTheme {
   }) {
     // Discover.html: .neo-border is black; .dark .neo-border is primary yellow
     final borderColor =
-      brightness == Brightness.light ? black : primaryYellow;
+        brightness == Brightness.light ? colors.black : colors.primaryYellow;
     final bgColor = backgroundColor ??
-        (brightness == Brightness.light ? white : zinc900);
+        (brightness == Brightness.light ? colors.white : colors.zinc900);
 
     return BoxDecoration(
       color: bgColor,
       border: Border.all(color: borderColor, width: borderWidth),
-      boxShadow: shadow ? [neoShadow(brightness, offset: shadowOffset)] : [],
+      boxShadow: shadow
+          ? [neoShadow(colors, brightness, offset: shadowOffset)]
+          : [],
     );
   }
 }

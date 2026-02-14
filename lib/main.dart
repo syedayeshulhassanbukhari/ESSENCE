@@ -6,6 +6,7 @@ import 'package:scentswapwebsite/screens/auth/login_screen.dart';
 import 'package:scentswapwebsite/screens/auth/register_screen.dart';
 import 'package:scentswapwebsite/screens/discover_screen.dart';
 import 'package:scentswapwebsite/screens/home_screen.dart';
+import 'package:scentswapwebsite/screens/individual_perfume_details.dart';
 import 'package:scentswapwebsite/screens/marketplace_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,8 +63,8 @@ class ScentSwapApp extends StatelessWidget {
           builder: (context, child) {
             return MaterialApp(
               title: 'ESSENCE - Perfume Marketplace',
-              theme: AppTheme.lightTheme(),
-              darkTheme: AppTheme.darkTheme(),
+              theme: AppTheme.lightTheme(themeProvider.colors),
+              darkTheme: AppTheme.darkTheme(themeProvider.colors),
               themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
               // Keep a short, smooth theme transition
               themeAnimationDuration: const Duration(milliseconds: 200),
@@ -80,7 +81,7 @@ class ScentSwapApp extends StatelessWidget {
                 '/home': (context) => const HomeScreen(),
                 '/discover': (context) => const DiscoverScreen(),
                 '/marketplace': (context) => MarketplaceScreen(),
-              },
+                '/individualDetails' : (context) => IndividualPerfumeDetails(),              },
               home: const _AuthGate(),
             );
           },
