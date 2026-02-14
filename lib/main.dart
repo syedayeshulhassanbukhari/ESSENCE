@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:scentswapwebsite/screens/auth/login_screen.dart';
 import 'package:scentswapwebsite/screens/auth/register_screen.dart';
 import 'package:scentswapwebsite/screens/discover_screen.dart';
@@ -13,9 +14,13 @@ import 'theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/responsive_provider.dart';
 import 'providers/auth_controller.dart';
+import 'providers/discover_provider.dart';
+import 'services/fragella_api_client.dart';
+import 'config/fragella_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -26,6 +31,17 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => ResponsiveProvider()),
         Provider(create: (_) => AuthController()),
+        Provider(
+          create: (_) => FragellaApiClient(
+            apiKey: FragellaConfig.apiKey,
+            baseUrl: FragellaConfig.baseUrl,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DiscoverProvider(
+            apiClient: context.read<FragellaApiClient>(),
+          ),
+        ),
       ],
       child: const ScentSwapApp(),
     ),

@@ -23,6 +23,7 @@ dependencies:
   provider: ^6.1.5+1
   marquee: ^2.2.3
   flutter_screenutil: ^5.9.3
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
