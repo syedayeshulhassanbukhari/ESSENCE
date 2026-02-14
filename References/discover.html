@@ -1,254 +1,272 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+
+<html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Sillage — Neo-Brutalism Perfume Discovery</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Syne:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              primary: "#facc15", // Vibrant Yellow
-              "background-light": "#ffffff",
-              "background-dark": "#0a0a0a",
+<title>Scent Explorer | Discovery Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#fac638",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#231e0f",
+                        "neo-lime": "#bef264",
+                        "neo-orange": "#fb923c",
+                        "neo-pink": "#f472b6",
+                        "neo-blue": "#60a5fa",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem", 
+                        "lg": "0.25rem", 
+                        "xl": "0.5rem", 
+                        "full": "0.75rem"
+                    },
+                },
             },
-            fontFamily: {
-              display: ["Syne", "sans-serif"],
-              sans: ["Space Grotesk", "sans-serif"],
-            },
-            borderRadius: {
-              DEFAULT: "0px", // Sharp edges for Neo-Brutalism
-            },
-          },
-        },
-      };
+        }
     </script>
 <style>
         .neo-shadow {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-        }
-        .dark .neo-shadow {
-            box-shadow: 8px 8px 0px 0px rgba(250,204,21,1);
-        }
-        .neo-shadow-small {
             box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
         }
-        .dark .neo-shadow-small {
-            box-shadow: 4px 4px 0px 0px rgba(250,204,21,1);
+        .neo-shadow-lg {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
         }
-        .neo-border {
-            border: 3px solid black;
+        .neo-shadow-hover:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
         }
-        .dark .neo-border {
-            border: 3px solid #facc15;
+        .neo-shadow-active:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
         }
-        body {
-            cursor: crosshair;
+        .border-4-black {
+            border: 4px solid black;
         }
     </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-black dark:text-white font-sans transition-colors duration-200">
-<nav class="border-b-4 border-black dark:border-primary sticky top-0 bg-white dark:bg-background-dark z-50">
-<div class="max-w-[1440px] mx-auto flex justify-between items-center p-6">
-<div class="text-3xl font-display font-extrabold tracking-tighter">SILLAGE.</div>
-<div class="hidden md:flex gap-8 font-bold uppercase tracking-widest">
-<a class="hover:underline decoration-4 underline-offset-4" href="#">Discover</a>
-<a class="hover:underline decoration-4 underline-offset-4" href="#">Marketplace</a>
-<a class="hover:underline decoration-4 underline-offset-4" href="#">Vault</a>
-<a class="hover:underline decoration-4 underline-offset-4" href="#">About</a>
+<body class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white transition-colors duration-200">
+<!-- Global Navigation Bar -->
+<nav class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b-4 border-black px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<a class="text-3xl font-extrabold tracking-tighter border-2 border-black px-2 bg-primary neo-shadow" href="#">
+                SCENT.LAB
+            </a>
+<div class="hidden md:flex items-center gap-6 font-bold uppercase tracking-tight">
+<div class="relative group">
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+                        Discovery <span class="material-icons">expand_more</span>
+</button>
+<!-- Mock Dropdown -->
+<div class="absolute top-full left-0 hidden group-hover:block w-48 bg-white border-4 border-black neo-shadow-lg mt-2 p-2">
+<a class="block p-2 hover:bg-primary/20" href="#">NEW ARRIVALS</a>
+<a class="block p-2 hover:bg-primary/20" href="#">BEST SELLERS</a>
+<a class="block p-2 hover:bg-primary/20" href="#">COLLECTIONS</a>
+</div>
+</div>
+<div class="relative group">
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+                        Marketplace <span class="material-icons">expand_more</span>
+</button>
+<!-- Mock Dropdown -->
+<div class="absolute top-full left-0 hidden group-hover:block w-48 bg-white border-4 border-black neo-shadow-lg mt-2 p-2">
+<a class="block p-2 hover:bg-primary/20" href="#">VINTAGE DEALS</a>
+<a class="block p-2 hover:bg-primary/20" href="#">RARE FINDS</a>
+</div>
+</div>
+<a class="hover:text-primary transition-colors" href="#">Archive</a>
+</div>
 </div>
 <div class="flex items-center gap-4">
-<button class="neo-border neo-shadow-small p-2 bg-primary" onclick="document.documentElement.classList.toggle('dark')">
-<span class="material-symbols-outlined block dark:hidden">dark_mode</span>
-<span class="material-symbols-outlined hidden dark:block text-black">light_mode</span>
-</button>
-<button class="neo-border neo-shadow-small px-6 py-2 bg-black text-white dark:bg-primary dark:text-black font-bold uppercase">
-                    Connect
-                </button>
-</div>
+<button class="material-icons border-4 border-black p-2 neo-shadow neo-shadow-hover bg-white text-black">search</button>
+<button class="material-icons border-4 border-black p-2 neo-shadow neo-shadow-hover bg-primary text-black">shopping_bag</button>
+<button class="md:hidden material-icons border-4 border-black p-2 bg-white">menu</button>
 </div>
 </nav>
-<header class="max-w-[1440px] mx-auto p-6 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center border-b-4 border-black dark:border-primary">
-<div class="lg:col-span-7">
-<h1 class="text-6xl md:text-9xl font-display font-extrabold uppercase leading-[0.85] tracking-tighter mb-8">
-                Fragrance <br/> <span class="bg-primary px-4 text-black">Redefined.</span>
-</h1>
-<p class="text-xl md:text-2xl font-medium max-w-xl mb-12 border-l-8 border-black dark:border-primary pl-6 py-2">
-                The world's first decentralized marketplace for avant-garde perfumery. Discover scents that challenge the status quo.
-            </p>
-<div class="flex flex-wrap gap-6">
-<button class="bg-primary text-black neo-border neo-shadow px-10 py-6 text-2xl font-display font-black uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
-                    Shop Marketplace
-                </button>
-<button class="bg-white dark:bg-zinc-800 neo-border neo-shadow px-10 py-6 text-2xl font-display font-black uppercase hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
-                    Join the Club
-                </button>
-</div>
-</div>
-<div class="lg:col-span-5 relative">
-<div class="neo-border bg-primary p-4 neo-shadow rotate-3 hover:rotate-0 transition-transform duration-500">
-<img alt="Minimalist perfume bottle" class="w-full h-[500px] object-cover grayscale contrast-125 border-4 border-black" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiTkqgXPglCr3WEjYRotSXa6boRrK_qVjj3J2cUPl8jVgA99DRFMOdhRNlmaIbungENOOLZS-47bjYCcbe-KH483JrhYK6FcnT-t9ZyJuO2PDZqdrft56gJJe5XWqfJWqY33U41QRIjSV-E26hBN_QWUhy5LssS9F2ZnY_eMNS6xGHS9ApWaIlvV2cTorH7AUodxcdodyJjJ6zfg75sDgZ4uHKPunUqsHPMNoR68dG1jBb3-58LkuDgbq-ByjoHZO0M9ancC3oH8k"/>
-</div>
-<div class="absolute -bottom-6 -left-6 bg-black text-white dark:bg-white dark:text-black p-4 font-display font-black text-4xl neo-border italic">
-                EST. 2024
-            </div>
-</div>
+<!-- Hero Title -->
+<header class="p-8 md:p-16 border-b-4 border-black bg-primary/10">
+<h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none">
+            The <span class="bg-primary px-2">Discovery</span> Lab
+        </h1>
+<p class="mt-6 text-xl md:text-2xl font-bold max-w-2xl border-l-8 border-black pl-6">
+            BRUTALIST SCENTS FOR THE BOLD. EXPLORE OUR CURATED GRID OF OLFACTORY ART PIECES.
+        </p>
 </header>
-<section class="max-w-[1440px] mx-auto p-6 md:p-12">
-<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
-<div>
-<span class="text-primary bg-black px-3 py-1 text-sm font-bold uppercase tracking-widest mb-4 inline-block">Curated</span>
-<h2 class="text-5xl md:text-7xl font-display font-black uppercase tracking-tighter">Discover Your Scent</h2>
+<!-- Filter/Sort Bar -->
+<section class="sticky top-[84px] z-40 bg-background-light border-b-4 border-black p-4 flex flex-wrap gap-4 items-center">
+<span class="font-black uppercase text-sm">Filter By:</span>
+<button class="border-4 border-black px-4 py-1 font-bold bg-neo-lime neo-shadow neo-shadow-hover uppercase text-sm">Woody</button>
+<button class="border-4 border-black px-4 py-1 font-bold bg-white neo-shadow neo-shadow-hover uppercase text-sm">Floral</button>
+<button class="border-4 border-black px-4 py-1 font-bold bg-neo-orange neo-shadow neo-shadow-hover uppercase text-sm">Citrus</button>
+<button class="border-4 border-black px-4 py-1 font-bold bg-white neo-shadow neo-shadow-hover uppercase text-sm">Oud</button>
+<button class="border-4 border-black px-4 py-1 font-bold bg-neo-pink neo-shadow neo-shadow-hover uppercase text-sm">Spicy</button>
+<div class="ml-auto flex items-center gap-2">
+<span class="font-black uppercase text-sm hidden sm:block">Sort:</span>
+<select class="border-4 border-black bg-white font-bold py-1 px-4 focus:ring-0 focus:outline-none">
+<option>NEWEST</option>
+<option>PRICE: LOW-HIGH</option>
+<option>PRICE: HIGH-LOW</option>
+</select>
 </div>
-<button class="font-bold underline decoration-4 underline-offset-8 text-xl">VIEW ALL RELEASES</button>
-</div>
+</section>
+<!-- Discovery Grid -->
+<main class="p-6 md:p-12">
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-<div class="group">
-<div class="neo-border bg-white dark:bg-zinc-900 overflow-hidden neo-shadow group-hover:translate-x-2 group-hover:translate-y-2 group-hover:shadow-none transition-all duration-300">
-<div class="h-80 bg-zinc-200 dark:bg-zinc-800 border-b-4 border-black dark:border-primary relative overflow-hidden">
-<img alt="Avant-garde scent" class="w-full h-full object-cover grayscale mix-blend-multiply group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8NDP0aduWHz-kRO9tFNi0-5_r3m2Wb3GR6WqhJVySNiV1BLcZMv5tZitWoobGSaQQztQDC97lEJJh8U9OsUJ6JkLkyz_R8x39_PEgJ4IGx56I0Q5xpsJfMx89mhNz0aeeoeBFg0YgjuTNvCA2ecY3bY4gao9eHoNt03o0-Bsu7OKjy4P_IBt9gzIB0vPw0hSihhlgqerLtKQteePdkydhXRDqskunQr5iH3UljVpSPriMXTLZvcBSPhbwnmUjspop84MMZJHJ1EI"/>
-<div class="absolute top-4 right-4 bg-primary text-black font-bold p-2 neo-border">
-                            NEW
-                        </div>
+<!-- Card 1 -->
+<div class="group border-4-black bg-neo-lime flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+<div class="p-6 flex justify-between items-start border-b-4 border-black">
+<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Obsidian<br/>Night</h2>
+<span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">NEW</span>
 </div>
-<div class="p-6">
-<div class="flex justify-between items-start mb-4">
-<h3 class="text-3xl font-display font-black uppercase leading-none">Ozone <br/>Metallic</h3>
-<span class="text-2xl font-bold font-display">$185</span>
+<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+<img alt="Obsidian Night Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl grayscale contrast-125" data-alt="Minimalist black perfume bottle on lime background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrT_DcguIdU4yisX95q24doQKBukIM80oRn7K4mJoch6CY5_MnmDJoeL2o1P-ImHMKHTT8WXu-u4FoQNk77QBDOtoOdoa4qPNPd35dFXwEKgA6we4J4f5oMEWHvrlqRrxY1Mzz2dqXcdaOIQWKW4jFXnTwVT0k56ZTTwouI3svZdCtyi6VwS1_n-Sszyrfr12yIBV3thI1geTRnJjAXCBIVvv9XMQx5mohR0dz-Kh7ESBmWJCPZO7rfLBr4VhAIfDAqhn6sqUeI7Q"/>
 </div>
-<p class="text-zinc-600 dark:text-zinc-400 mb-8 font-medium">Top notes of cold steel, fresh rain, and electric current.</p>
-<button class="w-full neo-border py-4 font-black uppercase bg-black text-white dark:bg-primary dark:text-black hover:invert transition-all">
-                            Add to Cart
-                        </button>
+<div class="p-6 border-t-4 border-black bg-white space-y-4">
+<div class="flex justify-between font-extrabold text-xl">
+<span>50ML</span>
+<span>$145.00</span>
 </div>
-</div>
-</div>
-<div class="group">
-<div class="neo-border bg-white dark:bg-zinc-900 overflow-hidden neo-shadow group-hover:translate-x-2 group-hover:translate-y-2 group-hover:shadow-none transition-all duration-300">
-<div class="h-80 bg-zinc-200 dark:bg-zinc-800 border-b-4 border-black dark:border-primary relative overflow-hidden">
-<img alt="Brutalist perfume bottle" class="w-full h-full object-cover grayscale mix-blend-multiply group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJkJFKWtHZyTpLACEx3QAJ1VdamyWjq2_ZBEidsUV-3ZrPNoplOTxOBtJtE_hFdPUnzSy20rNwRlGGgrE5a4jmGlfwD33fApU7UpzhUldRQzJ27RM7OHg0f4jeMrHEc4Y85uOxG4HoDkR0T-becvWt_MCgBj0WfvxA530hGYocO79jPRGYdoyvscFO0OoF6mxewkhmV-Bd5qTf-L-PYNlRrRKSUkLGK-93Yz9XIEMRN7Raw9T6LNRtRj4Qz34rE7y-wUgXfYPP8vA"/>
-<div class="absolute top-4 right-4 bg-primary text-black font-bold p-2 neo-border">
-                            SOLD OUT
-                        </div>
-</div>
-<div class="p-6">
-<div class="flex justify-between items-start mb-4">
-<h3 class="text-3xl font-display font-black uppercase leading-none">Brutal <br/>Concrete</h3>
-<span class="text-2xl font-bold font-display">$210</span>
-</div>
-<p class="text-zinc-600 dark:text-zinc-400 mb-8 font-medium">Notes of wet cement, cedarwood, and urban dust.</p>
-<button class="w-full neo-border py-4 font-black uppercase bg-zinc-200 dark:bg-zinc-800 cursor-not-allowed opacity-50">
-                            Waitlist
-                        </button>
+<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                        View Details
+                    </button>
 </div>
 </div>
+<!-- Card 2 -->
+<div class="group border-4-black bg-neo-orange flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+<div class="p-6 flex justify-between items-start border-b-4 border-black">
+<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Solar<br/>Flare</h2>
+<span class="border-4 border-black bg-white px-3 py-1 font-bold text-sm">BESTSELLER</span>
 </div>
-<div class="group">
-<div class="neo-border bg-white dark:bg-zinc-900 overflow-hidden neo-shadow group-hover:translate-x-2 group-hover:translate-y-2 group-hover:shadow-none transition-all duration-300">
-<div class="h-80 bg-zinc-200 dark:bg-zinc-800 border-b-4 border-black dark:border-primary relative overflow-hidden">
-<img alt="Amber perfume" class="w-full h-full object-cover grayscale mix-blend-multiply group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5zBV5dEyicmG5wV6fUrn7IUckmmoYjqbVb5FzBtHBfCY3YLpD_8Ot-PFr51saIqH3lRHK9-CncU8Vx0Tkrr2L48TMHExJROHjgSsT3ntB4949gXpcuBgOs9hwzZFwdgVEjkiazEPkH-tYHMH6Gv1TJlyc6JcmZ_Y87o70AA8KjAsQTNzztiTe6N09solLq-o0FH8SPEzI0pAJ9YJI5PJ4q1TYSk5FkDvf8n1dLET7n18UwuS_ZHb7olU9zzytNIqlTAG_iJvUoD8"/>
+<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+<img alt="Solar Flare Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl contrast-150" data-alt="Clear glass perfume bottle with orange liquid" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL690zBM48FV7fRaP7YrMq2BgTHYdjtsKsPf8cC76eREHtQf8QPPb7_YQvT7xx2WruOvxSdhAI9bes0_tWvU4T4Du5TVDvanrV0sgp_Y--d6c4nOMQ5wCaE1NpTLEqmkZgrmvwoQPT9mZFu44Bxs3xBc1_HJU5unP49Sjwv9uLw548ONolF1fCeSnZWUctFnVVvQ2_pCGcaFo9onGp2-kwJDUKh5mTev33fVcR-FG3ebnCqXKRyq9i5cA4JY6fkoFJQHH39CKiTXk"/>
 </div>
-<div class="p-6">
-<div class="flex justify-between items-start mb-4">
-<h3 class="text-3xl font-display font-black uppercase leading-none">Amber <br/>Radiation</h3>
-<span class="text-2xl font-bold font-display">$160</span>
+<div class="p-6 border-t-4 border-black bg-white space-y-4">
+<div class="flex justify-between font-extrabold text-xl">
+<span>100ML</span>
+<span>$210.00</span>
 </div>
-<p class="text-zinc-600 dark:text-zinc-400 mb-8 font-medium">Glowing resin, burnt sugar, and solar warmth.</p>
-<button class="w-full neo-border py-4 font-black uppercase bg-black text-white dark:bg-primary dark:text-black hover:invert transition-all">
-                            Add to Cart
-                        </button>
-</div>
-</div>
-</div>
-</div>
-</section>
-<div class="bg-black py-6 border-y-4 border-primary overflow-hidden whitespace-nowrap">
-<div class="inline-block animate-marquee">
-<span class="text-primary font-display font-black text-4xl mx-8 uppercase">Limited Drops Only — Rare Ingredients — Artisanal Methods — Limited Drops Only — Rare Ingredients — Artisanal Methods — Limited Drops Only — Rare Ingredients — Artisanal Methods —</span>
-</div>
-<div class="inline-block animate-marquee">
-<span class="text-primary font-display font-black text-4xl mx-8 uppercase">Limited Drops Only — Rare Ingredients — Artisanal Methods — Limited Drops Only — Rare Ingredients — Artisanal Methods — Limited Drops Only — Rare Ingredients — Artisanal Methods —</span>
+<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                        View Details
+                    </button>
 </div>
 </div>
-<section class="max-w-[1440px] mx-auto p-6 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 border-b-4 border-black dark:border-primary">
-<div class="neo-border bg-primary p-12 flex flex-col justify-center neo-shadow">
-<h2 class="text-6xl font-display font-black uppercase mb-8 leading-none">The <br/>Community <br/>Vault</h2>
-<p class="text-xl font-bold mb-12 max-w-md">Our community votes on which discontinued scents get resurrected. Have your say in the future of fragrance.</p>
-<button class="bg-black text-white neo-border px-8 py-4 font-black uppercase self-start hover:bg-white hover:text-black transition-colors">
-                Enter The Vault
-            </button>
+<!-- Card 3 -->
+<div class="group border-4-black bg-neo-pink flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+<div class="p-6 flex justify-between items-start border-b-4 border-black">
+<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Velvet<br/>Dusk</h2>
+<span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">LIMITED</span>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div class="neo-border p-8 bg-white dark:bg-zinc-900 neo-shadow-small">
-<span class="material-symbols-outlined text-4xl mb-4 bg-primary p-2 neo-border">experiment</span>
-<h4 class="text-2xl font-display font-black uppercase mb-2">Molecular Lab</h4>
-<p class="font-medium">Synthesis of nature and machine. Pure high-performance extractions.</p>
+<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+<img alt="Velvet Dusk Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl brightness-90" data-alt="Tall sleek perfume bottle on pink background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkV9qfEmufEJOK0Z836kmWz5uuSFmI9dLkuQKn3nxG70TSEU6uNdqNpZqbyou7YLIbfD9BvbuadxQ1m-SuY53_t7IwwPcrFlClcY92fyhi4ptQcJE2cS9O81ytCsccNNLSGW-piZi1HuQ5z8aH52m9MSSWhcRTbsD0nYgyJTLJ1-ORjw1rnKu87jE8AlGf5SbAjlrSgvUfigWiF8kYi3rQUFCagkjmF9lO-SdyyfP_vC5vxMjrUulJrfTGeyJTpjmLD16e_iNjPxg"/>
 </div>
-<div class="neo-border p-8 bg-white dark:bg-zinc-900 neo-shadow-small">
-<span class="material-symbols-outlined text-4xl mb-4 bg-primary p-2 neo-border">eco</span>
-<h4 class="text-2xl font-display font-black uppercase mb-2">Bio-Sourced</h4>
-<p class="font-medium">100% ethical sourcing from regenerative micro-farms worldwide.</p>
+<div class="p-6 border-t-4 border-black bg-white space-y-4">
+<div class="flex justify-between font-extrabold text-xl">
+<span>50ML</span>
+<span>$185.00</span>
 </div>
-<div class="neo-border p-8 bg-white dark:bg-zinc-900 neo-shadow-small">
-<span class="material-symbols-outlined text-4xl mb-4 bg-primary p-2 neo-border">security</span>
-<h4 class="text-2xl font-display font-black uppercase mb-2">Verified Authenticity</h4>
-<p class="font-medium">Each bottle is serialized and authenticated via digital vault.</p>
-</div>
-<div class="neo-border p-8 bg-white dark:bg-zinc-900 neo-shadow-small">
-<span class="material-symbols-outlined text-4xl mb-4 bg-primary p-2 neo-border">rocket_launch</span>
-<h4 class="text-2xl font-display font-black uppercase mb-2">Rapid Drops</h4>
-<p class="font-medium">Fresh formulations released every first Monday of the month.</p>
+<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                        View Details
+                    </button>
 </div>
 </div>
-</section>
-<footer class="max-w-[1440px] mx-auto p-6 md:p-12 bg-white dark:bg-background-dark">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
-<div class="col-span-1 lg:col-span-2">
-<div class="text-6xl font-display font-black tracking-tighter mb-8">SILLAGE.</div>
-<p class="text-xl max-w-sm font-bold uppercase">Disrupting the industry one molecule at a time. The revolution will smell incredible.</p>
+<!-- Card 4 -->
+<div class="group border-4-black bg-neo-blue flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+<div class="p-6 flex justify-between items-start border-b-4 border-black">
+<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Arctic<br/>Mist</h2>
+<span class="border-4 border-black bg-white px-3 py-1 font-bold text-sm">REFRESH</span>
 </div>
+<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+<img alt="Arctic Mist Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl grayscale contrast-125" data-alt="Blue tinted glass bottle with silver cap" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_movqrFX0d4RhOQP0KY86mcm7dZi1HTWyrPQKuNfhYqqvgxKPlteiXnPOpL99T_GjosRiGLUwxg3rCn6Zl0Zdy5Ydq3mn3ER5R6Cz22Iu1TImqf6xZvQFXV68E2XcGdwFAGRyKyIkhubu16pQSrpSpjeMuxUi61dHy-jHe6YnvZdWbbGNDllY_zlx6j2gTFrzPW_rheMat3CUzywZy0XunFXFs5vvuj3KAz4am1ksa_M9JCdE-rg6-IPiY8XHGMiRY0Pbfh1BWVM"/>
+</div>
+<div class="p-6 border-t-4 border-black bg-white space-y-4">
+<div class="flex justify-between font-extrabold text-xl">
+<span>30ML</span>
+<span>$95.00</span>
+</div>
+<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                        View Details
+                    </button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group border-4-black bg-white flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+<div class="p-6 flex justify-between items-start border-b-4 border-black bg-primary">
+<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Concrete<br/>Rose</h2>
+<span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">NEW</span>
+</div>
+<div class="flex-grow flex items-center justify-center p-8 bg-gray-100">
+<img alt="Concrete Rose Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl" data-alt="Gray architectural perfume bottle design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6QnBlHJIEpJK0XS4LOoQKCLPs1aXfKPKRNnZe5ckxRruSvK_vEsEMK2hm6JlW0GN7UNIpvLu5YckMWfV3Srvav2Z1zD-75WzsMe_eEyJYqQwpyRkWcODFdmav5Ig-601tfSeFUl_gsryHSXDkY2j8nwIg-q9l1cTI6jiDcFG2TQposRiftRRa66X-kCxw1OeLa3T9cjJnOPuEraHxlbf4QlKUgImspU34L-qQd41dNBTwPmJD6Lucon-GFh4x6qXQJKe8ZkDCjcE"/>
+</div>
+<div class="p-6 border-t-4 border-black bg-white space-y-4">
+<div class="flex justify-between font-extrabold text-xl">
+<span>50ML</span>
+<span>$160.00</span>
+</div>
+<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                        View Details
+                    </button>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group border-4-black bg-black flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+<div class="p-6 flex justify-between items-start border-b-4 border-white/20">
+<h2 class="text-4xl font-black uppercase leading-none tracking-tighter text-white">Neon<br/>Amber</h2>
+<span class="border-4 border-white bg-white text-black px-3 py-1 font-bold text-sm">HOT</span>
+</div>
+<div class="flex-grow flex items-center justify-center p-8 bg-gradient-to-br from-primary/20 to-transparent">
+<img alt="Neon Amber Perfume Bottle" class="w-full h-80 object-contain drop-shadow-[0_0_15px_rgba(250,198,56,0.5)]" data-alt="Amber liquid bottle glowing on black background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvCqQclQFk9gEm-tdwOSqbwdPWc797yioFcoKzLnOqAKk0DoJG-4c0bDFKeZiHT2odR9CPPODYWAQBRQXD48FadQHHFjxVBZyGx1BfkFY3q9SqnqOeOuXGPmEaDzL6Ieakb7pWwuByNlS7ewo2bkflFySy7vC8bv1P89KN1h-70io2N8AIFTLcKr7zPHoAbenbym3wj9EfgelrNEcXkzjMntWsWR56VVSeF1Gx8vYaKQH_WJzgfiINixsdnnV2FOQOp4mUqZTNMJQ"/>
+</div>
+<div class="p-6 border-t-4 border-white/20 bg-zinc-900 space-y-4">
+<div class="flex justify-between font-extrabold text-xl text-white">
+<span>100ML</span>
+<span>$240.00</span>
+</div>
+<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                        View Details
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-12 bg-black text-white p-8 md:p-16 border-t-8 border-primary">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
 <div>
-<h5 class="font-black uppercase mb-6 text-zinc-400">Navigation</h5>
-<ul class="flex flex-col gap-4 font-bold uppercase">
-<li><a class="hover:underline decoration-2" href="#">Catalogue</a></li>
-<li><a class="hover:underline decoration-2" href="#">Marketplace</a></li>
-<li><a class="hover:underline decoration-2" href="#">Sustainability</a></li>
-<li><a class="hover:underline decoration-2" href="#">Archives</a></li>
+<h3 class="text-4xl font-black uppercase tracking-tighter mb-6">Join the Lab</h3>
+<p class="font-bold text-lg mb-6">Drop your email for exclusive discovery kit drops and limited editions.</p>
+<div class="flex">
+<input class="w-full border-4 border-white bg-transparent p-4 font-bold text-white placeholder-zinc-500 focus:ring-0 focus:outline-none" placeholder="YOUR@EMAIL.COM" type="email"/>
+<button class="bg-primary text-black font-black px-8 border-y-4 border-r-4 border-white uppercase hover:bg-white transition-colors">Join</button>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-black uppercase text-xl text-primary">Explore</h4>
+<ul class="font-bold space-y-2">
+<li><a class="hover:underline" href="#">THE COLLECTION</a></li>
+<li><a class="hover:underline" href="#">INGREDIENT GLOSSARY</a></li>
+<li><a class="hover:underline" href="#">MARKETPLACE</a></li>
+<li><a class="hover:underline" href="#">LAB JOURNALS</a></li>
 </ul>
 </div>
-<div>
-<h5 class="font-black uppercase mb-6 text-zinc-400">Join Us</h5>
-<form class="flex flex-col gap-4">
-<input class="neo-border bg-white dark:bg-zinc-800 p-4 font-bold focus:ring-0" placeholder="YOUR EMAIL" type="email"/>
-<button class="bg-primary text-black font-black uppercase p-4 neo-border neo-shadow-small hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
-                        Subscribe
-                    </button>
-</form>
+<div class="space-y-4">
+<h4 class="font-black uppercase text-xl text-primary">Connect</h4>
+<div class="flex gap-4">
+<a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all" href="#">INSTA</a>
+<a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all" href="#">TWTR</a>
+<a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all" href="#">TIKTK</a>
 </div>
-</div>
-<div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t-4 border-black dark:border-primary gap-4">
-<p class="font-bold">© 2024 SILLAGE LABS INC.</p>
-<div class="flex gap-8 font-bold uppercase text-sm">
-<a href="#">Instagram</a>
-<a href="#">Discord</a>
-<a href="#">Twitter</a>
-<a href="#">Terms</a>
+<p class="text-zinc-500 font-bold mt-8">©2024 SCENT.LAB ALL RIGHTS RESERVED. DESIGNED FOR THE BOLD.</p>
 </div>
 </div>
 </footer>
-<style>
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
-        }
-    </style>
-
 </body></html>
