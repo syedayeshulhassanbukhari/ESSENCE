@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 import 'providers/theme_provider.dart';
+import 'providers/responsive_provider.dart';
+import 'providers/auth_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +19,12 @@ Future<void> main() async {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ResponsiveProvider()),
+        Provider(create: (_) => AuthController()),
+      ],
       child: const ScentSwapApp(),
     ),
   );
@@ -40,12 +46,17 @@ class ScentSwapApp extends StatelessWidget {
           themeAnimationDuration: const Duration(milliseconds: 200),
           themeAnimationCurve: Curves.easeInOut,
           debugShowCheckedModeBanner: false,
+          builder: (context, child) {
+            final width = MediaQuery.sizeOf(context).width;
+            context.read<ResponsiveProvider>().updateWidth(width);
+            return child ?? const SizedBox.shrink();
+          },
           routes: {
             '/login': (context) => const LoginScreen(),
             '/register': (context) => const RegisterScreen(),
             '/home': (context) => const HomeScreen(),
             '/discover': (context) => const HomeScreen(),
-            '/marketplace': (context) => const MarketplaceScreen(),
+            '/marketplace': (context) => MarketplaceScreen(),
           },
           home: const _AuthGate(),
         );

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../theme/app_theme.dart';
 import '../providers/theme_provider.dart';
+import '../providers/responsive_provider.dart';
 import 'neo_widgets.dart';
 
 // ===== APP HEADER =====
@@ -16,7 +17,9 @@ class AppHeader extends StatelessWidget {
     final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
     // Discover.html nav: border is black; dark border is primary yellow
     final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
-    final isSmall = MediaQuery.of(context).size.width < 768;
+    final isSmall = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isSmall,
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -209,7 +212,9 @@ class AppFooter extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     // Discover.html footer: light border black; dark border primary yellow
     final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
-    final isSmall = MediaQuery.of(context).size.width < 768;
+    final isSmall = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isSmall,
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -339,8 +344,9 @@ class ResponsiveLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSmall = screenWidth < 640;
+    final isSmall = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isSmall,
+    );
 
     final defaultPadding = isSmall
         ? const EdgeInsets.all(AppTheme.spacing4)

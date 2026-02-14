@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import '../../theme/app_theme.dart';
 import '../../widgets/neo_widgets.dart';
+import '../../providers/auth_ui_provider.dart';
+import '../../providers/responsive_provider.dart';
+import '../../providers/auth_controller.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,9 +18,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
-  bool _isLoading = false;
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -29,111 +29,120 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final borderColor =
-        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
-    final isSmall = MediaQuery.of(context).size.width < 768;
+    return ChangeNotifierProvider(
+      create: (_) => AuthUiProvider(),
+      child: Builder(
+        builder: (context) {
+          final brightness = Theme.of(context).brightness;
+          final borderColor =
+              brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+          final isSmall = context.select<ResponsiveProvider, bool>(
+            (provider) => provider.isSmall,
+          );
 
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
-      body: isSmall
-          ? _buildMobileLayout(context)
-          : Row(
-              children: [
-                // Left Side - Image Section (same as login)
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppTheme.black,
-                      border: Border(
-                        right: BorderSide(
-                          color: borderColor,
-                          width: AppTheme.borderWidth,
-                        ),
-                      ),
-                    ),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.network(
-                              'https://lh3.googleusercontent.com/aida-public/AB6AXuBMdvwApHp3zBcymz7XT6oxbymkrSmImhI4gx9HzcYnEAu_xPQUXVUC-8nHfDStJb9efKpy_-I_VBu3yvqRvbQgo1CYIq_5gOdoQCoUYCHJIiN_9haWb-N_jLYkB4x7X-qZ94Mj4KUCECCYqHNaquj-78e92lQO5v2jyy8y9Kk3GHYRrx0Zew1st7_pHHcrP6S9MEqOD5ryTRjaDSumeuqb7E_-KU75w3kTNaCtmNLzSqllSxXt8Wq35R4foDwI7sg0jbtF4rULGmo',
-                              fit: BoxFit.cover,
-                            ),
-                            IgnorePointer(
-                              child: Opacity(
-                                opacity: 0.2,
-                                child: Image.network(
-                                  'https://lh3.googleusercontent.com/aida-public/AB6AXuDUZ1K6kRs0xs46m6YbFvvL9cXvZBVmBvEw_ZKcNsws0lWdcBOQRmBsUb0BiwzNZK-7Rmt0vnU3TYd_yfmN9K2Nrtxzs8L2Q6-r56VSteXSMv1d3b_Cy4MZB-3ApA1Eaz0G7L_YLx177TMZ-QEmapj_Pffh9Gje6fWuO1v2H-YplxBlhnVKBnCRJS-ykuQNm0t3Sy5cPV6jFSwWhPdKAyer75oEI91dnCuNI0Xw4_VLAFK_9a6h7Jx6w1zydhi7LmccGkwL91UBPHQ',
-                                  fit: BoxFit.cover,
-                                ),
+          return Scaffold(
+            backgroundColor: AppTheme.backgroundLight,
+            body: isSmall
+                ? _buildMobileLayout(context)
+                : Row(
+                    children: [
+                      // Left Side - Image Section (same as login)
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.black,
+                            border: Border(
+                              right: BorderSide(
+                                color: borderColor,
+                                width: AppTheme.borderWidth,
                               ),
                             ),
-                          ],
-                        ),
-                        // Logo
-                        Positioned(
-                          top: AppTheme.spacing4,
-                          left: AppTheme.spacing4,
-                          child: NeoCard(
-                            backgroundColor: AppTheme.white,
-                            shadow: true,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.flare, color: AppTheme.black),
-                                SizedBox(width: AppTheme.spacing2),
-                                Text(
-                                  'ESSENCE',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(
-                                        color: AppTheme.black,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
-                        // Bottom Tag
-                        Positioned(
-                          bottom: AppTheme.spacing4,
-                          left: AppTheme.spacing4,
-                          child: NeoCard(
-                            backgroundColor: AppTheme.primaryYellow,
-                            shadow: true,
-                            child: Text(
-                              'Join the Vault',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                    color: AppTheme.black,
-                                    fontStyle: FontStyle.italic,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  Image.network(
+                                    'https://lh3.googleusercontent.com/aida-public/AB6AXuBMdvwApHp3zBcymz7XT6oxbymkrSmImhI4gx9HzcYnEAu_xPQUXVUC-8nHfDStJb9efKpy_-I_VBu3yvqRvbQgo1CYIq_5gOdoQCoUYCHJIiN_9haWb-N_jLYkB4x7X-qZ94Mj4KUCECCYqHNaquj-78e92lQO5v2jyy8y9Kk3GHYRrx0Zew1st7_pHHcrP6S9MEqOD5ryTRjaDSumeuqb7E_-KU75w3kTNaCtmNLzSqllSxXt8Wq35R4foDwI7sg0jbtF4rULGmo',
+                                    fit: BoxFit.cover,
                                   ),
-                            ),
+                                  IgnorePointer(
+                                    child: Opacity(
+                                      opacity: 0.2,
+                                      child: Image.network(
+                                        'https://lh3.googleusercontent.com/aida-public/AB6AXuDUZ1K6kRs0xs46m6YbFvvL9cXvZBVmBvEw_ZKcNsws0lWdcBOQRmBsUb0BiwzNZK-7Rmt0vnU3TYd_yfmN9K2Nrtxzs8L2Q6-r56VSteXSMv1d3b_Cy4MZB-3ApA1Eaz0G7L_YLx177TMZ-QEmapj_Pffh9Gje6fWuO1v2H-YplxBlhnVKBnCRJS-ykuQNm0t3Sy5cPV6jFSwWhPdKAyer75oEI91dnCuNI0Xw4_VLAFK_9a6h7Jx6w1zydhi7LmccGkwL91UBPHQ',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // Logo
+                              Positioned(
+                                top: AppTheme.spacing4,
+                                left: AppTheme.spacing4,
+                                child: NeoCard(
+                                  backgroundColor: AppTheme.white,
+                                  shadow: true,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.flare, color: AppTheme.black),
+                                      SizedBox(width: AppTheme.spacing2),
+                                      Text(
+                                        'ESSENCE',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                              color: AppTheme.black,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              // Bottom Tag
+                              Positioned(
+                                bottom: AppTheme.spacing4,
+                                left: AppTheme.spacing4,
+                                child: NeoCard(
+                                  backgroundColor: AppTheme.primaryYellow,
+                                  shadow: true,
+                                  child: Text(
+                                    'Join the Vault',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(
+                                          color: AppTheme.black,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      // Right Side - Register Form
+                      Expanded(
+                        flex: 7,
+                        child: _buildRegisterForm(context),
+                      ),
+                    ],
                   ),
-                ),
-                // Right Side - Register Form
-                Expanded(
-                  flex: 7,
-                  child: _buildRegisterForm(context),
-                ),
-              ],
-            ),
+          );
+        },
+      ),
     );
   }
 
-  Future<void> _registerWithEmail() async {
+  Future<void> _registerWithEmail(BuildContext context) async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -143,20 +152,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    final ui = context.read<AuthUiProvider>();
+    ui.setLoading(true);
     try {
-      final credential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      await credential.user?.updateDisplayName(name);
-    } on FirebaseAuthException catch (e) {
-      _showError(_mapFirebaseError(e));
-    } catch (_) {
-      _showError('Something went wrong. Please try again.');
+      final error = await context.read<AuthController>().registerWithEmail(
+            name: name,
+            email: email,
+            password: password,
+          );
+      if (error != null) {
+        _showError(error);
+      }
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (!mounted) return;
+      ui.setLoading(false);
     }
   }
 
@@ -165,19 +174,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
-  }
-
-  String _mapFirebaseError(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'invalid-email':
-        return 'The email address is invalid.';
-      case 'email-already-in-use':
-        return 'An account already exists for that email.';
-      case 'weak-password':
-        return 'Password is too weak.';
-      default:
-        return 'Registration failed. Please try again.';
-    }
   }
 
   Widget _buildMobileLayout(BuildContext context) {
@@ -241,6 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final brightness = Theme.of(context).brightness;
     final textColor =
         brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final ui = context.watch<AuthUiProvider>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,16 +290,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
         NeoButton(
           label: 'Create Account',
           onPressed: () {
-            if (_isLoading) return;
-            _registerWithEmail();
+            if (ui.isLoading) return;
+            _registerWithEmail(context);
           },
           isFullWidth: true,
+          isLoading: ui.isLoading,
         ),
         SizedBox(height: AppTheme.spacing4),
         // Go to Login (named route)
         GestureDetector(
           onTap: () {
-            if (_isLoading) return;
+            if (ui.isLoading) return;
             Navigator.of(context).pushReplacementNamed('/login');
           },
           child: Text(

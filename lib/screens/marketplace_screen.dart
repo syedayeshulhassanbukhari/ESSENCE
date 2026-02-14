@@ -1,131 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/marketplace_product.dart';
+import '../providers/marketplace_catalog_provider.dart';
+import '../providers/marketplace_filter_provider.dart';
+import '../providers/responsive_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
 
-class MarketplaceScreen extends StatefulWidget {
-  const MarketplaceScreen({super.key});
-
-  @override
-  State<MarketplaceScreen> createState() => _MarketplaceScreenState();
-}
-
-class _MarketplaceScreenState extends State<MarketplaceScreen> {
-  String _selectedCategory = 'All Scents';
-  String _selectedIntensity = 'Subtle';
-  double _priceRange = 250;
-  String _sortBy = 'Newest First';
-
-  final List<String> _categories = [
-    'All Scents',
-    'Floral',
-    'Woody',
-    'Oriental',
-    'Fresh',
-  ];
-
-  final List<String> _intensities = [
-    'Subtle',
-    'Strong',
-    'Vibrant',
-    'Heavy',
-  ];
-
-  final List<String> _sortOptions = [
-    'Newest First',
-    'Price: Low-High',
-    'Most Intense',
-  ];
-
-  final List<Map<String, dynamic>> _products = [
-    {
-      'name': 'Electric Petal',
-      'category': 'Floral / Ozone / Neon',
-      'price': '\$120',
-      'bgColor': AppTheme.accentCyan,
-      'isBestSeller': false,
-    },
-    {
-      'name': 'Nuclear Amber',
-      'category': 'Resin / Smoke / Static',
-      'price': '\$185',
-      'bgColor': AppTheme.accentPink,
-      'isBestSeller': true,
-    },
-    {
-      'name': 'Void Water',
-      'category': 'Mineral / Cold / Salt',
-      'price': '\$95',
-      'bgColor': AppTheme.primaryYellow,
-      'isBestSeller': false,
-    },
-    {
-      'name': 'Glitch Moss',
-      'category': 'Damp Earth / Chrome / Ink',
-      'price': '\$145',
-      'bgColor': AppTheme.accentGreen,
-      'isBestSeller': false,
-    },
-    {
-      'name': 'Abstract Paper',
-      'category': 'White Musk / Wood / Fiber',
-      'price': '\$210',
-      'bgColor': AppTheme.white,
-      'isBestSeller': false,
-    },
-    {
-      'name': 'Black Hole',
-      'category': 'Darkness / Velvet / Gravity',
-      'price': '\$300',
-      'bgColor': AppTheme.black,
-      'isBestSeller': false,
-    },
-  ];
+class MarketplaceScreen extends StatelessWidget {
+  MarketplaceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
-    final bgColor = brightness == Brightness.light
-        ? AppTheme.backgroundLight
-        : AppTheme.backgroundDark;
-    final isSmall = MediaQuery.of(context).size.width < 640;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MarketplaceFilterProvider()),
+        Provider(create: (_) => MarketplaceCatalogProvider()),
+      ],
+      child: Builder(
+        builder: (context) {
+          final brightness = Theme.of(context).brightness;
+          final bgColor = brightness == Brightness.light
+              ? AppTheme.backgroundLight
+              : AppTheme.backgroundDark;
+          final isSmall = context.select<ResponsiveProvider, bool>(
+            (provider) => provider.isSmall,
+          );
+          final filters = context.watch<MarketplaceFilterProvider>();
+          final catalog = context.watch<MarketplaceCatalogProvider>();
+          final products = filters.applyFilters(catalog.products);
 
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const AppHeader(),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppTheme.spacing4,
-                vertical: AppTheme.spacing6,
-              ),
-              child: Row(
+          return Scaffold(
+            backgroundColor: bgColor,
+            body: SingleChildScrollView(
+              child: Column(
                 children: [
-                  // Sidebar (Desktop Only)
-                  if (!isSmall)
-                    Expanded(
-                      flex: 2,
-                      child: _buildFiltersSidebar(context),
+                  const AppHeader(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppTheme.spacing4,
+                      vertical: AppTheme.spacing6,
                     ),
-                  if (!isSmall) SizedBox(width: AppTheme.spacing6),
-                  // Products Grid
-                  Expanded(
-                    flex: 3,
-                    child: _buildProductsSection(context, isSmall),
+                    child: Row(
+                      children: [
+                        // Sidebar (Desktop Only)
+                        if (!isSmall)
+                          Expanded(
+                            flex: 2,
+                            child: _buildFiltersSidebar(context, filters),
+                          ),
+                        if (!isSmall) SizedBox(width: AppTheme.spacing6),
+                        // Products Grid
+                        Expanded(
+                          flex: 3,
+                          child: _buildProductsSection(
+                            context,
+                            isSmall,
+                            filters,
+                            products,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  const AppFooter(),
                 ],
               ),
             ),
-            const AppFooter(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildFiltersSidebar(BuildContext context) {
+  Widget _buildFiltersSidebar(
+    BuildContext context,
+    MarketplaceFilterProvider filters,
+  ) {
     final brightness = Theme.of(context).brightness;
     final textColor =
         brightness == Brightness.light ? AppTheme.black : AppTheme.white;
@@ -135,24 +87,25 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
       spacing: AppTheme.spacing6,
       children: [
         Text(
-          'FILTERS',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          'Filters',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: textColor,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w900,
+                fontStyle: FontStyle.italic,
               ),
         ),
         // Category
         _buildFilterSection(
           context,
           'CATEGORY',
-          _categories,
-          _selectedCategory,
-          (value) => setState(() => _selectedCategory = value),
+          MarketplaceFilterProvider.categories,
+          filters.selectedCategory,
+          (value) => filters.setSelectedCategory(value),
         ),
         // Intensity
-        _buildIntensityGrid(context),
+        _buildIntensityGrid(context, filters),
         // Price Range
-        _buildPriceRange(context),
+        _buildPriceRange(context, filters),
       ],
     );
   }
@@ -182,12 +135,14 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             onTap: () => onChanged(option),
             child: NeoCard(
               backgroundColor: isSelected ? AppTheme.primaryYellow : null,
+              shadow: isSelected,
+              shadowOffset: AppTheme.shadowSmall,
               padding: const EdgeInsets.symmetric(
                 horizontal: AppTheme.spacing4,
                 vertical: AppTheme.spacing2,
               ),
               child: Text(
-                option,
+                option.toUpperCase(),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: isSelected ? AppTheme.black : textColor,
                       fontWeight: FontWeight.w600,
@@ -200,7 +155,14 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     );
   }
 
-  Widget _buildIntensityGrid(BuildContext context) {
+  Widget _buildIntensityGrid(
+    BuildContext context,
+    MarketplaceFilterProvider filters,
+  ) {
+    final brightness = Theme.of(context).brightness;
+    final borderColor =
+        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: AppTheme.spacing2,
@@ -209,37 +171,57 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           'INTENSITY',
           style: Theme.of(context).textTheme.labelLarge,
         ),
-        GridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: AppTheme.spacing2,
-          crossAxisSpacing: AppTheme.spacing2,
+        GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: AppTheme.spacing2,
+            crossAxisSpacing: AppTheme.spacing2,
+            // Approximate Tailwind py-2 button height
+            mainAxisExtent: 36,
+          ),
+          itemCount: MarketplaceFilterProvider.intensities.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: _intensities.map((intensity) {
-            final isSelected = intensity == _selectedIntensity;
+          itemBuilder: (context, index) {
+            final intensity = MarketplaceFilterProvider.intensities[index];
+            final isSelected = intensity == filters.selectedIntensity;
             return GestureDetector(
-              onTap: () => setState(() => _selectedIntensity = intensity),
-              child: NeoCard(
-                backgroundColor: isSelected ? AppTheme.black : null,
-                padding: const EdgeInsets.all(AppTheme.spacing2),
+              onTap: () => filters.setSelectedIntensity(intensity),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.spacing2,
+                  vertical: AppTheme.spacing2 * 0.75,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? AppTheme.black : Colors.transparent,
+                  border: Border.all(
+                    color: borderColor,
+                    width: AppTheme.borderWidth,
+                  ),
+                ),
                 child: Center(
                   child: Text(
-                    intensity,
+                    intensity.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: isSelected ? AppTheme.white : null,
-                          fontSize: 10,
+                          color:
+                              isSelected ? AppTheme.white : borderColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
                         ),
                   ),
                 ),
               ),
             );
-          }).toList(),
+          },
         ),
       ],
     );
   }
 
-  Widget _buildPriceRange(BuildContext context) {
+  Widget _buildPriceRange(
+    BuildContext context,
+    MarketplaceFilterProvider filters,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: AppTheme.spacing2,
@@ -249,10 +231,10 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           style: Theme.of(context).textTheme.labelLarge,
         ),
         Slider(
-          value: _priceRange,
+          value: filters.priceRange,
           min: 0,
           max: 500,
-          onChanged: (value) => setState(() => _priceRange = value),
+          onChanged: (value) => filters.setPriceRange(value),
           activeColor: AppTheme.primaryYellow,
         ),
         Row(
@@ -263,7 +245,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
               style: Theme.of(context).textTheme.labelSmall,
             ),
             Text(
-              '\$${_priceRange.toInt()}',
+              '\$500+',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     fontStyle: FontStyle.italic,
                   ),
@@ -274,10 +256,21 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     );
   }
 
-  Widget _buildProductsSection(BuildContext context, bool isSmall) {
+  Widget _buildProductsSection(
+    BuildContext context,
+    bool isSmall,
+    MarketplaceFilterProvider filters,
+    List<MarketplaceProduct> products,
+  ) {
     final brightness = Theme.of(context).brightness;
     final textColor =
         brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+    final isLarge = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isLarge,
+    );
+
+    final accentColor =
+        brightness == Brightness.light ? AppTheme.accentPink : AppTheme.accentCyan;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,17 +281,32 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: AppTheme.spacing2,
           children: [
-            NeoBadge(
-              label: 'Curated Collection',
-              backgroundColor: AppTheme.accentPink,
-              textColor: AppTheme.white,
-            ),
             Text(
-              'Catalog.24',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: textColor,
-                    fontWeight: FontWeight.w800,
+              'Curated Collection'.toUpperCase(),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: accentColor,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 3,
+                    fontSize: 12,
                   ),
+            ),
+            RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                      color: textColor,
+                      fontWeight: FontWeight.w900,
+                      fontSize: isLarge ? 96 : 60,
+                      height: 0.95,
+                      letterSpacing: -1,
+                    ),
+                children: [
+                  const TextSpan(text: 'Catalog'),
+                  TextSpan(
+                    text: '.24',
+                    style: TextStyle(color: accentColor),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -308,26 +316,32 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           child: Row(
             children: [
               Text(
-                'Sort by:',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+                'Sort by:'.toUpperCase(),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1,
                     ),
               ),
               SizedBox(width: AppTheme.spacing4),
               Expanded(
                 child: DropdownButton<String>(
-                  value: _sortBy,
+                  value: filters.sortBy,
                   isExpanded: true,
                   underline: SizedBox(),
-                  items: _sortOptions
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1,
+                        color: textColor,
+                      ),
+                  items: MarketplaceFilterProvider.sortOptions
                       .map((option) => DropdownMenuItem(
                             value: option,
-                            child: Text(option),
+                            child: Text(option.toUpperCase()),
                           ))
                       .toList(),
                   onChanged: (value) {
                     if (value != null) {
-                      setState(() => _sortBy = value);
+                      filters.setSortBy(value);
                     }
                   },
                 ),
@@ -342,9 +356,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           crossAxisSpacing: AppTheme.spacing6,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: _products.map((product) {
-            return _buildProductCard(context, product);
-          }).toList(),
+          children: products
+              .map((product) => _MarketplaceProductCard(product: product))
+              .toList(),
         ),
         // Load More Button
         Center(
@@ -352,84 +366,153 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             label: 'Load More Entries +',
             onPressed: () {},
             italic: true,
+            height: 64,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppTheme.spacing8,
+            ),
+            textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
             // Use default height to stay consistent with other buttons
             // and avoid oversized CTAs on this page.
+          ),
+        ),
+        Center(
+          child: NeoButton(
+            label: 'Add Your Perfume',
+            onPressed: () {},
+            backgroundColor: AppTheme.white,
+            textColor: AppTheme.black,
+            italic: true,
+            height: 56,
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppTheme.spacing8,
+            ),
+            textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
           ),
         ),
         SizedBox(height: AppTheme.spacing6),
       ],
     );
   }
+}
 
-  Widget _buildProductCard(BuildContext context, Map<String, dynamic> product) {
+class _MarketplaceProductCard extends StatelessWidget {
+  final MarketplaceProduct product;
+
+  const _MarketplaceProductCard({required this.product});
+
+  @override
+  Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final textColor =
+    final defaultTextColor =
         brightness == Brightness.light ? AppTheme.black : AppTheme.white;
 
+    final Color bgColor = product.bgColor;
+    final String imageUrl = product.imageUrl;
+    final bool isBestSeller = product.isBestSeller;
+
+    // Ensure good contrast on very dark backgrounds
+    final Color textColor =
+        (bgColor == AppTheme.black && brightness == Brightness.light)
+            ? AppTheme.white
+            : defaultTextColor;
+
     return NeoCard(
-      backgroundColor: product['bgColor'],
+      backgroundColor: bgColor,
       padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image placeholder
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: textColor,
-                  width: AppTheme.borderWidth,
+          SizedBox(
+            height: 220,
+            width: double.infinity,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
                 ),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                '[Image]',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+                Positioned(
+                  top: AppTheme.spacing2,
+                  right: AppTheme.spacing2,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppTheme.spacing4,
+                      vertical: AppTheme.spacing2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border.all(
+                        color: defaultTextColor,
+                        width: AppTheme.borderWidth,
+                      ),
+                    ),
+                    child: Text(
+                        product.priceLabel,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: AppTheme.black,
+                          ),
+                    ),
+                  ),
+                ),
+                if (isBestSeller)
+                  Positioned(
+                    bottom: AppTheme.spacing2,
+                    left: AppTheme.spacing2,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppTheme.spacing2,
+                        vertical: AppTheme.spacing2 / 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryYellow,
+                        border: Border.all(
+                          color: defaultTextColor,
+                          width: AppTheme.borderWidth,
+                        ),
+                      ),
+                      child: Text(
+                        'Best Seller'.toUpperCase(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.black,
+                            ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
-          // Product info
           Padding(
             padding: const EdgeInsets.all(AppTheme.spacing4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: AppTheme.spacing2,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        product['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: textColor,
-                              fontWeight: FontWeight.w800,
-                            ),
-                      ),
-                    ),
-                    Text(
-                      product['price'],
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: textColor,
-                            fontWeight: FontWeight.w900,
-                          ),
-                    ),
-                  ],
-                ),
-                if (product['isBestSeller'])
-                  NeoBadge(
-                    label: 'Best Seller',
-                    backgroundColor: AppTheme.primaryYellow,
-                    textColor: AppTheme.black,
-                  ),
                 Text(
-                  product['category'],
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  product.name,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: textColor,
+                        fontWeight: FontWeight.w900,
+                        fontStyle: FontStyle.italic,
                       ),
-                  maxLines: 2,
+                ),
+                Text(
+                  product.category,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: textColor.withValues(
+                          alpha: 0.7,
+                        ),
+                        fontWeight: FontWeight.w700,
+                      ),
                 ),
                 SizedBox(height: AppTheme.spacing2),
                 NeoButton(

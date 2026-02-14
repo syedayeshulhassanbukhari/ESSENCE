@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
 import '../widgets/marquee_text.dart';
+import '../providers/responsive_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -38,12 +40,12 @@ Widget _buildHeroSection(BuildContext context) {
       brightness == Brightness.light ? AppTheme.black : AppTheme.white;
   final joinBackground =
       brightness == Brightness.light ? AppTheme.white : AppTheme.zinc800;
-  final width = MediaQuery.of(context).size.width;
-  final isSmall = width < 768;
-  final isWide = width >= 1024;
+  final responsive = context.watch<ResponsiveProvider>();
+  final isSmall = responsive.isSmall;
+  final isWide = responsive.isLarge;
 
   // Match HTML: text-6xl md:text-9xl, font-display (Syne), uppercase, tight leading
-  final bool isMdUp = width >= 768;
+  final bool isMdUp = responsive.isMedium || responsive.isLarge;
   final double heroFontSize = isMdUp ? 96 : 60;
   final TextStyle heroHeadingStyle = GoogleFonts.syne(
     fontSize: heroFontSize,
@@ -242,7 +244,9 @@ Widget _buildHeroImageCard(BuildContext context) {
   Widget _buildFeaturedSection(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
-    final isSmall = MediaQuery.of(context).size.width < 768;
+    final isSmall = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isSmall,
+    );
 
     return ResponsiveLayout(
       child: Padding(
@@ -255,7 +259,7 @@ Widget _buildHeroImageCard(BuildContext context) {
             Text(
               'DISCOVER YOUR SCENT',
               style: GoogleFonts.syne(
-                fontSize: MediaQuery.of(context).size.width >= 768 ? 64 : 48,
+                fontSize: isSmall ? 48 : 64,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -1.0,
                 color: textColor,
@@ -397,7 +401,9 @@ Widget _buildHeroImageCard(BuildContext context) {
   }
 
   Widget _buildCommunitySection(BuildContext context) {
-    final isSmall = MediaQuery.of(context).size.width < 768;
+    final isSmall = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isSmall,
+    );
 
     return ResponsiveLayout(
       child: Padding(
@@ -589,7 +595,9 @@ Widget _buildHeroImageCard(BuildContext context) {
     final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
     // Newsletter input border: black in light mode, primary yellow in dark mode like discover.html
     final borderColor = brightness == Brightness.light ? AppTheme.black : AppTheme.primaryYellow;
-    final isSmall = MediaQuery.of(context).size.width < 640;
+    final isSmall = context.select<ResponsiveProvider, bool>(
+      (provider) => provider.isSmall,
+    );
 
     return ResponsiveLayout(
       child: Padding(
