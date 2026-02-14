@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../theme/app_theme.dart';
 import '../providers/theme_provider.dart';
@@ -25,9 +26,9 @@ class AppHeader extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: borderColor, width: AppTheme.borderWidth)),
       ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppTheme.spacing4,
-        vertical: AppTheme.spacing4,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppTheme.spacing4.w,
+        vertical: AppTheme.spacing4.h,
       ),
       child: Row(
         children: [
@@ -36,11 +37,11 @@ class AppHeader extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   color: textColor,
                   fontStyle: FontStyle.italic,
-                  fontSize: isSmall ? 28 : 36,
+                  fontSize: (isSmall ? 28 : 36).sp,
                 ),
           ),
           if (!isSmall) ...[
-            SizedBox(width: AppTheme.spacing6),
+            SizedBox(width: AppTheme.spacing6.w),
             ..._buildNavButtons(context),
           ],
           const Spacer(),
@@ -58,7 +59,7 @@ class AppHeader extends StatelessWidget {
               );
             },
           ),
-          SizedBox(width: AppTheme.spacing2),
+          SizedBox(width: AppTheme.spacing2.w),
           const _UserProfileAvatar(),
         ],
       ),
@@ -86,16 +87,16 @@ class AppHeader extends StatelessWidget {
     return items
         .map(
           (item) => Padding(
-            padding: const EdgeInsets.only(right: AppTheme.spacing2),
+            padding: EdgeInsets.only(right: AppTheme.spacing2.w),
             child: NeoButton(
               label: item['label'] as String,
               onPressed: () => _onNavTap(context, item['route'] as String),
               backgroundColor: AppTheme.white,
               textColor: AppTheme.black,
-              height: 40,
+              height: 40.h,
               textStyle: navTextStyle,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppTheme.spacing4,
+              padding: EdgeInsets.symmetric(
+                horizontal: AppTheme.spacing4.w,
               ),
             ),
           ),
@@ -118,8 +119,8 @@ class _UserProfileAvatar extends StatelessWidget {
 
     final photoUrl = user?.photoURL;
     final avatar = Container(
-      width: 48,
-      height: 48,
+      width: 48.w,
+      height: 48.w,
       decoration: BoxDecoration(
         color: bgColor,
         border: Border.all(color: borderColor, width: AppTheme.borderWidth),
@@ -131,21 +132,21 @@ class _UserProfileAvatar extends StatelessWidget {
               ? Image.network(
                   photoUrl,
                   fit: BoxFit.cover,
-                  width: 40,
-                  height: 40,
+                  width: 40.w,
+                  height: 40.w,
                   errorBuilder: (context, error, stackTrace) => Icon(
                     Icons.person,
                     color: brightness == Brightness.light
                         ? AppTheme.black
                         : AppTheme.white,
-                    size: 24,
+                    size: 24.sp,
                   ),
                 )
               : Icon(
                   Icons.person,
                   color:
                       brightness == Brightness.light ? AppTheme.black : AppTheme.white,
-                  size: 24,
+                  size: 24.sp,
                 ),
         ),
       ),
@@ -220,7 +221,7 @@ class AppFooter extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: borderColor, width: AppTheme.borderWidth)),
       ),
-      padding: const EdgeInsets.all(AppTheme.spacing6),
+      padding: EdgeInsets.all(AppTheme.spacing6.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -239,7 +240,7 @@ class AppFooter extends StatelessWidget {
                               fontStyle: FontStyle.italic,
                             ),
                       ),
-                      SizedBox(height: AppTheme.spacing4),
+                      SizedBox(height: AppTheme.spacing4.h),
                       Text(
                         'Disrupting the industry one molecule at a time. The revolution will smell incredible.',
                         style: Theme.of(context).textTheme.bodyMedium,
@@ -248,11 +249,11 @@ class AppFooter extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: AppTheme.spacing8),
+                SizedBox(width: AppTheme.spacing8.w),
                 Expanded(
                   child: _buildFooterColumn(context, 'NAVIGATION', ['Archive', 'Wholesale', 'Collaborations', 'Careers']),
                 ),
-                SizedBox(width: AppTheme.spacing8),
+                SizedBox(width: AppTheme.spacing8.w),
                 Expanded(
                   child: _buildFooterColumn(context, 'SOCIALS', ['Instagram', 'TikTok', 'Behance', 'Twitter']),
                 ),
@@ -268,16 +269,16 @@ class AppFooter extends StatelessWidget {
                         fontStyle: FontStyle.italic,
                       ),
                 ),
-                SizedBox(height: AppTheme.spacing4),
+                SizedBox(height: AppTheme.spacing4.h),
                 Text(
                   'Disrupting the industry. The revolution will smell incredible.',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
-          SizedBox(height: AppTheme.spacing6),
+          SizedBox(height: AppTheme.spacing6.h),
           Divider(thickness: AppTheme.borderWidth, color: borderColor),
-          SizedBox(height: AppTheme.spacing4),
+          SizedBox(height: AppTheme.spacing4.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -291,7 +292,7 @@ class AppFooter extends StatelessWidget {
                 Row(
                   children: [
                     _buildFooterLink(context, 'Privacy'),
-                    SizedBox(width: AppTheme.spacing4),
+                    SizedBox(width: AppTheme.spacing4.w),
                     _buildFooterLink(context, 'Terms'),
                   ],
                 ),
@@ -310,9 +311,9 @@ class AppFooter extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.labelMedium,
         ),
-        SizedBox(height: AppTheme.spacing2),
+        SizedBox(height: AppTheme.spacing2.h),
         ...items.map((item) => Padding(
-          padding: const EdgeInsets.only(bottom: AppTheme.spacing2),
+          padding: EdgeInsets.only(bottom: AppTheme.spacing2.h),
           child: _buildFooterLink(context, item),
         )),
       ],
@@ -349,8 +350,8 @@ class ResponsiveLayout extends StatelessWidget {
     );
 
     final defaultPadding = isSmall
-        ? const EdgeInsets.all(AppTheme.spacing4)
-        : const EdgeInsets.all(AppTheme.spacing6);
+      ? EdgeInsets.all(AppTheme.spacing4.w)
+      : EdgeInsets.all(AppTheme.spacing6.w);
 
     return Center(
       child: ConstrainedBox(

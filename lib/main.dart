@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scentswapwebsite/screens/auth/login_screen.dart';
 import 'package:scentswapwebsite/screens/auth/register_screen.dart';
+import 'package:scentswapwebsite/screens/discover_screen.dart';
 import 'package:scentswapwebsite/screens/home_screen.dart';
 import 'package:scentswapwebsite/screens/marketplace_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,28 +39,35 @@ class ScentSwapApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, _) {
-        return MaterialApp(
-          title: 'ESSENCE - Perfume Marketplace',
-          theme: AppTheme.lightTheme(),
-          darkTheme: AppTheme.darkTheme(),
-          themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          // Keep a short, smooth theme transition
-          themeAnimationDuration: const Duration(milliseconds: 200),
-          themeAnimationCurve: Curves.easeInOut,
-          debugShowCheckedModeBanner: false,
+        return ScreenUtilInit(
+          designSize: const Size(1440, 900),
+          minTextAdapt: true,
+          splitScreenMode: true,
           builder: (context, child) {
-            final width = MediaQuery.sizeOf(context).width;
-            context.read<ResponsiveProvider>().updateWidth(width);
-            return child ?? const SizedBox.shrink();
+            return MaterialApp(
+              title: 'ESSENCE - Perfume Marketplace',
+              theme: AppTheme.lightTheme(),
+              darkTheme: AppTheme.darkTheme(),
+              themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              // Keep a short, smooth theme transition
+              themeAnimationDuration: const Duration(milliseconds: 200),
+              themeAnimationCurve: Curves.easeInOut,
+              debugShowCheckedModeBanner: false,
+              builder: (context, child) {
+                final width = MediaQuery.sizeOf(context).width;
+                context.read<ResponsiveProvider>().updateWidth(width);
+                return child ?? const SizedBox.shrink();
+              },
+              routes: {
+                '/login': (context) => const LoginScreen(),
+                '/register': (context) => const RegisterScreen(),
+                '/home': (context) => const HomeScreen(),
+                '/discover': (context) => const DiscoverScreen(),
+                '/marketplace': (context) => MarketplaceScreen(),
+              },
+              home: const _AuthGate(),
+            );
           },
-          routes: {
-            '/login': (context) => const LoginScreen(),
-            '/register': (context) => const RegisterScreen(),
-            '/home': (context) => const HomeScreen(),
-            '/discover': (context) => const HomeScreen(),
-            '/marketplace': (context) => MarketplaceScreen(),
-          },
-          home: const _AuthGate(),
         );
       },
     );

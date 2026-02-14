@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/foundation.dart';
 import '../models/marketplace_product.dart';
 import '../providers/marketplace_catalog_provider.dart';
 import '../providers/marketplace_filter_provider.dart';
@@ -9,7 +11,10 @@ import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
 
 class MarketplaceScreen extends StatelessWidget {
-  MarketplaceScreen({super.key});
+  MarketplaceScreen({super.key, this.header, this.footer});
+
+  final Widget? header;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -24,49 +29,88 @@ class MarketplaceScreen extends StatelessWidget {
           final bgColor = brightness == Brightness.light
               ? AppTheme.backgroundLight
               : AppTheme.backgroundDark;
-          final isSmall = context.select<ResponsiveProvider, bool>(
-            (provider) => provider.isSmall,
-          );
+          final responsive = context.watch<ResponsiveProvider>();
+          final isSmall = responsive.isSmall;
+          final isMedium = responsive.isMedium;
+          final isLarge = responsive.isLarge;
           final filters = context.watch<MarketplaceFilterProvider>();
           final catalog = context.watch<MarketplaceCatalogProvider>();
           final products = filters.applyFilters(catalog.products);
+          final sidebarWidth = isLarge ? 320.w : 260.w;
+
+          final headerWidget = header ?? const AppHeader();
+          final footerWidget = footer ?? const AppFooter();
 
           return Scaffold(
             backgroundColor: bgColor,
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const AppHeader(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppTheme.spacing4,
-                      vertical: AppTheme.spacing6,
-                    ),
-                    child: Row(
-                      children: [
-                        // Sidebar (Desktop Only)
-                        if (!isSmall)
-                          Expanded(
-                            flex: 2,
-                            child: _buildFiltersSidebar(context, filters),
-                          ),
-                        if (!isSmall) SizedBox(width: AppTheme.spacing6),
-                        // Products Grid
-                        Expanded(
-                          flex: 3,
-                          child: _buildProductsSection(
-                            context,
-                            isSmall,
-                            filters,
-                            products,
-                          ),
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      headerWidget,
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppTheme.spacing4.w,
+                          vertical: AppTheme.spacing6.h,
                         ),
-                      ],
+                        child: isSmall
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildMobileFiltersPanel(context, filters),
+                                  SizedBox(height: AppTheme.spacing6.h),
+                                  _buildProductsSection(
+                                    context,
+                                    isSmall,
+                                    filters,
+                                    products,
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Sidebar (Desktop/Tablet)
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: sidebarWidth,
+                                    ),
+                                    child: _buildFiltersSidebar(
+                                      context,
+                                      filters,
+                                      showTitle: true,
+                                    ),
+                                  ),
+                                  SizedBox(width: AppTheme.spacing6.w),
+                                  // Products Grid
+                                  Expanded(
+                                    child: _buildProductsSection(
+                                      context,
+                                      isSmall,
+                                      filters,
+                                      products,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                      footerWidget,
+                    ],
+                  ),
+                ),
+                if (kDebugMode)
+                  Positioned(
+                    right: AppTheme.spacing4.w,
+                    bottom: AppTheme.spacing4.h,
+                    child: _buildDebugSizeBadge(
+                      context,
+                      isSmall: isSmall,
+                      isMedium: isMedium,
+                      isLarge: isLarge,
                     ),
                   ),
-                  const AppFooter(),
-                ],
-              ),
+              ],
             ),
           );
         },
@@ -74,9 +118,35 @@ class MarketplaceScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildDebugSizeBadge(
+    BuildContext context, {
+    required bool isSmall,
+    required bool isMedium,
+    required bool isLarge,
+  }) {
+    final size = MediaQuery.sizeOf(context);
+    final label = isSmall ? 'SM' : (isMedium ? 'MD' : 'LG');
+
+    return NeoCard(
+      backgroundColor: AppTheme.white,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppTheme.spacing4.w,
+        vertical: AppTheme.spacing2.h,
+      ),
+      child: Text(
+        '${size.width.toStringAsFixed(0)}x${size.height.toStringAsFixed(0)} $label',
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: AppTheme.black,
+              fontWeight: FontWeight.w700,
+            ),
+      ),
+    );
+  }
+
   Widget _buildFiltersSidebar(
     BuildContext context,
     MarketplaceFilterProvider filters,
+    {required bool showTitle}
   ) {
     final brightness = Theme.of(context).brightness;
     final textColor =
@@ -86,14 +156,15 @@ class MarketplaceScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: AppTheme.spacing6,
       children: [
-        Text(
-          'Filters',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: textColor,
-                fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
-              ),
-        ),
+        if (showTitle)
+          Text(
+            'Filters',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: textColor,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
         // Category
         _buildFilterSection(
           context,
@@ -107,6 +178,38 @@ class MarketplaceScreen extends StatelessWidget {
         // Price Range
         _buildPriceRange(context, filters),
       ],
+    );
+  }
+
+  Widget _buildMobileFiltersPanel(
+    BuildContext context,
+    MarketplaceFilterProvider filters,
+  ) {
+    final brightness = Theme.of(context).brightness;
+    final textColor =
+        brightness == Brightness.light ? AppTheme.black : AppTheme.white;
+
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: NeoCard(
+        padding: EdgeInsets.zero,
+        child: ExpansionTile(
+          title: Text(
+            'Filters',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: textColor,
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+          childrenPadding: EdgeInsets.symmetric(
+            horizontal: AppTheme.spacing4.w,
+            vertical: AppTheme.spacing4.h,
+          ),
+          children: [
+            _buildFiltersSidebar(context, filters, showTitle: false),
+          ],
+        ),
+      ),
     );
   }
 
@@ -187,27 +290,32 @@ class MarketplaceScreen extends StatelessWidget {
             final isSelected = intensity == filters.selectedIntensity;
             return GestureDetector(
               onTap: () => filters.setSelectedIntensity(intensity),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppTheme.spacing2,
-                  vertical: AppTheme.spacing2 * 0.75,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppTheme.black : Colors.transparent,
-                  border: Border.all(
-                    color: borderColor,
-                    width: AppTheme.borderWidth,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    intensity.toUpperCase(),
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color:
-                              isSelected ? AppTheme.white : borderColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                        ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 160.w),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppTheme.spacing2,
+                      vertical: AppTheme.spacing2 * 0.75,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppTheme.black : Colors.transparent,
+                      border: Border.all(
+                        color: borderColor,
+                        width: AppTheme.borderWidth,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        intensity.toUpperCase(),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color:
+                                  isSelected ? AppTheme.white : borderColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                            ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -265,9 +373,9 @@ class MarketplaceScreen extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     final textColor =
         brightness == Brightness.light ? AppTheme.black : AppTheme.white;
-    final isLarge = context.select<ResponsiveProvider, bool>(
-      (provider) => provider.isLarge,
-    );
+    final responsive = context.watch<ResponsiveProvider>();
+    final isLarge = responsive.isLarge;
+    final isMedium = responsive.isMedium;
 
     final accentColor =
         brightness == Brightness.light ? AppTheme.accentPink : AppTheme.accentCyan;
@@ -351,7 +459,8 @@ class MarketplaceScreen extends StatelessWidget {
         ),
         // Products Grid
         GridView.count(
-          crossAxisCount: isSmall ? 1 : 3,
+          crossAxisCount: isSmall ? 1 : (isMedium ? 2 : 3),
+          childAspectRatio: isSmall ? 0.9 : (isMedium ? 0.8 : 0.75),
           mainAxisSpacing: AppTheme.spacing6,
           crossAxisSpacing: AppTheme.spacing6,
           shrinkWrap: true,

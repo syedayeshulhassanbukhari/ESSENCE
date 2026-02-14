@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/layout_widgets.dart';
@@ -46,7 +47,7 @@ Widget _buildHeroSection(BuildContext context) {
 
   // Match HTML: text-6xl md:text-9xl, font-display (Syne), uppercase, tight leading
   final bool isMdUp = responsive.isMedium || responsive.isLarge;
-  final double heroFontSize = isMdUp ? 96 : 60;
+  final double heroFontSize = isMdUp ? 96.sp : 60.sp;
   final TextStyle heroHeadingStyle = GoogleFonts.syne(
     fontSize: heroFontSize,
     fontWeight: FontWeight.w800,
@@ -56,7 +57,7 @@ Widget _buildHeroSection(BuildContext context) {
   );
 
   // Match HTML body: text-xl md:text-2xl
-  final double bodyFontSize = isMdUp ? 24 : 20;
+  final double bodyFontSize = isMdUp ? 24.sp : 20.sp;
 
   Widget buildTextColumn() {
     return Column(
@@ -244,9 +245,10 @@ Widget _buildHeroImageCard(BuildContext context) {
   Widget _buildFeaturedSection(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final textColor = brightness == Brightness.light ? AppTheme.black : AppTheme.white;
-    final isSmall = context.select<ResponsiveProvider, bool>(
-      (provider) => provider.isSmall,
-    );
+    final responsive = context.watch<ResponsiveProvider>();
+    final isSmall = responsive.isSmall;
+    final isMedium = responsive.isMedium;
+    final isLarge = responsive.isLarge;
 
     return ResponsiveLayout(
       child: Padding(
@@ -259,7 +261,7 @@ Widget _buildHeroImageCard(BuildContext context) {
             Text(
               'DISCOVER YOUR SCENT',
               style: GoogleFonts.syne(
-                fontSize: isSmall ? 48 : 64,
+                fontSize: isLarge ? 64.sp : (isMedium ? 56.sp : 48.sp),
                 fontWeight: FontWeight.w800,
                 letterSpacing: -1.0,
                 color: textColor,
@@ -267,7 +269,7 @@ Widget _buildHeroImageCard(BuildContext context) {
             ),
             SizedBox(height: AppTheme.spacing6),
             GridView.count(
-              crossAxisCount: isSmall ? 1 : 3,
+              crossAxisCount: isSmall ? 1 : (isMedium ? 2 : 3),
               // Give each card extra vertical space so content
               // (image + texts + button) doesn't overflow.
               childAspectRatio: isSmall ? 0.9 : 0.75,
