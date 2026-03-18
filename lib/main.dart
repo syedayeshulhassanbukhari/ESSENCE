@@ -21,7 +21,7 @@ import 'config/fragella_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: 'assets/.env');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -72,7 +72,9 @@ class ScentSwapApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               builder: (context, child) {
                 final width = MediaQuery.sizeOf(context).width;
-                context.read<ResponsiveProvider>().updateWidth(width);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  context.read<ResponsiveProvider>().updateWidth(width);
+                });
                 return child ?? const SizedBox.shrink();
               },
               routes: {

@@ -36,56 +36,59 @@ class DiscoverNavBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final colors = context.watch<ThemeProvider>().colors;
-    return Container(
-      color: isDark ? DiscoverStyle.bgDark : DiscoverStyle.bgLight,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppTheme.spacing6.w,
-        vertical: AppTheme.spacing4.h,
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppTheme.spacing2.w,
-              vertical: AppTheme.spacing2.h,
-            ),
-            decoration: BoxDecoration(
-              color: DiscoverStyle.primary,
-              border: Border.all(
-                color: colors.black,
-                width: AppTheme.borderWidth,
+    return SizedBox(
+      height: height,
+      child: Container(
+        color: isDark ? DiscoverStyle.bgDark : DiscoverStyle.bgLight,
+        padding: EdgeInsets.symmetric(
+          horizontal: AppTheme.spacing6.w,
+          vertical: AppTheme.spacing4.h,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppTheme.spacing2.w,
+                vertical: AppTheme.spacing2.h,
               ),
-              boxShadow: [
-                BoxShadow(
+              decoration: BoxDecoration(
+                color: DiscoverStyle.primary,
+                border: Border.all(
                   color: colors.black,
-                  offset: const Offset(4, 4),
-                  blurRadius: 0,
+                  width: AppTheme.borderWidth,
                 ),
-              ],
-            ),
-            child: Text(
-              'SCENT.LAB',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -1,
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.black,
+                    offset: const Offset(4, 4),
+                    blurRadius: 0,
                   ),
+                ],
+              ),
+              child: Text(
+                'SCENT.LAB',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -1,
+                    ),
+              ),
             ),
-          ),
-          SizedBox(width: AppTheme.spacing6.w),
-          if (!isSmall) ...[
-            const _NavItem(label: 'Discovery', hasDropdown: true),
-            const _NavItem(label: 'Marketplace', hasDropdown: true),
-            const _NavItem(label: 'Archive', hasDropdown: false),
-          ],
-          const Spacer(),
-          const _IconButton(icon: Icons.search, isPrimary: false),
-          SizedBox(width: AppTheme.spacing2.w),
-          const _IconButton(icon: Icons.shopping_bag, isPrimary: true),
-          if (isSmall) ...[
+            SizedBox(width: AppTheme.spacing6.w),
+            if (!isSmall) ...[
+              const _NavItem(label: 'Discovery', hasDropdown: true),
+              const _NavItem(label: 'Marketplace', hasDropdown: true),
+              const _NavItem(label: 'Archive', hasDropdown: false),
+            ],
+            const Spacer(),
+            const _IconButton(icon: Icons.search, isPrimary: false),
             SizedBox(width: AppTheme.spacing2.w),
-            const _IconButton(icon: Icons.menu, isPrimary: false),
+            const _IconButton(icon: Icons.shopping_bag, isPrimary: true),
+            if (isSmall) ...[
+              SizedBox(width: AppTheme.spacing2.w),
+              const _IconButton(icon: Icons.menu, isPrimary: false),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -124,116 +127,119 @@ class DiscoverFilterBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final colors = context.watch<ThemeProvider>().colors;
-    return Container(
-      color: isDark ? DiscoverStyle.bgDark : DiscoverStyle.bgLight,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppTheme.spacing6.w,
-        vertical: AppTheme.spacing2.h,
-      ),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colors.black,
-            width: AppTheme.borderWidth,
+    return SizedBox(
+      height: height,
+      child: Container(
+        color: isDark ? DiscoverStyle.bgDark : DiscoverStyle.bgLight,
+        padding: EdgeInsets.symmetric(
+          horizontal: AppTheme.spacing6.w,
+          vertical: AppTheme.spacing2.h,
+        ),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: colors.black,
+              width: AppTheme.borderWidth,
+            ),
           ),
         ),
-      ),
-      child: Row(
-        children: [
-          Text(
-            'Filter By:',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
-          ),
-          SizedBox(width: AppTheme.spacing2.w),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: filters
-                    .map(
-                      (filter) => Padding(
-                        padding: EdgeInsets.only(right: AppTheme.spacing2.w),
-                        child: _FilterChip(
-                          label: filter['label']!,
-                          colorToken: filter['color']!,
-                          onTap: () => onSearch(filter['label']!),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          ),
-          SizedBox(width: AppTheme.spacing2.w),
-          SizedBox(
-            width: isSmall ? 160.w : 220.w,
-            child: TextField(
-              controller: searchController,
-              onSubmitted: onSearch,
-              decoration: InputDecoration(
-                hintText: 'SEARCH',
-                filled: true,
-                fillColor: colors.white,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: AppTheme.spacing2.w,
-                  vertical: AppTheme.spacing2.h,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: colors.black,
-                    width: AppTheme.borderWidth,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: colors.black,
-                    width: AppTheme.borderWidth,
-                  ),
-                ),
-              ),
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-            ),
-          ),
-          SizedBox(width: AppTheme.spacing2.w),
-          if (!isSmall)
+        child: Row(
+          children: [
             Text(
-              'Sort:',
+              'Filter By:',
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
             ),
-          SizedBox(width: AppTheme.spacing2.w),
-          Container(
-            decoration: BoxDecoration(
-              color: colors.white,
-              border: Border.all(
-                color: colors.black,
-                width: AppTheme.borderWidth,
+            SizedBox(width: AppTheme.spacing2.w),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: filters
+                      .map(
+                        (filter) => Padding(
+                          padding: EdgeInsets.only(right: AppTheme.spacing2.w),
+                          child: _FilterChip(
+                            label: filter['label']!,
+                            colorToken: filter['color']!,
+                            onTap: () => onSearch(filter['label']!),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
             ),
-            padding: EdgeInsets.symmetric(horizontal: AppTheme.spacing2.w),
-            child: DropdownButton<String>(
-              value: 'NEWEST',
-              underline: const SizedBox.shrink(),
-              items: const [
-                DropdownMenuItem(value: 'NEWEST', child: Text('NEWEST')),
-                DropdownMenuItem(
-                  value: 'PRICE: LOW-HIGH',
-                  child: Text('PRICE: LOW-HIGH'),
+            SizedBox(width: AppTheme.spacing2.w),
+            SizedBox(
+              width: isSmall ? 160.w : 220.w,
+              child: TextField(
+                controller: searchController,
+                onSubmitted: onSearch,
+                decoration: InputDecoration(
+                  hintText: 'SEARCH',
+                  filled: true,
+                  fillColor: colors.white,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: AppTheme.spacing2.w,
+                    vertical: AppTheme.spacing2.h,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: colors.black,
+                      width: AppTheme.borderWidth,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: colors.black,
+                      width: AppTheme.borderWidth,
+                    ),
+                  ),
                 ),
-                DropdownMenuItem(
-                  value: 'PRICE: HIGH-LOW',
-                  child: Text('PRICE: HIGH-LOW'),
-                ),
-              ],
-              onChanged: (_) {},
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+              ),
             ),
-          ),
-        ],
+            SizedBox(width: AppTheme.spacing2.w),
+            if (!isSmall)
+              Text(
+                'Sort:',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+              ),
+            SizedBox(width: AppTheme.spacing2.w),
+            Container(
+              decoration: BoxDecoration(
+                color: colors.white,
+                border: Border.all(
+                  color: colors.black,
+                  width: AppTheme.borderWidth,
+                ),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: AppTheme.spacing2.w),
+              child: DropdownButton<String>(
+                value: 'NEWEST',
+                underline: const SizedBox.shrink(),
+                items: const [
+                  DropdownMenuItem(value: 'NEWEST', child: Text('NEWEST')),
+                  DropdownMenuItem(
+                    value: 'PRICE: LOW-HIGH',
+                    child: Text('PRICE: LOW-HIGH'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'PRICE: HIGH-LOW',
+                    child: Text('PRICE: HIGH-LOW'),
+                  ),
+                ],
+                onChanged: (_) {},
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
