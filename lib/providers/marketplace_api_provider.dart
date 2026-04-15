@@ -3,33 +3,32 @@ import 'package:flutter/foundation.dart';
 import '../models/fragella_fragrance.dart';
 import '../services/fragella_api_client.dart';
 
-class DiscoverProvider extends ChangeNotifier {
-  DiscoverProvider({required FragellaApiClient apiClient})
+class MarketplaceApiProvider extends ChangeNotifier {
+  MarketplaceApiProvider({required FragellaApiClient apiClient})
       : _apiClient = apiClient;
 
   final FragellaApiClient _apiClient;
 
-  final List<FragellaFragrance> _results = [];
+  final List<FragellaFragrance> _items = [];
   bool _isLoading = false;
   String _errorMessage = '';
-  String _lastQuery = '';
   bool _hasLoaded = false;
+  String _lastQuery = 'fragrance';
 
-  List<FragellaFragrance> get results => List.unmodifiable(_results);
+  List<FragellaFragrance> get items => List.unmodifiable(_items);
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   String get lastQuery => _lastQuery;
-  bool get hasLoaded => _hasLoaded;
 
-  void ensureInitialLoad({required String query}) {
+  Future<void> ensureLoaded() async {
     if (_hasLoaded || _isLoading) {
       return;
     }
     _hasLoaded = true;
-    search(query: query);
+    await fetchCatalog();
   }
 
-  Future<void> search({required String query, int limit = 10}) async {
+  Future<void> fetchCatalog({String query = 'fragrance', int limit = 24}) async {
     final normalizedQuery = query.trim();
     if (normalizedQuery.length < 3) {
       _errorMessage = 'Search query must be at least 3 characters.';
@@ -39,27 +38,27 @@ class DiscoverProvider extends ChangeNotifier {
     if (_isLoading && normalizedQuery == _lastQuery) {
       return;
     }
-    if (!_isLoading && normalizedQuery == _lastQuery && _results.isNotEmpty) {
+    if (!_isLoading && normalizedQuery == _lastQuery && _items.isNotEmpty) {
       return;
     }
 
     _lastQuery = normalizedQuery;
-    _errorMessage = '';
     _isLoading = true;
+    _errorMessage = '';
     notifyListeners();
 
     try {
-      final data = await _apiClient.searchFragrances(
+      final results = await _apiClient.searchFragrances(
         query: normalizedQuery,
         limit: limit,
       );
-      _results
+      _items
         ..clear()
-        ..addAll(data);
+        ..addAll(results);
     } on FragellaApiException catch (e) {
       _errorMessage = e.message;
     } catch (_) {
-      _errorMessage = 'Something went wrong. Please try again.';
+      _errorMessage = 'Unable to load marketplace perfumes.';
     } finally {
       _isLoading = false;
       notifyListeners();

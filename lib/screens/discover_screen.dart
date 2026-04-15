@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../providers/discover_provider.dart';
 import '../providers/responsive_provider.dart';
 import '../providers/theme_provider.dart';
+import '../services/discover_presentation_service.dart';
 import '../theme/app_theme.dart';
+import '../theme/discover_palette.dart';
+import '../widgets/layout_widgets.dart';
 import '../widgets/discover/discover_widgets.dart';
 
 class DiscoverScreen extends StatefulWidget {
@@ -15,16 +20,11 @@ class DiscoverScreen extends StatefulWidget {
 }
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
+  static const DiscoverPresentationService _presentationService =
+      DiscoverPresentationService();
   final TextEditingController _searchController =
-      TextEditingController(text: 'Dior');
-
-  static const List<Map<String, String>> _filters = [
-    {'label': 'Woody', 'color': 'lime'},
-    {'label': 'Floral', 'color': 'white'},
-    {'label': 'Citrus', 'color': 'orange'},
-    {'label': 'Oud', 'color': 'white'},
-    {'label': 'Spicy', 'color': 'pink'},
-  ];
+      TextEditingController(text: 'fragrance');
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -39,6 +39,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -54,30 +55,28 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     final gridColumns = isSmall ? 1 : (isMedium ? 2 : 3);
     final discover = context.watch<DiscoverProvider>();
     final results = discover.results;
+    final filters = _presentationService.buildFilters(results);
 
     return Scaffold(
-      backgroundColor: isDark ? DiscoverStyle.bgDark : DiscoverStyle.bgLight,
+      backgroundColor: isDark ? colors.backgroundDark : colors.backgroundLight,
       body: CustomScrollView(
         slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: DiscoverNavBar(
-              height: isSmall ? 72.h : 84.h,
-              isSmall: isSmall,
-              isDark: isDark,
-            ),
+          const SliverToBoxAdapter(
+            child: AppHeader(),
           ),
           SliverToBoxAdapter(
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: AppTheme.spacing6.w,
-                vertical: AppTheme.spacing6.h,
+                vertical: isSmall ? AppTheme.spacing6.h : AppTheme.spacing8.h,
               ),
               decoration: BoxDecoration(
-                color: DiscoverStyle.primary.withOpacity(0.1),
+                color: isDark
+                    ? colors.backgroundDark
+                    : DiscoverPalette.primary.withOpacity(0.1),
                 border: Border(
                   bottom: BorderSide(
-                    color: colors.black,
+                    color: isDark ? colors.primaryYellow : colors.black,
                     width: AppTheme.borderWidth,
                   ),
                 ),
@@ -98,7 +97,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     decoration: BoxDecoration(
                       border: Border(
                         left: BorderSide(
-                          color: colors.black,
+                          color: isDark ? colors.primaryYellow : colors.black,
                           width: AppTheme.borderWidth,
                         ),
                       ),
@@ -119,11 +118,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           SliverPersistentHeader(
             pinned: true,
             delegate: DiscoverFilterBar(
-              height: isSmall ? 72.h : 64.h,
+              height: isSmall ? 84.h : 72.h,
               isSmall: isSmall,
               isDark: isDark,
-              filters: _filters,
+              colors: colors,
+              filters: filters,
               onSearch: _onSearch,
+              onSearchChanged: _onSearchChanged,
               searchController: _searchController,
             ),
           ),
@@ -197,5 +198,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       return;
     }
     context.read<DiscoverProvider>().search(query: query.trim());
+  }
+
+  void _onSearchChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 450), () {
+      if (!mounted) {
+        return;
+      }
+      _onSearch(value);
+    });
   }
 }

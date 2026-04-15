@@ -1,27 +1,51 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../models/fragella_fragrance.dart';
 import '../models/marketplace_product.dart';
-import '../providers/marketplace_catalog_provider.dart';
+import '../providers/marketplace_api_provider.dart';
 import '../providers/marketplace_filter_provider.dart';
 import '../providers/responsive_provider.dart';
+import '../services/fragella_api_client.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
 
-class MarketplaceScreen extends StatelessWidget {
+class MarketplaceScreen extends StatefulWidget {
   MarketplaceScreen({super.key, this.header, this.footer});
 
   final Widget? header;
   final Widget? footer;
 
   @override
+  State<MarketplaceScreen> createState() => _MarketplaceScreenState();
+}
+
+class _MarketplaceScreenState extends State<MarketplaceScreen> {
+  final TextEditingController _searchController =
+      TextEditingController(text: 'fragrance');
+  Timer? _debounce;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final apiClient = context.read<FragellaApiClient>();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MarketplaceFilterProvider()),
-        Provider(create: (_) => MarketplaceCatalogProvider()),
+        ChangeNotifierProvider(
+          create: (_) => MarketplaceApiProvider(apiClient: apiClient),
+        ),
       ],
       child: Builder(
         builder: (context) {
@@ -32,15 +56,19 @@ class MarketplaceScreen extends StatelessWidget {
               : colors.backgroundDark;
           final responsive = context.watch<ResponsiveProvider>();
           final isSmall = responsive.isSmall;
-          final isMedium = responsive.isMedium;
           final isLarge = responsive.isLarge;
           final filters = context.watch<MarketplaceFilterProvider>();
-          final catalog = context.watch<MarketplaceCatalogProvider>();
-          final products = filters.applyFilters(catalog.products);
+          final apiProvider = context.watch<MarketplaceApiProvider>();
+          context.read<MarketplaceApiProvider>().ensureLoaded();
+          final mappedProducts = _mapToMarketplaceProducts(
+            apiProvider.items,
+            colors,
+          );
+          final products = filters.applyFilters(mappedProducts);
           final sidebarWidth = isLarge ? 320.w : 260.w;
 
-          final headerWidget = header ?? const AppHeader();
-          final footerWidget = footer ?? const AppFooter();
+          final headerWidget = widget.header ?? const AppHeader();
+          final footerWidget = widget.footer ?? const AppFooter();
 
           return Scaffold(
             backgroundColor: bgColor,
@@ -64,6 +92,9 @@ class MarketplaceScreen extends StatelessWidget {
                                 isSmall,
                                 filters,
                                 products,
+                                apiProvider: apiProvider,
+                                isLoading: apiProvider.isLoading,
+                                errorMessage: apiProvider.errorMessage,
                               ),
                             ],
                           )
@@ -89,6 +120,9 @@ class MarketplaceScreen extends StatelessWidget {
                                   isSmall,
                                   filters,
                                   products,
+                                  apiProvider: apiProvider,
+                                  isLoading: apiProvider.isLoading,
+                                  errorMessage: apiProvider.errorMessage,
                                 ),
                               ),
                             ],
@@ -335,6 +369,11 @@ class MarketplaceScreen extends StatelessWidget {
     bool isSmall,
     MarketplaceFilterProvider filters,
     List<MarketplaceProduct> products,
+    {
+    required MarketplaceApiProvider apiProvider,
+    required bool isLoading,
+    required String errorMessage,
+  }
   ) {
     final brightness = Theme.of(context).brightness;
     final colors = context.watch<ThemeProvider>().colors;
@@ -388,6 +427,37 @@ class MarketplaceScreen extends StatelessWidget {
             ),
           ],
         ),
+        NeoCard(
+          padding: const EdgeInsets.all(AppTheme.spacing4),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: _onSearchChanged,
+                  onSubmitted: _onSearch,
+                  decoration: const InputDecoration(
+                    hintText: 'Search perfume (e.g. Dior)',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                ),
+              ),
+              SizedBox(width: AppTheme.spacing4.w),
+              NeoButton(
+                label: 'Search',
+                onPressed: () => _onSearch(_searchController.text),
+                height: 48,
+              ),
+            ],
+          ),
+        ),
+        Text(
+          'Results for: ${apiProvider.lastQuery}',
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+        ),
         // Sort
         NeoCard(
           padding: const EdgeInsets.all(AppTheme.spacing4),
@@ -427,33 +497,62 @@ class MarketplaceScreen extends StatelessWidget {
             ],
           ),
         ),
-        // Products Grid
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final columns = _resolveGridColumns(
-              constraints.maxWidth,
-              desiredColumns,
-            );
-            final tileHeight = isSmall
-                ? 420.h
-                : (isMedium ? 440.h : 460.h);
-
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columns,
-                mainAxisSpacing: AppTheme.spacing6,
-                crossAxisSpacing: AppTheme.spacing6,
-                mainAxisExtent: tileHeight,
+        if (isLoading)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: AppTheme.spacing6),
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else if (errorMessage.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing6),
+            child: Center(
+              child: Text(
+                errorMessage,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
-              itemCount: products.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return _MarketplaceProductCard(product: products[index]);
-              },
-            );
-          },
-        ),
+            ),
+          )
+        else if (products.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing6),
+            child: Center(
+              child: Text(
+                'No perfumes found.',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            ),
+          )
+        else
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = _resolveGridColumns(
+                constraints.maxWidth,
+                desiredColumns,
+              );
+              final tileHeight = isSmall
+                  ? 420.h
+                  : (isMedium ? 440.h : 460.h);
+
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  mainAxisSpacing: AppTheme.spacing6,
+                  crossAxisSpacing: AppTheme.spacing6,
+                  mainAxisExtent: tileHeight,
+                ),
+                itemCount: products.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _MarketplaceProductCard(product: products[index]);
+                },
+              );
+            },
+          ),
         // Load More Button
         Center(
           child: NeoButton(
@@ -501,6 +600,81 @@ class MarketplaceScreen extends StatelessWidget {
     }
 
     return columns;
+  }
+
+  List<MarketplaceProduct> _mapToMarketplaceProducts(
+    List<FragellaFragrance> fragrances,
+    ThemeColors colors,
+  ) {
+    return fragrances.map((fragrance) {
+      final accords = fragrance.mainAccords.map((e) => e.toLowerCase()).toList();
+
+      return MarketplaceProduct(
+        name: fragrance.name,
+        category: accords.isNotEmpty
+            ? accords.take(3).map(_capitalize).join(' / ')
+            : 'Uncategorized',
+        priceLabel: fragrance.price.isNotEmpty ? '\$${fragrance.price}' : '—',
+        priceValue: _parsePrice(fragrance.price),
+        bgColor: _backgroundForAccords(accords, colors),
+        isBestSeller: fragrance.popularity.toLowerCase().contains('very high') ||
+            fragrance.confidence.toLowerCase() == 'high',
+        imageUrl: fragrance.imageUrl,
+        fragrance: fragrance,
+      );
+    }).toList();
+  }
+
+  Color _backgroundForAccords(List<String> accords, ThemeColors colors) {
+    if (accords.any((a) => a.contains('floral'))) {
+      return colors.accentPink;
+    }
+    if (accords.any((a) => a.contains('citrus')) ||
+        accords.any((a) => a.contains('fresh'))) {
+      return colors.accentCyan;
+    }
+    if (accords.any((a) => a.contains('woody')) ||
+        accords.any((a) => a.contains('green'))) {
+      return colors.accentGreen;
+    }
+    if (accords.any((a) => a.contains('amber')) ||
+        accords.any((a) => a.contains('spice'))) {
+      return colors.primaryYellow;
+    }
+    return colors.white;
+  }
+
+  double _parsePrice(String value) {
+    if (value.isEmpty) {
+      return 0;
+    }
+    final cleaned = value.replaceAll(RegExp(r'[^0-9\.]'), '');
+    return double.tryParse(cleaned) ?? 0;
+  }
+
+  String _capitalize(String text) {
+    if (text.isEmpty) {
+      return text;
+    }
+    return '${text[0].toUpperCase()}${text.substring(1)}';
+  }
+
+  void _onSearch(String query) {
+    final trimmed = query.trim();
+    if (trimmed.length < 3) {
+      return;
+    }
+    context.read<MarketplaceApiProvider>().fetchCatalog(query: trimmed);
+  }
+
+  void _onSearchChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 450), () {
+      if (!mounted) {
+        return;
+      }
+      _onSearch(value);
+    });
   }
 }
 
@@ -640,7 +814,14 @@ class _MarketplaceProductCard extends StatelessWidget {
                       ),
                       NeoButton(
                         label: 'Add to Vault',
-                        onPressed: () {},
+                        onPressed: () {
+                          if (product.fragrance != null) {
+                            Navigator.of(context).pushNamed(
+                              '/individualDetails',
+                              arguments: product.fragrance,
+                            );
+                          }
+                        },
                         backgroundColor: colors.black,
                         textColor: colors.white,
                         height: isSmall ? 44.h : 48.h,

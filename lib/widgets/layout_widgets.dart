@@ -115,7 +115,12 @@ class _UserProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
-    final user = FirebaseAuth.instance.currentUser;
+    User? user;
+    try {
+      user = FirebaseAuth.instance.currentUser;
+    } catch (_) {
+      user = null;
+    }
     final brightness = Theme.of(context).brightness;
     final borderColor =
       brightness == Brightness.light ? colors.black : colors.primaryYellow;

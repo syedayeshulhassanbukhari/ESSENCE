@@ -1,6 +1,5 @@
 export 'cta_section.dart';
 export 'detail_action_button.dart';
-export 'details_header.dart';
 export 'footer_section.dart';
 export 'notes_section.dart';
 export 'perfume_image_card.dart';

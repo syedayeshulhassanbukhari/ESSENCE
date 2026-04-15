@@ -1,121 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import '../../models/discover_color_token.dart';
+import '../../models/discover_filter.dart';
 import '../../models/fragella_fragrance.dart';
 import '../../providers/theme_provider.dart';
+import '../../services/discover_presentation_service.dart';
 import '../../theme/app_theme.dart';
-
-class DiscoverStyle {
-  static const Color primary = Color(0xFFFAC638);
-  static const Color bgLight = Color(0xFFF8F8F5);
-  static const Color bgDark = Color(0xFF231E0F);
-  static const Color neoLime = Color(0xFFBEF264);
-  static const Color neoOrange = Color(0xFFFB923C);
-  static const Color neoPink = Color(0xFFF472B6);
-  static const Color neoBlue = Color(0xFF60A5FA);
-}
-
-class DiscoverNavBar extends SliverPersistentHeaderDelegate {
-  DiscoverNavBar({
-    required this.height,
-    required this.isSmall,
-    required this.isDark,
-  });
-
-  final double height;
-  final bool isSmall;
-  final bool isDark;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final colors = context.watch<ThemeProvider>().colors;
-    return SizedBox(
-      height: height,
-      child: Container(
-        color: isDark ? DiscoverStyle.bgDark : DiscoverStyle.bgLight,
-        padding: EdgeInsets.symmetric(
-          horizontal: AppTheme.spacing6.w,
-          vertical: AppTheme.spacing4.h,
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppTheme.spacing2.w,
-                vertical: AppTheme.spacing2.h,
-              ),
-              decoration: BoxDecoration(
-                color: DiscoverStyle.primary,
-                border: Border.all(
-                  color: colors.black,
-                  width: AppTheme.borderWidth,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: colors.black,
-                    offset: const Offset(4, 4),
-                    blurRadius: 0,
-                  ),
-                ],
-              ),
-              child: Text(
-                'SCENT.LAB',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -1,
-                    ),
-              ),
-            ),
-            SizedBox(width: AppTheme.spacing6.w),
-            if (!isSmall) ...[
-              const _NavItem(label: 'Discovery', hasDropdown: true),
-              const _NavItem(label: 'Marketplace', hasDropdown: true),
-              const _NavItem(label: 'Archive', hasDropdown: false),
-            ],
-            const Spacer(),
-            const _IconButton(icon: Icons.search, isPrimary: false),
-            SizedBox(width: AppTheme.spacing2.w),
-            const _IconButton(icon: Icons.shopping_bag, isPrimary: true),
-            if (isSmall) ...[
-              SizedBox(width: AppTheme.spacing2.w),
-              const _IconButton(icon: Icons.menu, isPrimary: false),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  bool shouldRebuild(covariant DiscoverNavBar oldDelegate) {
-    return oldDelegate.height != height ||
-        oldDelegate.isSmall != isSmall ||
-        oldDelegate.isDark != isDark;
-  }
-}
+import '../../theme/discover_palette.dart';
 
 class DiscoverFilterBar extends SliverPersistentHeaderDelegate {
   DiscoverFilterBar({
     required this.height,
     required this.isSmall,
     required this.isDark,
+    required this.colors,
     required this.filters,
     required this.onSearch,
+    required this.onSearchChanged,
     required this.searchController,
   });
 
   final double height;
   final bool isSmall;
   final bool isDark;
-  final List<Map<String, String>> filters;
+  final ThemeColors colors;
+  final List<DiscoverFilter> filters;
   final ValueChanged<String> onSearch;
+  final ValueChanged<String> onSearchChanged;
   final TextEditingController searchController;
 
   @override
@@ -126,19 +38,18 @@ class DiscoverFilterBar extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final colors = context.watch<ThemeProvider>().colors;
     return SizedBox(
       height: height,
       child: Container(
-        color: isDark ? DiscoverStyle.bgDark : DiscoverStyle.bgLight,
         padding: EdgeInsets.symmetric(
           horizontal: AppTheme.spacing6.w,
           vertical: AppTheme.spacing2.h,
         ),
         decoration: BoxDecoration(
+          color: isDark ? colors.backgroundDark : DiscoverPalette.bgLight,
           border: Border(
             bottom: BorderSide(
-              color: colors.black,
+              color: isDark ? colors.primaryYellow : colors.black,
               width: AppTheme.borderWidth,
             ),
           ),
@@ -161,9 +72,9 @@ class DiscoverFilterBar extends SliverPersistentHeaderDelegate {
                         (filter) => Padding(
                           padding: EdgeInsets.only(right: AppTheme.spacing2.w),
                           child: _FilterChip(
-                            label: filter['label']!,
-                            colorToken: filter['color']!,
-                            onTap: () => onSearch(filter['label']!),
+                            label: filter.label,
+                            colorToken: filter.colorToken,
+                            onTap: () => onSearch(filter.label),
                           ),
                         ),
                       )
@@ -176,24 +87,26 @@ class DiscoverFilterBar extends SliverPersistentHeaderDelegate {
               width: isSmall ? 160.w : 220.w,
               child: TextField(
                 controller: searchController,
+                textInputAction: TextInputAction.search,
+                onChanged: onSearchChanged,
                 onSubmitted: onSearch,
                 decoration: InputDecoration(
                   hintText: 'SEARCH',
                   filled: true,
-                  fillColor: colors.white,
+                  fillColor: isDark ? colors.zinc900 : colors.white,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: AppTheme.spacing2.w,
                     vertical: AppTheme.spacing2.h,
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: colors.black,
+                      color: isDark ? colors.primaryYellow : colors.black,
                       width: AppTheme.borderWidth,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: colors.black,
+                      color: isDark ? colors.primaryYellow : colors.black,
                       width: AppTheme.borderWidth,
                     ),
                   ),
@@ -249,7 +162,9 @@ class DiscoverFilterBar extends SliverPersistentHeaderDelegate {
     return oldDelegate.height != height ||
         oldDelegate.isSmall != isSmall ||
         oldDelegate.isDark != isDark ||
+        oldDelegate.colors != colors ||
         oldDelegate.filters != filters ||
+        oldDelegate.onSearchChanged != onSearchChanged ||
         oldDelegate.searchController != searchController;
   }
 }
@@ -262,26 +177,13 @@ class _FilterChip extends StatelessWidget {
   });
 
   final String label;
-  final String colorToken;
+  final DiscoverColorToken colorToken;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
-    Color background;
-    switch (colorToken) {
-      case 'lime':
-        background = DiscoverStyle.neoLime;
-        break;
-      case 'orange':
-        background = DiscoverStyle.neoOrange;
-        break;
-      case 'pink':
-        background = DiscoverStyle.neoPink;
-        break;
-      default:
-        background = colors.white;
-    }
+    final background = DiscoverPalette.colorForToken(colors, colorToken);
 
     return GestureDetector(
       onTap: onTap,
@@ -318,13 +220,22 @@ class _FilterChip extends StatelessWidget {
 class DiscoverCard extends StatelessWidget {
   const DiscoverCard({required this.fragrance});
 
+  static const DiscoverPresentationService _presentationService =
+      DiscoverPresentationService();
+
   final FragellaFragrance fragrance;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
-    final background = _cardBackground(colors, fragrance);
-    final badge = _badgeFor(fragrance);
+    final presentation = _presentationService.buildCardPresentation(fragrance);
+    final background = DiscoverPalette.colorForToken(
+      colors,
+      presentation.backgroundToken,
+    );
+    final badge = presentation.badge;
+    final isDarkCard = background == colors.black;
+    final cardBorder = isDarkCard ? colors.white : colors.black;
     final badgeBg = badge.isLight ? colors.white : colors.black;
     final badgeText = badge.isLight ? colors.black : colors.white;
 
@@ -339,7 +250,7 @@ class DiscoverCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: background,
           border: Border.all(
-            color: colors.black,
+            color: cardBorder,
             width: AppTheme.borderWidth,
           ),
           boxShadow: [
@@ -357,7 +268,7 @@ class DiscoverCard extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: colors.black,
+                    color: cardBorder,
                     width: AppTheme.borderWidth,
                   ),
                 ),
@@ -373,6 +284,7 @@ class DiscoverCard extends StatelessWidget {
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: -1,
+                                color: isDarkCard ? colors.white : colors.black,
                               ),
                     ),
                   ),
@@ -384,7 +296,7 @@ class DiscoverCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: badgeBg,
                       border: Border.all(
-                        color: colors.black,
+                        color: cardBorder,
                         width: AppTheme.borderWidth,
                       ),
                     ),
@@ -416,10 +328,10 @@ class DiscoverCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(AppTheme.spacing4.w),
               decoration: BoxDecoration(
-                color: colors.white,
+                color: isDarkCard ? colors.zinc900 : colors.white,
                 border: Border(
                   top: BorderSide(
-                    color: colors.black,
+                    color: cardBorder,
                     width: AppTheme.borderWidth,
                   ),
                 ),
@@ -436,6 +348,7 @@ class DiscoverCard extends StatelessWidget {
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w900,
+                                  color: isDarkCard ? colors.white : colors.black,
                                 ),
                       ),
                       Text(
@@ -445,6 +358,7 @@ class DiscoverCard extends StatelessWidget {
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w900,
+                                  color: isDarkCard ? colors.white : colors.black,
                                 ),
                       ),
                     ],
@@ -456,7 +370,7 @@ class DiscoverCard extends StatelessWidget {
                       vertical: AppTheme.spacing4.h,
                     ),
                     decoration: BoxDecoration(
-                      color: DiscoverStyle.primary,
+                      color: DiscoverPalette.primary,
                       border: Border.all(
                         color: colors.black,
                         width: AppTheme.borderWidth,
@@ -489,48 +403,6 @@ class DiscoverCard extends StatelessWidget {
       ),
     );
   }
-
-  Color _cardBackground(ThemeColors colors, FragellaFragrance fragrance) {
-    final accords = fragrance.mainAccords.map((e) => e.toLowerCase()).toList();
-    if (accords.any((value) => value.contains('woody'))) {
-      return DiscoverStyle.neoLime;
-    }
-    if (accords.any((value) => value.contains('citrus'))) {
-      return DiscoverStyle.neoOrange;
-    }
-    if (accords.any((value) => value.contains('floral'))) {
-      return DiscoverStyle.neoPink;
-    }
-    if (accords.any((value) => value.contains('aquatic')) ||
-        accords.any((value) => value.contains('fresh'))) {
-      return DiscoverStyle.neoBlue;
-    }
-    if (fragrance.gender.toLowerCase().contains('men')) {
-      return colors.black;
-    }
-    return colors.white;
-  }
-
-  _BadgeStyle _badgeFor(FragellaFragrance fragrance) {
-    final popularity = fragrance.popularity.toLowerCase();
-    if (popularity.contains('very high')) {
-      return const _BadgeStyle('BESTSELLER', true);
-    }
-    if (fragrance.confidence.toLowerCase() == 'high') {
-      return const _BadgeStyle('HOT', false);
-    }
-    if (fragrance.year.isNotEmpty) {
-      return const _BadgeStyle('NEW', false);
-    }
-    return const _BadgeStyle('DISCOVER', true);
-  }
-}
-
-class _BadgeStyle {
-  const _BadgeStyle(this.label, this.isLight);
-
-  final String label;
-  final bool isLight;
 }
 
 class DiscoverFooter extends StatelessWidget {
@@ -606,6 +478,9 @@ class _FooterInputRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
+    final brightness = Theme.of(context).brightness;
+    final borderColor =
+        brightness == Brightness.dark ? colors.primaryYellow : colors.white;
     final input = Expanded(
       child: TextField(
         decoration: InputDecoration(
@@ -616,13 +491,13 @@ class _FooterInputRow extends StatelessWidget {
               ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: colors.white,
+              color: borderColor,
               width: AppTheme.borderWidth,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: colors.white,
+              color: borderColor,
               width: AppTheme.borderWidth,
             ),
           ),
@@ -646,7 +521,7 @@ class _FooterInputRow extends StatelessWidget {
         vertical: AppTheme.spacing4.h,
       ),
       decoration: BoxDecoration(
-        color: DiscoverStyle.primary,
+        color: DiscoverPalette.primary,
         border: Border.all(
           color: colors.white,
           width: AppTheme.borderWidth,
@@ -693,7 +568,7 @@ class _FooterExplore extends StatelessWidget {
         Text(
           'Explore',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: DiscoverStyle.primary,
+                color: DiscoverPalette.primary,
                 fontWeight: FontWeight.w900,
               ),
         ),
@@ -728,7 +603,7 @@ class _FooterConnect extends StatelessWidget {
         Text(
           'Connect',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: DiscoverStyle.primary,
+                color: DiscoverPalette.primary,
                 fontWeight: FontWeight.w900,
               ),
         ),
@@ -783,63 +658,5 @@ class _FooterLinks extends StatelessWidget {
             ],
           )
         : const SizedBox.shrink();
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  const _NavItem({required this.label, required this.hasDropdown});
-
-  final String label;
-  final bool hasDropdown;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(right: AppTheme.spacing4.w),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
-          ),
-          if (hasDropdown) ...[
-            SizedBox(width: AppTheme.spacing2.w),
-            const Icon(Icons.expand_more, size: 18),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _IconButton extends StatelessWidget {
-  const _IconButton({required this.icon, required this.isPrimary});
-
-  final IconData icon;
-  final bool isPrimary;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.watch<ThemeProvider>().colors;
-    return Container(
-      padding: EdgeInsets.all(AppTheme.spacing2.w),
-      decoration: BoxDecoration(
-        color: isPrimary ? DiscoverStyle.primary : colors.white,
-        border: Border.all(
-          color: colors.black,
-          width: AppTheme.borderWidth,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: colors.black,
-            offset: const Offset(4, 4),
-            blurRadius: 0,
-          ),
-        ],
-      ),
-      child: Icon(icon, color: colors.black, size: 20.sp),
-    );
   }
 }

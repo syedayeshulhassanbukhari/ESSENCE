@@ -6,6 +6,7 @@ import '../models/fragella_fragrance.dart';
 import '../models/resolved_notes.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/layout_widgets.dart';
 import '../widgets/individual_perfume/widgets.dart';
 
 class IndividualPerfumeDetails extends StatelessWidget {
@@ -49,9 +50,8 @@ class IndividualPerfumeDetails extends StatelessWidget {
       backgroundColor: isDark ? _bgDark : _bgLight,
       body: CustomScrollView(
         slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: DetailsHeader(isDark: isDark, colors: colors),
+          const SliverToBoxAdapter(
+            child: AppHeader(),
           ),
           SliverPadding(
             padding: EdgeInsets.symmetric(

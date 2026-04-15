@@ -6,11 +6,27 @@ import '../theme/app_theme.dart';
 import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
 import '../widgets/marquee_text.dart';
+import '../models/fragella_fragrance.dart';
+import '../providers/home_featured_provider.dart';
 import '../providers/responsive_provider.dart';
 import '../providers/theme_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<HomeFeaturedProvider>().ensureLoaded();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,6 +273,8 @@ Widget _buildHeroImageCard(BuildContext context) {
     final isSmall = responsive.isSmall;
     final isMedium = responsive.isMedium;
     final isLarge = responsive.isLarge;
+    final featured = context.watch<HomeFeaturedProvider>();
+    final items = featured.items.take(6).toList();
 
     return ResponsiveLayout(
       child: Padding(
@@ -276,22 +294,46 @@ Widget _buildHeroImageCard(BuildContext context) {
               ),
             ),
             SizedBox(height: AppTheme.spacing6),
-            GridView.count(
-              crossAxisCount: isSmall ? 1 : (isMedium ? 2 : 3),
-              // Give each card extra vertical space so content
-              // (image + texts + button) doesn't overflow.
-              childAspectRatio: isSmall ? 0.9 : 0.75,
-              mainAxisSpacing: AppTheme.spacing6,
-              crossAxisSpacing: AppTheme.spacing6,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                _buildProductCard(context, 'Ozone\nMetallic', '\$185', 'NEW'),
-                _buildProductCard(context, 'Brutal\nConcrete', '\$210', 'SOLD OUT',
-                    isSoldOut: true),
-                _buildProductCard(context, 'Amber\nRadiation', '\$160', 'NEW'),
-              ],
-            ),
+            if (featured.isLoading)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: AppTheme.spacing6),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (featured.errorMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing6),
+                child: Text(
+                  featured.errorMessage,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              )
+            else if (items.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing6),
+                child: Text(
+                  'No featured perfumes found.',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              )
+            else
+              GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: isSmall ? 1 : (isMedium ? 2 : 3),
+                  childAspectRatio: isSmall ? 0.9 : 0.75,
+                  mainAxisSpacing: AppTheme.spacing6,
+                  crossAxisSpacing: AppTheme.spacing6,
+                ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return _buildProductCard(context, items[index]);
+                },
+              ),
             SizedBox(height: AppTheme.spacing6),
             Align(
               alignment: Alignment.centerRight,
@@ -308,84 +350,106 @@ Widget _buildHeroImageCard(BuildContext context) {
 
   Widget _buildProductCard(
     BuildContext context,
-    String name,
-    String price,
-    String? badge, {
-    bool isSoldOut = false,
-  }) {
+    FragellaFragrance fragrance,
+  ) {
     final brightness = Theme.of(context).brightness;
     final colors = context.watch<ThemeProvider>().colors;
     final textColor =
         brightness == Brightness.light ? colors.black : colors.white;
+    final isSoldOut = fragrance.popularity.toLowerCase().contains('out of stock');
+    final badge = fragrance.year.isNotEmpty ? 'NEW' : null;
+    final price = fragrance.price.isNotEmpty ? '\$${fragrance.price}' : '—';
 
-    return NeoCard(
-      backgroundColor:
-          brightness == Brightness.light ? colors.white : colors.zinc900,
-      padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: textColor,
-                    width: AppTheme.borderWidth,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed('/individualDetails', arguments: fragrance);
+      },
+      child: NeoCard(
+        backgroundColor:
+            brightness == Brightness.light ? colors.white : colors.zinc900,
+        padding: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: textColor,
+                      width: AppTheme.borderWidth,
+                    ),
                   ),
+                  color: const Color(0xFF999999),
                 ),
-                color: const Color(0xFF999999),
-              ),
-              child: Center(
-                child: Text(
-                  '[Image]',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(AppTheme.spacing4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        name,
-                        style: Theme.of(context).textTheme.headlineSmall,
+                child: fragrance.imageUrl.isNotEmpty
+                    ? Image.network(
+                        fragrance.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Text(
+                              '[Image]',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text(
+                          '[Image]',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: AppTheme.spacing2),
-                    Text(
-                      price,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-                  ],
-                ),
-                if (badge != null) ...[
-                  SizedBox(height: AppTheme.spacing2),
-                  NeoBadge(label: badge),
-                ],
-                SizedBox(height: AppTheme.spacing4),
-                NeoButton(
-                  label: isSoldOut ? 'Waitlist' : 'Add to Cart',
-                  onPressed: () {},
-                  backgroundColor:
-                      isSoldOut ? const Color(0xFFCCCCCC) : colors.black,
-                    textColor: colors.white,
-                  height: 48,
-                  isFullWidth: true,
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(AppTheme.spacing4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          fragrance.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
+                      const SizedBox(width: AppTheme.spacing2),
+                      Text(
+                        price,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                      ),
+                    ],
+                  ),
+                  if (badge != null) ...[
+                    const SizedBox(height: AppTheme.spacing2),
+                    NeoBadge(label: badge),
+                  ],
+                  const SizedBox(height: AppTheme.spacing4),
+                  NeoButton(
+                    label: isSoldOut ? 'Waitlist' : 'View Details',
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/individualDetails', arguments: fragrance);
+                    },
+                    backgroundColor:
+                        isSoldOut ? const Color(0xFFCCCCCC) : colors.black,
+                    textColor: colors.white,
+                    height: 48,
+                    isFullWidth: true,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

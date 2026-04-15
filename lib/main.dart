@@ -9,13 +9,14 @@ import 'package:scentswapwebsite/screens/home_screen.dart';
 import 'package:scentswapwebsite/screens/individual_perfume_details.dart';
 import 'package:scentswapwebsite/screens/marketplace_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/responsive_provider.dart';
 import 'providers/auth_controller.dart';
 import 'providers/discover_provider.dart';
+import 'providers/home_featured_provider.dart';
 import 'services/fragella_api_client.dart';
 import 'config/fragella_config.dart';
 
@@ -40,6 +41,11 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => DiscoverProvider(
+            apiClient: context.read<FragellaApiClient>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => HomeFeaturedProvider(
             apiClient: context.read<FragellaApiClient>(),
           ),
         ),
@@ -98,22 +104,26 @@ class _AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+    // Dev bypass: show the post-auth screen directly.
+    return const HomeScreen();
 
-        if (snapshot.hasData) {
-          return const HomeScreen();
-        }
-
-        return const LoginScreen();
-      },
-    );
+    // Original auth gate logic (kept for re-enable):
+    // return StreamBuilder<User?>(
+    //   stream: FirebaseAuth.instance.authStateChanges(),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return const Scaffold(
+    //         body: Center(child: CircularProgressIndicator()),
+    //       );
+    //     }
+    //
+    //     if (snapshot.hasData) {
+    //       return const HomeScreen();
+    //     }
+    //
+    //     return const LoginScreen();
+    //   },
+    // );
   }
 }
 

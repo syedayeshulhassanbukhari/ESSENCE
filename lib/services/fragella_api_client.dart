@@ -42,6 +42,16 @@ class FragellaApiClient {
     );
 
     if (response.statusCode != 200) {
+      if (response.statusCode == 429) {
+        throw FragellaApiException(
+          'Rate limit reached (429). Please wait a few seconds and try again.',
+        );
+      }
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        throw FragellaApiException(
+          'Authentication failed (${response.statusCode}). Check API key permissions.',
+        );
+      }
       throw FragellaApiException(
         'Request failed (${response.statusCode}).',
       );
