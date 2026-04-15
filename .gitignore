@@ -33,6 +33,9 @@ migrate_working_dir/
 /build/
 /coverage/
 /.env
+admin-panel/.env
+admin-panel/node_modules/
+admin-panel/public/uploads/
 
 # Symbolication related
 app.*.symbols

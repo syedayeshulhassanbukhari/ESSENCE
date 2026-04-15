@@ -1,0 +1,17 @@
+{
+  "name": "scentswap-admin-panel",
+  "version": "1.0.0",
+  "description": "Node.js admin panel for marketplace exchange perfume listings",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "multer": "^2.0.2"
+  }
+}

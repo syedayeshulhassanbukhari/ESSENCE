@@ -9,8 +9,9 @@ import 'package:scentswapwebsite/screens/home_screen.dart';
 import 'package:scentswapwebsite/screens/individual_perfume_details.dart';
 import 'package:scentswapwebsite/screens/marketplace_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
+import 'config/marketplace_exchange_config.dart';
 import 'theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/responsive_provider.dart';
@@ -23,6 +24,21 @@ import 'config/fragella_config.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: 'assets/.env');
+  if (MarketplaceExchangeConfig.supabaseUrl.isEmpty ||
+      MarketplaceExchangeConfig.supabasePublishableKey.isEmpty) {
+    throw Exception(
+      'Missing SUPABASE_URL or SUPABASE_PUBLISHABLE_KEY (or SUPABASE_ANON_KEY) in assets/.env',
+    );
+  }
+  if (!MarketplaceExchangeConfig.supabaseUrl.startsWith('http')) {
+    throw Exception(
+      'SUPABASE_URL must be a project URL like https://<project-ref>.supabase.co',
+    );
+  }
+  await Supabase.initialize(
+    url: MarketplaceExchangeConfig.supabaseUrl,
+    anonKey: MarketplaceExchangeConfig.supabasePublishableKey,
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

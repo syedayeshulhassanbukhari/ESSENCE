@@ -140,12 +140,12 @@ class DiscoverFilterBar extends SliverPersistentHeaderDelegate {
                 items: const [
                   DropdownMenuItem(value: 'NEWEST', child: Text('NEWEST')),
                   DropdownMenuItem(
-                    value: 'PRICE: LOW-HIGH',
-                    child: Text('PRICE: LOW-HIGH'),
+                    value: 'A-Z',
+                    child: Text('A-Z'),
                   ),
                   DropdownMenuItem(
-                    value: 'PRICE: HIGH-LOW',
-                    child: Text('PRICE: HIGH-LOW'),
+                    value: 'MOST POPULAR',
+                    child: Text('MOST POPULAR'),
                   ),
                 ],
                 onChanged: (_) {},
@@ -345,16 +345,6 @@ class DiscoverCard extends StatelessWidget {
                         fragrance.oilType.isNotEmpty
                             ? fragrance.oilType.toUpperCase()
                             : 'EDP',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: isDarkCard ? colors.white : colors.black,
-                                ),
-                      ),
-                      Text(
-                        fragrance.price.isNotEmpty
-                            ? '\$${fragrance.price}'
-                            : '—',
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w900,

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ScentSwap Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <h1 class="title">ScentSwap Exchange Studio</h1>
+      <p class="subtitle">Upload perfume images and publish exchange listings in rupees.</p>
+
+      <section class="panel">
+        <div class="row">
+          <div class="field">
+            <label for="adminPassword">Admin Password</label>
+            <input id="adminPassword" type="password" placeholder="Enter admin password" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <form id="createForm">
+          <div class="row">
+            <div class="field">
+              <label for="name">Perfume Name</label>
+              <input id="name" name="name" required />
+            </div>
+            <div class="field">
+              <label for="price">Price (PKR)</label>
+              <input id="price" name="price" type="number" min="1" step="0.01" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="image">Image</label>
+              <input id="image" name="image" type="file" accept="image/*" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Describe bottle condition, scent profile, and exchange notes." required></textarea>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Upload Listing</button>
+            <button type="button" class="secondary" id="refreshBtn">Refresh Listings</button>
+          </div>
+          <p id="status" class="status"></p>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Current Listings</h2>
+        <div id="listingGrid" class="grid"></div>
+      </section>
+    </main>
+
+    <script src="/main.js"></script>
+  </body>
+</html>

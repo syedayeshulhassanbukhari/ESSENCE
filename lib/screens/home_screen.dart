@@ -358,7 +358,6 @@ Widget _buildHeroImageCard(BuildContext context) {
         brightness == Brightness.light ? colors.black : colors.white;
     final isSoldOut = fragrance.popularity.toLowerCase().contains('out of stock');
     final badge = fragrance.year.isNotEmpty ? 'NEW' : null;
-    final price = fragrance.price.isNotEmpty ? '\$${fragrance.price}' : '—';
 
     return GestureDetector(
       onTap: () {
@@ -412,20 +411,13 @@ Widget _buildHeroImageCard(BuildContext context) {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(
+                      Expanded(
                         child: Text(
                           fragrance.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
-                      ),
-                      const SizedBox(width: AppTheme.spacing2),
-                      Text(
-                        price,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
                       ),
                     ],
                   ),

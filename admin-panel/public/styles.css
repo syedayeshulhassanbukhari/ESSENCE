@@ -1,0 +1,187 @@
+:root {
+  --bg: #f7f4ea;
+  --text: #151515;
+  --card: #fffef9;
+  --accent: #facc15;
+  --accent-2: #00f0ff;
+  --danger: #fb923c;
+  --line: #121212;
+  --ok: #21a35f;
+  --pink: #f472b6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 16% 0%, #fff4bf 0%, transparent 34%),
+    radial-gradient(circle at 88% 12%, #d2f7ff 0%, transparent 30%),
+    linear-gradient(135deg, #fefaf0 0%, #f8f1dd 40%, #efe8d4 100%),
+    var(--bg);
+  color: var(--text);
+}
+
+.shell {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 28px;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  margin: 10px 0 24px;
+  font-weight: 600;
+  max-width: 760px;
+}
+
+.panel {
+  background: var(--card);
+  border: 4px solid var(--line);
+  box-shadow: 10px 10px 0 var(--line);
+  padding: 20px;
+  margin-bottom: 22px;
+  position: relative;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: auto 12px 12px auto;
+  width: 16px;
+  height: 16px;
+  background: var(--pink);
+  border: 2px solid var(--line);
+}
+
+.row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+textarea {
+  border: 3px solid var(--line);
+  padding: 12px;
+  background: white;
+  font-weight: 500;
+}
+
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  border: 3px solid var(--line);
+  padding: 11px 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--accent);
+  box-shadow: 5px 5px 0 var(--line);
+  cursor: pointer;
+}
+
+button:hover {
+  transform: translate(-2px, -2px);
+}
+
+button.secondary {
+  background: var(--accent-2);
+}
+
+button.danger {
+  background: var(--danger);
+  color: white;
+}
+
+.status {
+  margin-top: 12px;
+  font-weight: 700;
+}
+
+.status.ok {
+  color: var(--ok);
+}
+
+.status.err {
+  color: #dc2626;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  border: 3px solid var(--line);
+  background: white;
+  box-shadow: 6px 6px 0 var(--line);
+  display: flex;
+  flex-direction: column;
+}
+
+.card img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-bottom: 3px solid var(--line);
+}
+
+.card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tiny {
+  font-size: 0.85rem;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    padding: 14px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
