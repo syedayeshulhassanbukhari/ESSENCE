@@ -5,7 +5,7 @@ import '../services/fragella_api_client.dart';
 
 class HomeFeaturedProvider extends ChangeNotifier {
   HomeFeaturedProvider({required FragellaApiClient apiClient})
-      : _apiClient = apiClient;
+    : _apiClient = apiClient;
 
   final FragellaApiClient _apiClient;
 
@@ -32,7 +32,10 @@ class HomeFeaturedProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final results = await _apiClient.searchFragrances(query: query, limit: limit);
+      final results = await _apiClient.searchFragrances(
+        query: query,
+        limit: limit,
+      );
       _items
         ..clear()
         ..addAll(results);

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>ALCHEMIST ADMIN - Initialize Scent</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f8f8f5",
+                        "on-surface-variant": "#000000",
+                        "inverse-on-surface": "#ffffff",
+                        "surface-variant": "#ffffff",
+                        "secondary-fixed-dim": "#bef264",
+                        "surface-bright": "#ffffff",
+                        "surface-container-low": "#ffffff",
+                        "on-tertiary-fixed-variant": "#000000",
+                        "on-primary": "#000000",
+                        "on-secondary": "#000000",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#000000",
+                        "secondary-container": "#fb923c",
+                        "on-surface": "#000000",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#f472b6",
+                        "on-primary-fixed-variant": "#000000",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#fac638",
+                        "tertiary": "#f472b6",
+                        "surface-container-highest": "#000000",
+                        "on-secondary-fixed": "#000000",
+                        "on-tertiary-fixed": "#000000",
+                        "primary-fixed": "#fac638",
+                        "surface": "#f8f8f5",
+                        "outline-variant": "#000000",
+                        "on-primary-fixed": "#000000",
+                        "on-background": "#000000",
+                        "on-secondary-container": "#000000",
+                        "primary": "#fac638",
+                        "surface-container": "#f8f8f5",
+                        "surface-tint": "#fac638",
+                        "outline": "#000000",
+                        "on-primary-container": "#000000",
+                        "inverse-surface": "#231e0f",
+                        "tertiary-container": "#60a5fa",
+                        "surface-container-high": "#ffffff",
+                        "tertiary-fixed": "#f472b6",
+                        "primary-container": "#fac638",
+                        "secondary-fixed": "#bef264",
+                        "surface-dim": "#e2d9ca",
+                        "inverse-primary": "#fac638",
+                        "on-tertiary": "#000000",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#000000",
+                        "secondary": "#bef264"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Space Grotesk"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .neo-shadow {
+            box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 1);
+        }
+
+        .neo-shadow-lg {
+            box-shadow: 8px 8px 0 0 rgba(0, 0, 0, 1);
+        }
+
+        .neo-shadow-hover:hover {
+            box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 1);
+            transform: translate(2px, 2px);
+        }
+
+        .neo-shadow-active:active {
+            box-shadow: 0px 0px 0 0 rgba(0, 0, 0, 1);
+            transform: translate(4px, 4px);
+        }
+    </style>
+</head>
+
+<body class="bg-background font-body text-on-background">
+    <!-- TopNavBar -->
+    <header
+        class="bg-[#f8f8f5] dark:bg-black fixed top-0 w-full z-50 border-b-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] flex justify-between items-center px-6 h-20">
+        <div class="flex items-center gap-4">
+            <div class="text-2xl font-['Space_Grotesk'] font-black bg-[#fac638] text-black px-4 py-1 border-4 border-black tracking-tighter uppercase"
+                style="">
+                ALCHEMIST ADMIN
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex gap-8">
+                <a class="font-['Space_Grotesk'] font-extrabold uppercase tracking-tighter text-black/60 dark:text-white/60 hover:bg-[#fac638] hover:text-black transition-all px-2 py-1"
+                    href="#" style=""><br></a>
+                <a class="font-['Space_Grotesk'] font-extrabold uppercase tracking-tighter text-black border-b-4 border-[#fac638] hover:bg-[#fac638] hover:text-black transition-all px-2 py-1"
+                    href="#" style=""><br></a>
+                <a class="font-['Space_Grotesk'] font-extrabold uppercase tracking-tighter text-black/60 dark:text-white/60 hover:bg-[#fac638] hover:text-black transition-all px-2 py-1"
+                    href="#" style=""><br></a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="material-symbols-outlined text-black active:translate-x-[2px] active:translate-y-[2px]"
+                    data-icon="notifications" style="">notifications</button>
+                <button class="material-symbols-outlined text-black active:translate-x-[2px] active:translate-y-[2px]"
+                    data-icon="settings" style="">settings</button>
+                <div class="w-10 h-10 border-2 border-black overflow-hidden">
+                    <img alt="Admin Profile Avatar" class="w-full h-full object-cover"
+                        data-alt="professional male portrait with minimalist background, high contrast black and white photography"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8eNc4CXyfA9-1TEXk5zQTscwpPCyo-5GG8XzJg1VUJzWqTPqWOIt5gT7_Ktt-VgyrJut0oelhJvFcGULZ630HqPT5eKnjA09PBryJ-EKswvgwC6B6rvMyud9rt-eTT-2TwroMRw0Q0QSbO-Ix9qnX870F2weESRgrj4km_O7xQzshtCauz9fYROQyAAiLZLiTcuzE_Cru15GC4aVPZ6FyZpJ7dA6-NI69j6-_JDiVdpZXQaXUwnc4OGgakOT1Lmki-0WjGh1YWTU"
+                        style="">
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="flex min-h-screen pt-20">
+        <!-- SideNavBar -->
+        <aside
+            class="hidden md:flex flex-col w-64 bg-[#f8f8f5] dark:bg-black border-r-4 border-black fixed h-[calc(100vh-5rem)] overflow-y-auto py-4">
+            <div class="px-6 mb-8">
+                <h2 class="font-['Space_Grotesk'] font-bold uppercase text-black dark:text-white text-xs tracking-widest opacity-50"
+                    style="">LAB CONTROL</h2>
+                <p class="font-['Space_Grotesk'] font-bold text-[10px] text-black/40" style="">V1.0.4-STABLE</p>
+            </div>
+            <nav class="flex-1 space-y-1">
+                <a class="flex items-center gap-3 text-black dark:text-white p-4 m-2 border-4 border-transparent hover:bg-[#fb923c] hover:border-black transition-all group font-['Space_Grotesk'] font-bold uppercase"
+                    href="#" style="">
+                    <span class="material-symbols-outlined" data-icon="grid_view" style="">grid_view</span>
+                    <span class="" style="">Dashboard</span>
+                </a>
+                <a class="flex items-center gap-3 bg-[#bef264] text-black border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] m-2 p-4 transition-all font-['Space_Grotesk'] font-bold uppercase"
+                    href="#" style="">
+                    <span class="material-symbols-outlined" data-icon="Science" style="">science</span>
+                    <span class="" style="">Inventoy</span>
+                </a>
+                <a class="flex items-center gap-3 text-black dark:text-white p-4 m-2 border-4 border-transparent hover:bg-[#fb923c] hover:border-black transition-all group font-['Space_Grotesk'] font-bold uppercase"
+                    href="#" style="">
+                    <span class="material-symbols-outlined" data-icon="Bar_Chart" style="">bar_chart</span>
+                    <span class="" style="">Analytics</span>
+                </a>
+                <a class="flex items-center gap-3 text-black dark:text-white p-4 m-2 border-4 border-transparent hover:bg-[#fb923c] hover:border-black transition-all group font-['Space_Grotesk'] font-bold uppercase"
+                    href="#" style="">
+                    <span class="material-symbols-outlined" data-icon="shopping_bag" style="">shopping_bag</span>
+                    <span class="" style="">Orders</span>
+                </a>
+                <a class="flex items-center gap-3 text-black dark:text-white p-4 m-2 border-4 border-transparent hover:bg-[#fb923c] hover:border-black transition-all group font-['Space_Grotesk'] font-bold uppercase"
+                    href="#" style="">
+                    <span class="material-symbols-outlined" data-icon="tune" style="">tune</span>
+                    <span class="" style="">Settings</span>
+                </a>
+            </nav>
+            <div class="px-4 py-4 mt-auto border-t-4 border-black">
+                <button
+                    class="w-full bg-[#fac638] text-black font-['Space_Grotesk'] font-black border-4 border-black py-3 neo-shadow neo-shadow-hover neo-shadow-active uppercase tracking-tight"
+                    style="">
+                    NEW SCENT
+                </button>
+                <a class="flex items-center gap-3 text-black dark:text-white p-4 mt-2 border-4 border-transparent hover:bg-error hover:text-white transition-all font-['Space_Grotesk'] font-bold uppercase"
+                    href="#" style="">
+                    <span class="material-symbols-outlined" data-icon="logout" style="">logout</span>
+                    <span class="" style="">Logout</span>
+                </a>
+            </div>
+        </aside>
+        <!-- Main Content Area -->
+        <main class="flex-1 md:ml-64 p-8 bg-background">
+            <div class="max-w-5xl mx-auto">
+                <header class="mb-12">
+                    <h1 class="text-7xl md:text-8xl font-black tracking-tighter uppercase leading-none mb-4" style="">
+                        Initialize<br><span class="text-secondary" style="">Scent</span>
+                    </h1>
+                    <div class="h-2 w-32 bg-black"></div>
+                </header>
+                <form class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left Column: Media -->
+                    <div class="lg:col-span-5 space-y-8">
+                        <div
+                            class="group relative bg-surface-variant border-4 border-black border-dashed h-[500px] flex flex-col items-center justify-center p-8 transition-colors hover:bg-secondary/10">
+                            <input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" type="file">
+                            <div class="text-center pointer-events-none">
+                                <span class="material-symbols-outlined text-8xl mb-4" data-icon="upload_file"
+                                    style="">upload_file</span>
+                                <p class="text-2xl font-black uppercase tracking-tight" style="">Drag Essence Blueprint
+                                </p>
+                                <p class="text-sm font-bold opacity-60" style="">RAW IMAGE OR DESIGN FILE (MAX 50MB)</p>
+                            </div>
+                            <div class="absolute bottom-4 right-4 bg-black text-white px-3 py-1 font-black text-xs uppercase"
+                                style="">
+                                Required
+                            </div>
+                        </div>
+                        <div class="bg-tertiary-fixed p-6 border-4 border-black neo-shadow">
+                            <h3 class="text-xl font-black uppercase mb-4 flex items-center gap-2" style="">
+                                <span class="material-symbols-outlined" data-icon="info" style="">info</span>
+                                Compliance Check
+                            </h3>
+                            <ul class="space-y-2 font-bold text-sm uppercase">
+                                <li class="flex items-center gap-2" style="">
+                                    <span class="material-symbols-outlined text-xs" data-icon="check_circle"
+                                        style="">check_circle</span>
+                                    IFRA Standard Verified
+                                </li>
+                                <li class="flex items-center gap-2" style="">
+                                    <span class="material-symbols-outlined text-xs" data-icon="check_circle"
+                                        style="">check_circle</span>
+                                    Synthetic Component Log
+                                </li>
+                                <li class="flex items-center gap-2" style="">
+                                    <span class="material-symbols-outlined text-xs" data-icon="check_circle"
+                                        style="">check_circle</span>
+                                    Eco-Solvent Match
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Right Column: Details -->
+                    <div class="lg:col-span-7 space-y-8">
+                        <div class="space-y-6">
+                            <!-- Name Field -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-black uppercase tracking-widest text-black/60"
+                                    style="">Product Designation</label>
+                                <input
+                                    class="w-full bg-white border-4 border-black p-4 text-2xl font-black placeholder:text-zinc-400 focus:ring-0 focus:border-secondary transition-all neo-shadow"
+                                    placeholder="E.G. CHROME OZONE V2" type="text">
+                            </div>
+                            <!-- Pricing -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-black uppercase tracking-widest text-black/60"
+                                    style="">Market Value (Credits)</label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-black"
+                                        style="">$</span>
+                                    <input
+                                        class="w-full bg-white border-4 border-black p-4 pl-10 text-2xl font-black placeholder:text-zinc-400 focus:ring-0 focus:border-secondary transition-all neo-shadow"
+                                        placeholder="0.00" type="number">
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-black uppercase tracking-widest text-black/60"
+                                    style="">Olfactory Narrative</label>
+                                <textarea
+                                    class="w-full bg-white border-4 border-black p-4 text-lg font-bold placeholder:text-zinc-400 focus:ring-0 focus:border-secondary transition-all neo-shadow resize-none"
+                                    placeholder="DESCRIBE THE VISCERAL EXPERIENCE..." rows="4"></textarea>
+                            </div>
+                            <!-- Notes Multi-select (Custom UI) -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-black uppercase tracking-widest text-black/60"
+                                    style="">Molecular Composition (Notes)</label>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                    <label class="cursor-pointer" style="">
+                                        <input class="hidden peer" type="checkbox">
+                                        <div class="border-4 border-black p-3 font-black text-center uppercase text-sm peer-checked:bg-secondary-container transition-all hover:bg-background"
+                                            style="">Sandalwood</div>
+                                    </label>
+                                    <label class="cursor-pointer" style="">
+                                        <input checked="" class="hidden peer" type="checkbox">
+                                        <div class="border-4 border-black p-3 font-black text-center uppercase text-sm peer-checked:bg-secondary-container transition-all hover:bg-background"
+                                            style="">Bergamot</div>
+                                    </label>
+                                    <label class="cursor-pointer" style="">
+                                        <input class="hidden peer" type="checkbox">
+                                        <div class="border-4 border-black p-3 font-black text-center uppercase text-sm peer-checked:bg-secondary-container transition-all hover:bg-background"
+                                            style="">Civet</div>
+                                    </label>
+                                    <label class="cursor-pointer" style="">
+                                        <input checked="" class="hidden peer" type="checkbox">
+                                        <div class="border-4 border-black p-3 font-black text-center uppercase text-sm peer-checked:bg-secondary-container transition-all hover:bg-background"
+                                            style="">Ozone</div>
+                                    </label>
+                                    <label class="cursor-pointer" style="">
+                                        <input class="hidden peer" type="checkbox">
+                                        <div class="border-4 border-black p-3 font-black text-center uppercase text-sm peer-checked:bg-secondary-container transition-all hover:bg-background"
+                                            style="">Petrichor</div>
+                                    </label>
+                                    <label class="cursor-pointer" style="">
+                                        <input class="hidden peer" type="checkbox">
+                                        <div class="border-4 border-black p-3 font-black text-center uppercase text-sm peer-checked:bg-secondary-container transition-all hover:bg-background"
+                                            style="">Ambergris</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Final Action -->
+                        <div class="pt-6">
+                            <button
+                                class="group relative w-full bg-primary p-6 border-4 border-black neo-shadow-lg neo-shadow-hover neo-shadow-active transition-all"
+                                type="submit" style="">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-4xl font-black uppercase tracking-tighter" style="">Initialize
+                                        Scent</span>
+                                    <span
+                                        class="material-symbols-outlined text-4xl group-hover:translate-x-2 transition-transform"
+                                        data-icon="bolt" style="">bolt</span>
+                                </div>
+                                <div class="absolute -top-3 -right-3 bg-black text-white px-4 py-1 text-xs font-black uppercase tracking-widest border-2 border-white"
+                                    style="">
+                                    System Ready
+                                </div>
+                            </button>
+                            <p class="mt-4 text-center font-bold text-xs uppercase tracking-widest opacity-40" style="">
+                                Warning: Initializing will commit Molecular ID to the Global Registry
+                            </p>
+                        </div>
+                    </div>
+                </form>
+                <!-- Status Bento Feed (Extra context) -->
+                <section class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white border-4 border-black p-6 neo-shadow">
+                        <span class="material-symbols-outlined text-4xl mb-4" data-icon="precision_manufacturing"
+                            style="">precision_manufacturing</span>
+                        <h4 class="text-2xl font-black uppercase tracking-tighter mb-2" style="">Production Status</h4>
+                        <div class="h-4 bg-background border-2 border-black overflow-hidden">
+                            <div class="h-full bg-secondary w-3/4 border-r-2 border-black"></div>
+                        </div>
+                        <p class="mt-4 font-bold text-sm uppercase" style="">Active Distiller: 75% Capacity</p>
+                    </div>
+                    <div class="bg-secondary border-4 border-black p-6 neo-shadow">
+                        <span class="material-symbols-outlined text-4xl mb-4" data-icon="monitoring"
+                            style="">monitoring</span>
+                        <h4 class="text-2xl font-black uppercase tracking-tighter mb-2" style="">Market Velocity</h4>
+                        <div class="flex items-end gap-1 h-12">
+                            <div class="w-full bg-black h-4"></div>
+                            <div class="w-full bg-black h-8"></div>
+                            <div class="w-full bg-black h-6"></div>
+                            <div class="w-full bg-black h-12"></div>
+                            <div class="w-full bg-black h-10"></div>
+                        </div>
+                        <p class="mt-4 font-bold text-sm uppercase" style="">+12.4% Global Demand</p>
+                    </div>
+                    <div class="bg-surface-container-highest text-white border-4 border-black p-6 neo-shadow">
+                        <span class="material-symbols-outlined text-4xl mb-4 text-primary" data-icon="security"
+                            style="">security</span>
+                        <h4 class="text-2xl font-black uppercase tracking-tighter mb-2" style="">Registry Lock</h4>
+                        <p class="font-bold text-sm uppercase text-white/70" style="">ALL SCENT SIGNATURES ARE ENCRYPTED
+                            VIA BIO-BLOCKCHAIN LAYER 4.</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <!-- Bottom Navigation for Mobile -->
+    <nav
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-[#f8f8f5] border-t-4 border-black flex justify-around items-center h-16 px-4 z-50">
+        <button class="flex flex-col items-center justify-center p-2 text-black/60" style="">
+            <span class="material-symbols-outlined" data-icon="grid_view" style="">grid_view</span>
+        </button>
+        <button
+            class="flex flex-col items-center justify-center p-2 text-black border-4 border-black bg-[#bef264] neo-shadow-sm -mt-8 w-14 h-14"
+            style="">
+            <span class="material-symbols-outlined" data-icon="add" style="">add</span>
+        </button>
+        <button class="flex flex-col items-center justify-center p-2 text-black/60" style="">
+            <span class="material-symbols-outlined" data-icon="tune" style="">tune</span>
+        </button>
+    </nav>
+</body>
+
+</html>

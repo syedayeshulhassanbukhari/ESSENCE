@@ -25,6 +25,8 @@ class MarketplaceScreen extends StatefulWidget {
 }
 
 class _MarketplaceScreenState extends State<MarketplaceScreen> {
+  bool _queuedInitialLoad = false;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -39,7 +41,15 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
       child: Builder(
         builder: (context) {
           final exchangeProvider = context.watch<ExchangeListingProvider>();
-          context.read<ExchangeListingProvider>().ensureLoaded();
+          if (!_queuedInitialLoad) {
+            _queuedInitialLoad = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) {
+                return;
+              }
+              context.read<ExchangeListingProvider>().ensureLoaded();
+            });
+          }
 
           final brightness = Theme.of(context).brightness;
           final colors = context.watch<ThemeProvider>().colors;
