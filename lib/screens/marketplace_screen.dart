@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../models/exchange_listing.dart';
@@ -10,7 +8,6 @@ import '../providers/responsive_provider.dart';
 import '../providers/theme_provider.dart';
 import '../services/exchange_marketplace_service.dart';
 import '../theme/app_theme.dart';
-import '../utils/pkr_input_formatter.dart';
 import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
 
@@ -126,14 +123,6 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           runSpacing: AppTheme.spacing2.h,
           children: [
             NeoButton(
-              label: 'Add Your Perfume',
-              onPressed: () => _showAddPerfumeDialog(context, exchangeProvider),
-              height: isSmall ? 52.h : 56.h,
-              textStyle: textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            NeoButton(
               label: 'Refresh Listings',
               onPressed: exchangeProvider.refreshListings,
               backgroundColor: colors.white,
@@ -204,158 +193,6 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     );
   }
 
-  Future<void> _showAddPerfumeDialog(
-    BuildContext context,
-    ExchangeListingProvider exchangeProvider,
-  ) async {
-    final nameController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final priceController = TextEditingController();
-    final picker = ImagePicker();
-    XFile? selectedImage;
-
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Upload Your Perfume'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(labelText: 'Perfume Name'),
-                    ),
-                    SizedBox(height: AppTheme.spacing4.h),
-                    TextField(
-                      controller: priceController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]')),
-                        PkrInputFormatter(),
-                      ],
-                      decoration: const InputDecoration(
-                        labelText: 'Price (PKR)',
-                        prefixText: 'PKR ',
-                      ),
-                    ),
-                    SizedBox(height: AppTheme.spacing4.h),
-                    TextField(
-                      controller: descriptionController,
-                      maxLines: 4,
-                      decoration: const InputDecoration(labelText: 'Description'),
-                    ),
-                    SizedBox(height: AppTheme.spacing4.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            selectedImage == null
-                                ? 'No image selected'
-                                : selectedImage!.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        SizedBox(width: AppTheme.spacing2.w),
-                        TextButton(
-                          onPressed: () async {
-                            final file = await picker.pickImage(
-                              source: ImageSource.gallery,
-                              imageQuality: 85,
-                            );
-                            if (file != null) {
-                              setState(() {
-                                selectedImage = file;
-                              });
-                            }
-                          },
-                          child: const Text('Choose Image'),
-                        ),
-                      ],
-                    ),
-                    if (exchangeProvider.errorMessage.isNotEmpty)
-                      Padding(
-                        padding: EdgeInsets.only(top: AppTheme.spacing2.h),
-                        child: Text(
-                          exchangeProvider.errorMessage,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: exchangeProvider.isSubmitting
-                      ? null
-                      : () => Navigator.of(dialogContext).pop(),
-                  child: const Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: exchangeProvider.isSubmitting
-                      ? null
-                      : () async {
-                          final name = nameController.text.trim();
-                          final description = descriptionController.text.trim();
-                          final price = priceController.text.trim();
-
-                          if (name.isEmpty || description.isEmpty || price.isEmpty) {
-                            ScaffoldMessenger.of(dialogContext).showSnackBar(
-                              const SnackBar(
-                                content: Text('Name, description, and valid PKR price are required.'),
-                              ),
-                            );
-                            return;
-                          }
-
-                          if (selectedImage == null) {
-                            ScaffoldMessenger.of(dialogContext).showSnackBar(
-                              const SnackBar(
-                                content: Text('Please select an image.'),
-                              ),
-                            );
-                            return;
-                          }
-
-                          final success = await exchangeProvider.submitListing(
-                            name: name,
-                            description: description,
-                            price: price,
-                            image: selectedImage!,
-                          );
-
-                          if (success && dialogContext.mounted) {
-                            Navigator.of(dialogContext).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Your perfume is listed for exchange.'),
-                              ),
-                            );
-                          }
-                        },
-                  child: exchangeProvider.isSubmitting
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Submit'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
 }
 
 class _ExchangeListingCard extends StatelessWidget {

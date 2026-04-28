@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Initialize Scent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ececeb;
+      --text: #090909;
+      --line: #0b0b0b;
+      --lime: #b7eb58;
+      --yellow: #f3c531;
+      --orange: #f29a3e;
+      --pink: #e869af;
+      --muted: #98a1b0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg);
+      border-bottom: 3px solid var(--line);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.6rem;
+      font-style: italic;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text);
+      border: 2px solid var(--line);
+      background: #fff;
+      box-shadow: 3px 3px 0 var(--line);
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .nav-link.active {
+      background: var(--yellow);
+    }
+
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 20px 28px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+    }
+
+    .title span {
+      color: var(--lime);
+      display: block;
+    }
+
+    .title-rule {
+      width: 84px;
+      height: 6px;
+      background: var(--line);
+      margin-top: 10px;
+    }
+
+    .hero { margin-bottom: 18px; }
+
+    .layout {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 250px 1fr;
+    }
+
+    .left-col, .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .upload-box {
+      border: 3px dashed var(--line);
+      min-height: 330px;
+      background: #efefef;
+      position: relative;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 20px;
+      cursor: pointer;
+    }
+
+    .upload-box input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-icon { font-size: 54px; line-height: 1; }
+    .upload-title { margin: 8px 0 4px; font-size: 1.05rem; font-weight: 800; text-transform: uppercase; }
+    .upload-sub { margin: 0; font-size: 0.72rem; font-weight: 700; color: #5c6470; }
+    .tag {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      background: var(--line);
+      color: #fff;
+      border: 2px solid #fff;
+      padding: 2px 8px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .compliance {
+      border: 3px solid var(--line);
+      background: var(--pink);
+      box-shadow: 4px 4px 0 var(--line);
+      padding: 14px 16px;
+    }
+
+    .compliance h3 {
+      margin: 0 0 8px;
+      font-size: 1.45rem;
+      text-transform: uppercase;
+    }
+
+    .compliance ul { margin: 0; padding: 0; list-style: none; }
+    .compliance li { font-size: 0.78rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field > label {
+      font-size: 0.73rem;
+      font-weight: 800;
+      letter-spacing: 0.17em;
+      color: #3f4450;
+      text-transform: uppercase;
+    }
+
+    input, textarea, button { font: inherit; }
+    input, textarea {
+      width: 100%;
+      border: 3px solid var(--line);
+      background: #f7f7f7;
+      box-shadow: 3px 3px 0 var(--line);
+      padding: 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #111;
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--muted); text-transform: uppercase; }
+    textarea { min-height: 110px; resize: vertical; }
+
+    .money-wrap { position: relative; }
+    .money-wrap span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 1.2rem; }
+    .money-wrap input { padding-left: 30px; }
+
+    button {
+      border: 3px solid var(--line);
+      padding: 12px 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: var(--yellow);
+      box-shadow: 5px 5px 0 var(--line);
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      width: 100%;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: clamp(1.3rem, 3.3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .submit-btn em {
+      position: absolute;
+      right: -3px;
+      top: -26px;
+      background: var(--line);
+      color: #fff;
+      border: 2px solid #fff;
+      padding: 4px 9px;
+      font-size: 0.63rem;
+      font-style: normal;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .warning {
+      margin: 9px 0 0;
+      text-align: center;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: #7b818b;
+      text-transform: uppercase;
+    }
+
+    .status { margin-top: 14px; font-weight: 700; }
+    .status.ok { color: #1a7f37; }
+    .status.err { color: #dc2626; }
+
+    @media (max-width: 760px) {
+      .top-nav {
+        padding: 10px 12px;
+      }
+
+      .brand {
+        font-size: 1.2rem;
+      }
+
+      .nav-links {
+        gap: 6px;
+      }
+
+      .nav-link {
+        font-size: 0.68rem;
+        padding: 6px 8px;
+      }
+
+      .shell { padding: 14px; }
+      .layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <a class="brand" href="/">ESSENCE.</a>
+    <nav class="nav-links">
+      <a class="nav-link" href="/#/home">Home</a>
+      <a class="nav-link" href="/#/discover">Discover</a>
+      <a class="nav-link" href="/#/marketplace">Marketplace</a>
+      <a class="nav-link active" href="/admin_panel.html">Upload Your Perfume</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <header class="hero">
+      <h1 class="title">
+        INITIALIZE
+        <span>SCENT</span>
+      </h1>
+      <div class="title-rule"></div>
+    </header>
+
+    <form id="createForm" class="layout">
+      <section class="left-col">
+        <label class="upload-box" for="image">
+          <input id="image" name="image" type="file" accept="image/*" required />
+          <div class="upload-icon">⬆</div>
+          <p class="upload-title">DRAG ESSENCE BLUEPRINT</p>
+          <p class="upload-sub">RAW IMAGE OR DESIGN FILE (MAX 50MB)</p>
+          <span class="tag">REQUIRED</span>
+        </label>
+
+        <aside class="compliance">
+          <h3>⊙ COMPLIANCE CHECK</h3>
+          <ul>
+            <li>⊙ IFRA STANDARD VERIFIED</li>
+            <li>⊙ SYNTHETIC COMPONENT LOG</li>
+            <li>⊙ ECO-SOLVENT MATCH</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="right-col">
+        <div class="field">
+          <label for="name">PRODUCT DESIGNATION</label>
+          <input id="name" name="name" placeholder="E.G. CHROME OZONE V2" required />
+        </div>
+
+        <div class="field">
+          <label for="price">MARKET VALUE (CREDITS)</label>
+          <div class="money-wrap">
+            <span>$</span>
+            <input id="price" name="price" type="number" min="1" step="0.01" placeholder="0.00" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="description">OLFACTORY NARRATIVE</label>
+          <textarea id="description" name="description" placeholder="DESCRIBE THE VISCERAL EXPERIENCE..." required></textarea>
+        </div>
+
+        <div class="submit-wrap">
+          <button type="submit" class="submit-btn">
+            <span>INITIALIZE SCENT</span>
+            <span>⚡</span>
+            <em>SYSTEM READY</em>
+          </button>
+          <p class="warning">WARNING: INITIALIZING WILL COMMIT MOLECULAR ID TO THE GLOBAL REGISTRY</p>
+        </div>
+
+        <p id="status" class="status"></p>
+      </section>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('createForm');
+    const statusEl = document.getElementById('status');
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message;
+      statusEl.className = `status ${isError ? 'err' : 'ok'}`;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('http://localhost:5050/api/exchange-listings', {
+          method: 'POST',
+          body: formData,
+        });
+
+        let payload = {};
+        try {
+          payload = await response.json();
+        } catch (_) {
+          payload = {};
+        }
+
+        if (!response.ok) {
+          throw new Error(payload.message || 'Upload failed');
+        }
+
+        form.reset();
+        setStatus('Listing uploaded successfully.');
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    });
+  </script>
+</body>
+</html>

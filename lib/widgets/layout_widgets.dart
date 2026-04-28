@@ -6,11 +6,36 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../theme/app_theme.dart';
 import '../providers/theme_provider.dart';
 import '../providers/responsive_provider.dart';
+import '../utils/open_admin_panel.dart';
 import 'neo_widgets.dart';
 
 // ===== APP HEADER =====
 class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
+
+  Future<void> _onUploadTap(BuildContext context) async {
+    final opened = await openAdminPanelPage();
+    if (!opened && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Admin panel is available on web only.'),
+        ),
+      );
+    }
+  }
+
+  void _onMobileMenuSelected(BuildContext context, String value) {
+    switch (value) {
+      case '/home':
+      case '/discover':
+      case '/marketplace':
+        _onNavTap(context, value);
+        return;
+      case 'upload':
+        _onUploadTap(context);
+        return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +56,7 @@ class AppHeader extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(
         horizontal: AppTheme.spacing4.w,
-        vertical: AppTheme.spacing4.h,
+        vertical: AppTheme.navBarVerticalPadding.h,
       ),
       child: Row(
         children: [
@@ -40,28 +65,65 @@ class AppHeader extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   color: textColor,
                   fontStyle: FontStyle.italic,
-                  fontSize: (isSmall ? 28 : 36).sp,
+                  fontSize: (isSmall
+                          ? AppTheme.navBrandFontSmall
+                          : AppTheme.navBrandFontLarge)
+                      .sp,
                 ),
           ),
+          const Spacer(),
           if (!isSmall) ...[
-            SizedBox(width: AppTheme.spacing6.w),
             ..._buildNavButtons(context),
           ],
-          const Spacer(),
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, _) {
-              return NeoIconButton(
-                icon: themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                backgroundColor: themeProvider.isDarkMode
-                  ? colors.primaryYellow
-                  : colors.white,
-                iconColor: themeProvider.isDarkMode
-                  ? colors.black
-                  : colors.black,
-                onPressed: () => themeProvider.toggleDarkMode(),
-              );
-            },
-          ),
+          if (!isSmall) ...[
+            SizedBox(width: AppTheme.spacing4.w),
+            SizedBox(
+              width: AppTheme.navUploadButtonWidth.w,
+              child: NeoButton(
+                label: 'Upload Your Perfume',
+                onPressed: () {
+                  _onUploadTap(context);
+                },
+                height: AppTheme.navButtonHeight.h,
+                textStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.0,
+                    ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.spacing4.w,
+                ),
+              ),
+            ),
+          ],
+          if (isSmall)
+            PopupMenuButton<String>(
+              tooltip: 'Menu',
+              onSelected: (value) => _onMobileMenuSelected(context, value),
+              itemBuilder: (context) => const [
+                PopupMenuItem<String>(
+                  value: '/home',
+                  child: Text('Home'),
+                ),
+                PopupMenuItem<String>(
+                  value: '/discover',
+                  child: Text('Discover'),
+                ),
+                PopupMenuItem<String>(
+                  value: '/marketplace',
+                  child: Text('Marketplace'),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem<String>(
+                  value: 'upload',
+                  child: Text('Upload Your Perfume'),
+                ),
+              ],
+              icon: Icon(
+                Icons.menu,
+                color: textColor,
+                size: AppTheme.navMenuIconSize.sp,
+              ),
+            ),
           SizedBox(width: AppTheme.spacing2.w),
           const _UserProfileAvatar(),
         ],
@@ -92,15 +154,18 @@ class AppHeader extends StatelessWidget {
         .map(
           (item) => Padding(
             padding: EdgeInsets.only(right: AppTheme.spacing2.w),
-            child: NeoButton(
-              label: item['label'] as String,
-              onPressed: () => _onNavTap(context, item['route'] as String),
-              backgroundColor: colors.white,
-              textColor: colors.black,
-              height: 40.h,
-              textStyle: navTextStyle,
-              padding: EdgeInsets.symmetric(
-                horizontal: AppTheme.spacing4.w,
+            child: SizedBox(
+              width: AppTheme.navButtonWidth.w,
+              child: NeoButton(
+                label: item['label'] as String,
+                onPressed: () => _onNavTap(context, item['route'] as String),
+                backgroundColor: colors.white,
+                textColor: colors.black,
+                height: AppTheme.navButtonHeight.h,
+                textStyle: navTextStyle,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.spacing2.w,
+                ),
               ),
             ),
           ),
@@ -115,6 +180,10 @@ class _UserProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
+    final isDarkMode = context.select<ThemeProvider, bool>(
+      (provider) => provider.isDarkMode,
+    );
+    final themeProvider = context.read<ThemeProvider>();
     User? user;
     try {
       user = FirebaseAuth.instance.currentUser;
@@ -129,8 +198,8 @@ class _UserProfileAvatar extends StatelessWidget {
 
     final photoUrl = user?.photoURL;
     final avatar = Container(
-      width: 48.w,
-      height: 48.w,
+      width: AppTheme.navAvatarSize.w,
+      height: AppTheme.navAvatarSize.w,
       decoration: BoxDecoration(
         color: bgColor,
         border: Border.all(color: borderColor, width: AppTheme.borderWidth),
@@ -144,14 +213,14 @@ class _UserProfileAvatar extends StatelessWidget {
               ? Image.network(
                   photoUrl,
                   fit: BoxFit.cover,
-                  width: 40.w,
-                  height: 40.w,
+                  width: AppTheme.navAvatarInnerSize.w,
+                  height: AppTheme.navAvatarInnerSize.w,
                   errorBuilder: (context, error, stackTrace) => Icon(
                     Icons.person,
                     color: brightness == Brightness.light
                         ? colors.black
                         : colors.white,
-                    size: 24.sp,
+                    size: AppTheme.navAvatarIconSize.sp,
                   ),
                 )
               : Icon(
@@ -159,7 +228,7 @@ class _UserProfileAvatar extends StatelessWidget {
                   color: brightness == Brightness.light
                       ? colors.black
                       : colors.white,
-                  size: 24.sp,
+                  size: AppTheme.navAvatarIconSize.sp,
                 ),
         ),
       ),
@@ -177,6 +246,10 @@ class _UserProfileAvatar extends StatelessWidget {
       ),
       onSelected: (value) {
         if (value == 1) {
+          themeProvider.toggleDarkMode();
+          return;
+        }
+        if (value == 2) {
           FirebaseAuth.instance.signOut();
         }
       },
@@ -198,6 +271,24 @@ class _UserProfileAvatar extends StatelessWidget {
         const PopupMenuDivider(),
         PopupMenuItem<int>(
           value: 1,
+          child: Row(
+            children: [
+              Icon(
+                isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                size: 18,
+              ),
+              const SizedBox(width: AppTheme.spacing2),
+              Text(
+                isDarkMode ? 'Light Mode' : 'Dark Mode',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem<int>(
+          value: 2,
           child: Row(
             children: [
               const Icon(Icons.logout, size: 18),

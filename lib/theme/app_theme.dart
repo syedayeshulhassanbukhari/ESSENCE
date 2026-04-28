@@ -22,6 +22,18 @@ class AppTheme {
   static const double shadowMedium = 4.0;
   static const double shadowSmall = 3.0;
 
+  // ===== NAVBAR TOKENS (GLOBAL REUSABLE) =====
+  static const double navBarVerticalPadding = 12.0;
+  static const double navBrandFontSmall = 28.0;
+  static const double navBrandFontLarge = 36.0;
+  static const double navButtonHeight = 42.0;
+  static const double navButtonWidth = 115.0;
+  static const double navUploadButtonWidth = 200.0;
+  static const double navMenuIconSize = 26.0;
+  static const double navAvatarSize = 48.0;
+  static const double navAvatarInnerSize = 40.0;
+  static const double navAvatarIconSize = 24.0;
+
   // Light theme
   static ThemeData lightTheme(ThemeColors colors) {
     return ThemeData(

@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Scent Explorer | Discovery Lab</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Scent Explorer | Discovery Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -26,247 +31,305 @@
                         "display": ["Space Grotesk"]
                     },
                     borderRadius: {
-                        "DEFAULT": "0.125rem", 
-                        "lg": "0.25rem", 
-                        "xl": "0.5rem", 
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
                         "full": "0.75rem"
                     },
                 },
             },
         }
     </script>
-<style>
+    <style>
         .neo-shadow {
-            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+            box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
         }
+
         .neo-shadow-lg {
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+            box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
         }
+
         .neo-shadow-hover:hover {
             transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+            box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
         }
+
         .neo-shadow-active:active {
             transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
+            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
         }
+
         .border-4-black {
             border: 4px solid black;
         }
     </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white transition-colors duration-200">
-<!-- Global Navigation Bar -->
-<nav class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b-4 border-black px-6 py-4 flex items-center justify-between">
-<div class="flex items-center gap-8">
-<a class="text-3xl font-extrabold tracking-tighter border-2 border-black px-2 bg-primary neo-shadow" href="#">
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white transition-colors duration-200">
+    <!-- Global Navigation Bar -->
+    <nav
+        class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b-4 border-black px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-8">
+            <a class="text-3xl font-extrabold tracking-tighter border-2 border-black px-2 bg-primary neo-shadow"
+                href="#">
                 SCENT.LAB
             </a>
-<div class="hidden md:flex items-center gap-6 font-bold uppercase tracking-tight">
-<div class="relative group">
-<button class="flex items-center gap-1 hover:text-primary transition-colors">
+            <div class="hidden md:flex items-center gap-6 font-bold uppercase tracking-tight">
+                <div class="relative group">
+                    <button class="flex items-center gap-1 hover:text-primary transition-colors">
                         Discovery <span class="material-icons">expand_more</span>
-</button>
-<!-- Mock Dropdown -->
-<div class="absolute top-full left-0 hidden group-hover:block w-48 bg-white border-4 border-black neo-shadow-lg mt-2 p-2">
-<a class="block p-2 hover:bg-primary/20" href="#">NEW ARRIVALS</a>
-<a class="block p-2 hover:bg-primary/20" href="#">BEST SELLERS</a>
-<a class="block p-2 hover:bg-primary/20" href="#">COLLECTIONS</a>
-</div>
-</div>
-<div class="relative group">
-<button class="flex items-center gap-1 hover:text-primary transition-colors">
+                    </button>
+                    <!-- Mock Dropdown -->
+                    <div
+                        class="absolute top-full left-0 hidden group-hover:block w-48 bg-white border-4 border-black neo-shadow-lg mt-2 p-2">
+                        <a class="block p-2 hover:bg-primary/20" href="#">NEW ARRIVALS</a>
+                        <a class="block p-2 hover:bg-primary/20" href="#">BEST SELLERS</a>
+                        <a class="block p-2 hover:bg-primary/20" href="#">COLLECTIONS</a>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center gap-1 hover:text-primary transition-colors">
                         Marketplace <span class="material-icons">expand_more</span>
-</button>
-<!-- Mock Dropdown -->
-<div class="absolute top-full left-0 hidden group-hover:block w-48 bg-white border-4 border-black neo-shadow-lg mt-2 p-2">
-<a class="block p-2 hover:bg-primary/20" href="#">VINTAGE DEALS</a>
-<a class="block p-2 hover:bg-primary/20" href="#">RARE FINDS</a>
-</div>
-</div>
-<a class="hover:text-primary transition-colors" href="#">Archive</a>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<button class="material-icons border-4 border-black p-2 neo-shadow neo-shadow-hover bg-white text-black">search</button>
-<button class="material-icons border-4 border-black p-2 neo-shadow neo-shadow-hover bg-primary text-black">shopping_bag</button>
-<button class="md:hidden material-icons border-4 border-black p-2 bg-white">menu</button>
-</div>
-</nav>
-<!-- Hero Title -->
-<header class="p-8 md:p-16 border-b-4 border-black bg-primary/10">
-<h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none">
+                    </button>
+                    <!-- Mock Dropdown -->
+                    <div
+                        class="absolute top-full left-0 hidden group-hover:block w-48 bg-white border-4 border-black neo-shadow-lg mt-2 p-2">
+                        <a class="block p-2 hover:bg-primary/20" href="#">VINTAGE DEALS</a>
+                        <a class="block p-2 hover:bg-primary/20" href="#">RARE FINDS</a>
+                    </div>
+                </div>
+                <a class="hover:text-primary transition-colors" href="#">Archive</a>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <button
+                class="material-icons border-4 border-black p-2 neo-shadow neo-shadow-hover bg-white text-black">search</button>
+            <button
+                class="material-icons border-4 border-black p-2 neo-shadow neo-shadow-hover bg-primary text-black">shopping_bag</button>
+            <button class="md:hidden material-icons border-4 border-black p-2 bg-white">menu</button>
+        </div>
+    </nav>
+    <!-- Hero Title -->
+    <header class="p-8 md:p-16 border-b-4 border-black bg-primary/10">
+        <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none">
             The <span class="bg-primary px-2">Discovery</span> Lab
         </h1>
-<p class="mt-6 text-xl md:text-2xl font-bold max-w-2xl border-l-8 border-black pl-6">
+        <p class="mt-6 text-xl md:text-2xl font-bold max-w-2xl border-l-8 border-black pl-6">
             BRUTALIST SCENTS FOR THE BOLD. EXPLORE OUR CURATED GRID OF OLFACTORY ART PIECES.
         </p>
-</header>
-<!-- Filter/Sort Bar -->
-<section class="sticky top-[84px] z-40 bg-background-light border-b-4 border-black p-4 flex flex-wrap gap-4 items-center">
-<span class="font-black uppercase text-sm">Filter By:</span>
-<button class="border-4 border-black px-4 py-1 font-bold bg-neo-lime neo-shadow neo-shadow-hover uppercase text-sm">Woody</button>
-<button class="border-4 border-black px-4 py-1 font-bold bg-white neo-shadow neo-shadow-hover uppercase text-sm">Floral</button>
-<button class="border-4 border-black px-4 py-1 font-bold bg-neo-orange neo-shadow neo-shadow-hover uppercase text-sm">Citrus</button>
-<button class="border-4 border-black px-4 py-1 font-bold bg-white neo-shadow neo-shadow-hover uppercase text-sm">Oud</button>
-<button class="border-4 border-black px-4 py-1 font-bold bg-neo-pink neo-shadow neo-shadow-hover uppercase text-sm">Spicy</button>
-<div class="ml-auto flex items-center gap-2">
-<span class="font-black uppercase text-sm hidden sm:block">Sort:</span>
-<select class="border-4 border-black bg-white font-bold py-1 px-4 focus:ring-0 focus:outline-none">
-<option>NEWEST</option>
-<option>PRICE: LOW-HIGH</option>
-<option>PRICE: HIGH-LOW</option>
-</select>
-</div>
-</section>
-<!-- Discovery Grid -->
-<main class="p-6 md:p-12">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-<!-- Card 1 -->
-<div class="group border-4-black bg-neo-lime flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
-<div class="p-6 flex justify-between items-start border-b-4 border-black">
-<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Obsidian<br/>Night</h2>
-<span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">NEW</span>
-</div>
-<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
-<img alt="Obsidian Night Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl grayscale contrast-125" data-alt="Minimalist black perfume bottle on lime background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrT_DcguIdU4yisX95q24doQKBukIM80oRn7K4mJoch6CY5_MnmDJoeL2o1P-ImHMKHTT8WXu-u4FoQNk77QBDOtoOdoa4qPNPd35dFXwEKgA6we4J4f5oMEWHvrlqRrxY1Mzz2dqXcdaOIQWKW4jFXnTwVT0k56ZTTwouI3svZdCtyi6VwS1_n-Sszyrfr12yIBV3thI1geTRnJjAXCBIVvv9XMQx5mohR0dz-Kh7ESBmWJCPZO7rfLBr4VhAIfDAqhn6sqUeI7Q"/>
-</div>
-<div class="p-6 border-t-4 border-black bg-white space-y-4">
-<div class="flex justify-between font-extrabold text-xl">
-<span>50ML</span>
-<span>$145.00</span>
-</div>
-<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+    </header>
+    <!-- Filter/Sort Bar -->
+    <section
+        class="sticky top-[84px] z-40 bg-background-light border-b-4 border-black p-4 flex flex-wrap gap-4 items-center">
+        <span class="font-black uppercase text-sm">Filter By:</span>
+        <button
+            class="border-4 border-black px-4 py-1 font-bold bg-neo-lime neo-shadow neo-shadow-hover uppercase text-sm">Woody</button>
+        <button
+            class="border-4 border-black px-4 py-1 font-bold bg-white neo-shadow neo-shadow-hover uppercase text-sm">Floral</button>
+        <button
+            class="border-4 border-black px-4 py-1 font-bold bg-neo-orange neo-shadow neo-shadow-hover uppercase text-sm">Citrus</button>
+        <button
+            class="border-4 border-black px-4 py-1 font-bold bg-white neo-shadow neo-shadow-hover uppercase text-sm">Oud</button>
+        <button
+            class="border-4 border-black px-4 py-1 font-bold bg-neo-pink neo-shadow neo-shadow-hover uppercase text-sm">Spicy</button>
+        <div class="ml-auto flex items-center gap-2">
+            <span class="font-black uppercase text-sm hidden sm:block">Sort:</span>
+            <select class="border-4 border-black bg-white font-bold py-1 px-4 focus:ring-0 focus:outline-none">
+                <option>NEWEST</option>
+                <option>PRICE: LOW-HIGH</option>
+                <option>PRICE: HIGH-LOW</option>
+            </select>
+        </div>
+    </section>
+    <!-- Discovery Grid -->
+    <main class="p-6 md:p-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <!-- Card 1 -->
+            <div
+                class="group border-4-black bg-neo-lime flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+                <div class="p-6 flex justify-between items-start border-b-4 border-black">
+                    <h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Obsidian<br />Night</h2>
+                    <span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">NEW</span>
+                </div>
+                <div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+                    <img alt="Obsidian Night Perfume Bottle"
+                        class="w-full h-80 object-contain drop-shadow-2xl grayscale contrast-125"
+                        data-alt="Minimalist black perfume bottle on lime background"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrT_DcguIdU4yisX95q24doQKBukIM80oRn7K4mJoch6CY5_MnmDJoeL2o1P-ImHMKHTT8WXu-u4FoQNk77QBDOtoOdoa4qPNPd35dFXwEKgA6we4J4f5oMEWHvrlqRrxY1Mzz2dqXcdaOIQWKW4jFXnTwVT0k56ZTTwouI3svZdCtyi6VwS1_n-Sszyrfr12yIBV3thI1geTRnJjAXCBIVvv9XMQx5mohR0dz-Kh7ESBmWJCPZO7rfLBr4VhAIfDAqhn6sqUeI7Q" />
+                </div>
+                <div class="p-6 border-t-4 border-black bg-white space-y-4">
+                    <div class="flex justify-between font-extrabold text-xl">
+                        <span>50ML</span>
+                        <span>$145.00</span>
+                    </div>
+                    <button
+                        class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
                         View Details
                     </button>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="group border-4-black bg-neo-orange flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
-<div class="p-6 flex justify-between items-start border-b-4 border-black">
-<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Solar<br/>Flare</h2>
-<span class="border-4 border-black bg-white px-3 py-1 font-bold text-sm">BESTSELLER</span>
-</div>
-<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
-<img alt="Solar Flare Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl contrast-150" data-alt="Clear glass perfume bottle with orange liquid" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL690zBM48FV7fRaP7YrMq2BgTHYdjtsKsPf8cC76eREHtQf8QPPb7_YQvT7xx2WruOvxSdhAI9bes0_tWvU4T4Du5TVDvanrV0sgp_Y--d6c4nOMQ5wCaE1NpTLEqmkZgrmvwoQPT9mZFu44Bxs3xBc1_HJU5unP49Sjwv9uLw548ONolF1fCeSnZWUctFnVVvQ2_pCGcaFo9onGp2-kwJDUKh5mTev33fVcR-FG3ebnCqXKRyq9i5cA4JY6fkoFJQHH39CKiTXk"/>
-</div>
-<div class="p-6 border-t-4 border-black bg-white space-y-4">
-<div class="flex justify-between font-extrabold text-xl">
-<span>100ML</span>
-<span>$210.00</span>
-</div>
-<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div
+                class="group border-4-black bg-neo-orange flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+                <div class="p-6 flex justify-between items-start border-b-4 border-black">
+                    <h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Solar<br />Flare</h2>
+                    <span class="border-4 border-black bg-white px-3 py-1 font-bold text-sm">BESTSELLER</span>
+                </div>
+                <div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+                    <img alt="Solar Flare Perfume Bottle"
+                        class="w-full h-80 object-contain drop-shadow-2xl contrast-150"
+                        data-alt="Clear glass perfume bottle with orange liquid"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL690zBM48FV7fRaP7YrMq2BgTHYdjtsKsPf8cC76eREHtQf8QPPb7_YQvT7xx2WruOvxSdhAI9bes0_tWvU4T4Du5TVDvanrV0sgp_Y--d6c4nOMQ5wCaE1NpTLEqmkZgrmvwoQPT9mZFu44Bxs3xBc1_HJU5unP49Sjwv9uLw548ONolF1fCeSnZWUctFnVVvQ2_pCGcaFo9onGp2-kwJDUKh5mTev33fVcR-FG3ebnCqXKRyq9i5cA4JY6fkoFJQHH39CKiTXk" />
+                </div>
+                <div class="p-6 border-t-4 border-black bg-white space-y-4">
+                    <div class="flex justify-between font-extrabold text-xl">
+                        <span>100ML</span>
+                        <span>$210.00</span>
+                    </div>
+                    <button
+                        class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
                         View Details
                     </button>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="group border-4-black bg-neo-pink flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
-<div class="p-6 flex justify-between items-start border-b-4 border-black">
-<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Velvet<br/>Dusk</h2>
-<span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">LIMITED</span>
-</div>
-<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
-<img alt="Velvet Dusk Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl brightness-90" data-alt="Tall sleek perfume bottle on pink background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkV9qfEmufEJOK0Z836kmWz5uuSFmI9dLkuQKn3nxG70TSEU6uNdqNpZqbyou7YLIbfD9BvbuadxQ1m-SuY53_t7IwwPcrFlClcY92fyhi4ptQcJE2cS9O81ytCsccNNLSGW-piZi1HuQ5z8aH52m9MSSWhcRTbsD0nYgyJTLJ1-ORjw1rnKu87jE8AlGf5SbAjlrSgvUfigWiF8kYi3rQUFCagkjmF9lO-SdyyfP_vC5vxMjrUulJrfTGeyJTpjmLD16e_iNjPxg"/>
-</div>
-<div class="p-6 border-t-4 border-black bg-white space-y-4">
-<div class="flex justify-between font-extrabold text-xl">
-<span>50ML</span>
-<span>$185.00</span>
-</div>
-<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div
+                class="group border-4-black bg-neo-pink flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+                <div class="p-6 flex justify-between items-start border-b-4 border-black">
+                    <h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Velvet<br />Dusk</h2>
+                    <span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">LIMITED</span>
+                </div>
+                <div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+                    <img alt="Velvet Dusk Perfume Bottle"
+                        class="w-full h-80 object-contain drop-shadow-2xl brightness-90"
+                        data-alt="Tall sleek perfume bottle on pink background"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkV9qfEmufEJOK0Z836kmWz5uuSFmI9dLkuQKn3nxG70TSEU6uNdqNpZqbyou7YLIbfD9BvbuadxQ1m-SuY53_t7IwwPcrFlClcY92fyhi4ptQcJE2cS9O81ytCsccNNLSGW-piZi1HuQ5z8aH52m9MSSWhcRTbsD0nYgyJTLJ1-ORjw1rnKu87jE8AlGf5SbAjlrSgvUfigWiF8kYi3rQUFCagkjmF9lO-SdyyfP_vC5vxMjrUulJrfTGeyJTpjmLD16e_iNjPxg" />
+                </div>
+                <div class="p-6 border-t-4 border-black bg-white space-y-4">
+                    <div class="flex justify-between font-extrabold text-xl">
+                        <span>50ML</span>
+                        <span>$185.00</span>
+                    </div>
+                    <button
+                        class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
                         View Details
                     </button>
-</div>
-</div>
-<!-- Card 4 -->
-<div class="group border-4-black bg-neo-blue flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
-<div class="p-6 flex justify-between items-start border-b-4 border-black">
-<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Arctic<br/>Mist</h2>
-<span class="border-4 border-black bg-white px-3 py-1 font-bold text-sm">REFRESH</span>
-</div>
-<div class="flex-grow flex items-center justify-center p-8 bg-white/30">
-<img alt="Arctic Mist Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl grayscale contrast-125" data-alt="Blue tinted glass bottle with silver cap" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_movqrFX0d4RhOQP0KY86mcm7dZi1HTWyrPQKuNfhYqqvgxKPlteiXnPOpL99T_GjosRiGLUwxg3rCn6Zl0Zdy5Ydq3mn3ER5R6Cz22Iu1TImqf6xZvQFXV68E2XcGdwFAGRyKyIkhubu16pQSrpSpjeMuxUi61dHy-jHe6YnvZdWbbGNDllY_zlx6j2gTFrzPW_rheMat3CUzywZy0XunFXFs5vvuj3KAz4am1ksa_M9JCdE-rg6-IPiY8XHGMiRY0Pbfh1BWVM"/>
-</div>
-<div class="p-6 border-t-4 border-black bg-white space-y-4">
-<div class="flex justify-between font-extrabold text-xl">
-<span>30ML</span>
-<span>$95.00</span>
-</div>
-<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div
+                class="group border-4-black bg-neo-blue flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+                <div class="p-6 flex justify-between items-start border-b-4 border-black">
+                    <h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Arctic<br />Mist</h2>
+                    <span class="border-4 border-black bg-white px-3 py-1 font-bold text-sm">REFRESH</span>
+                </div>
+                <div class="flex-grow flex items-center justify-center p-8 bg-white/30">
+                    <img alt="Arctic Mist Perfume Bottle"
+                        class="w-full h-80 object-contain drop-shadow-2xl grayscale contrast-125"
+                        data-alt="Blue tinted glass bottle with silver cap"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_movqrFX0d4RhOQP0KY86mcm7dZi1HTWyrPQKuNfhYqqvgxKPlteiXnPOpL99T_GjosRiGLUwxg3rCn6Zl0Zdy5Ydq3mn3ER5R6Cz22Iu1TImqf6xZvQFXV68E2XcGdwFAGRyKyIkhubu16pQSrpSpjeMuxUi61dHy-jHe6YnvZdWbbGNDllY_zlx6j2gTFrzPW_rheMat3CUzywZy0XunFXFs5vvuj3KAz4am1ksa_M9JCdE-rg6-IPiY8XHGMiRY0Pbfh1BWVM" />
+                </div>
+                <div class="p-6 border-t-4 border-black bg-white space-y-4">
+                    <div class="flex justify-between font-extrabold text-xl">
+                        <span>30ML</span>
+                        <span>$95.00</span>
+                    </div>
+                    <button
+                        class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
                         View Details
                     </button>
-</div>
-</div>
-<!-- Card 5 -->
-<div class="group border-4-black bg-white flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
-<div class="p-6 flex justify-between items-start border-b-4 border-black bg-primary">
-<h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Concrete<br/>Rose</h2>
-<span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">NEW</span>
-</div>
-<div class="flex-grow flex items-center justify-center p-8 bg-gray-100">
-<img alt="Concrete Rose Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl" data-alt="Gray architectural perfume bottle design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6QnBlHJIEpJK0XS4LOoQKCLPs1aXfKPKRNnZe5ckxRruSvK_vEsEMK2hm6JlW0GN7UNIpvLu5YckMWfV3Srvav2Z1zD-75WzsMe_eEyJYqQwpyRkWcODFdmav5Ig-601tfSeFUl_gsryHSXDkY2j8nwIg-q9l1cTI6jiDcFG2TQposRiftRRa66X-kCxw1OeLa3T9cjJnOPuEraHxlbf4QlKUgImspU34L-qQd41dNBTwPmJD6Lucon-GFh4x6qXQJKe8ZkDCjcE"/>
-</div>
-<div class="p-6 border-t-4 border-black bg-white space-y-4">
-<div class="flex justify-between font-extrabold text-xl">
-<span>50ML</span>
-<span>$160.00</span>
-</div>
-<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                </div>
+            </div>
+            <!-- Card 5 -->
+            <div
+                class="group border-4-black bg-white flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+                <div class="p-6 flex justify-between items-start border-b-4 border-black bg-primary">
+                    <h2 class="text-4xl font-black uppercase leading-none tracking-tighter">Concrete<br />Rose</h2>
+                    <span class="border-4 border-black bg-black text-white px-3 py-1 font-bold text-sm">NEW</span>
+                </div>
+                <div class="flex-grow flex items-center justify-center p-8 bg-gray-100">
+                    <img alt="Concrete Rose Perfume Bottle" class="w-full h-80 object-contain drop-shadow-2xl"
+                        data-alt="Gray architectural perfume bottle design"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6QnBlHJIEpJK0XS4LOoQKCLPs1aXfKPKRNnZe5ckxRruSvK_vEsEMK2hm6JlW0GN7UNIpvLu5YckMWfV3Srvav2Z1zD-75WzsMe_eEyJYqQwpyRkWcODFdmav5Ig-601tfSeFUl_gsryHSXDkY2j8nwIg-q9l1cTI6jiDcFG2TQposRiftRRa66X-kCxw1OeLa3T9cjJnOPuEraHxlbf4QlKUgImspU34L-qQd41dNBTwPmJD6Lucon-GFh4x6qXQJKe8ZkDCjcE" />
+                </div>
+                <div class="p-6 border-t-4 border-black bg-white space-y-4">
+                    <div class="flex justify-between font-extrabold text-xl">
+                        <span>50ML</span>
+                        <span>$160.00</span>
+                    </div>
+                    <button
+                        class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
                         View Details
                     </button>
-</div>
-</div>
-<!-- Card 6 -->
-<div class="group border-4-black bg-black flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
-<div class="p-6 flex justify-between items-start border-b-4 border-white/20">
-<h2 class="text-4xl font-black uppercase leading-none tracking-tighter text-white">Neon<br/>Amber</h2>
-<span class="border-4 border-white bg-white text-black px-3 py-1 font-bold text-sm">HOT</span>
-</div>
-<div class="flex-grow flex items-center justify-center p-8 bg-gradient-to-br from-primary/20 to-transparent">
-<img alt="Neon Amber Perfume Bottle" class="w-full h-80 object-contain drop-shadow-[0_0_15px_rgba(250,198,56,0.5)]" data-alt="Amber liquid bottle glowing on black background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvCqQclQFk9gEm-tdwOSqbwdPWc797yioFcoKzLnOqAKk0DoJG-4c0bDFKeZiHT2odR9CPPODYWAQBRQXD48FadQHHFjxVBZyGx1BfkFY3q9SqnqOeOuXGPmEaDzL6Ieakb7pWwuByNlS7ewo2bkflFySy7vC8bv1P89KN1h-70io2N8AIFTLcKr7zPHoAbenbym3wj9EfgelrNEcXkzjMntWsWR56VVSeF1Gx8vYaKQH_WJzgfiINixsdnnV2FOQOp4mUqZTNMJQ"/>
-</div>
-<div class="p-6 border-t-4 border-white/20 bg-zinc-900 space-y-4">
-<div class="flex justify-between font-extrabold text-xl text-white">
-<span>100ML</span>
-<span>$240.00</span>
-</div>
-<button class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
+                </div>
+            </div>
+            <!-- Card 6 -->
+            <div
+                class="group border-4-black bg-black flex flex-col h-full neo-shadow-lg transition-transform hover:-translate-y-2">
+                <div class="p-6 flex justify-between items-start border-b-4 border-white/20">
+                    <h2 class="text-4xl font-black uppercase leading-none tracking-tighter text-white">Neon<br />Amber
+                    </h2>
+                    <span class="border-4 border-white bg-white text-black px-3 py-1 font-bold text-sm">HOT</span>
+                </div>
+                <div
+                    class="flex-grow flex items-center justify-center p-8 bg-gradient-to-br from-primary/20 to-transparent">
+                    <img alt="Neon Amber Perfume Bottle"
+                        class="w-full h-80 object-contain drop-shadow-[0_0_15px_rgba(250,198,56,0.5)]"
+                        data-alt="Amber liquid bottle glowing on black background"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvCqQclQFk9gEm-tdwOSqbwdPWc797yioFcoKzLnOqAKk0DoJG-4c0bDFKeZiHT2odR9CPPODYWAQBRQXD48FadQHHFjxVBZyGx1BfkFY3q9SqnqOeOuXGPmEaDzL6Ieakb7pWwuByNlS7ewo2bkflFySy7vC8bv1P89KN1h-70io2N8AIFTLcKr7zPHoAbenbym3wj9EfgelrNEcXkzjMntWsWR56VVSeF1Gx8vYaKQH_WJzgfiINixsdnnV2FOQOp4mUqZTNMJQ" />
+                </div>
+                <div class="p-6 border-t-4 border-white/20 bg-zinc-900 space-y-4">
+                    <div class="flex justify-between font-extrabold text-xl text-white">
+                        <span>100ML</span>
+                        <span>$240.00</span>
+                    </div>
+                    <button
+                        class="w-full bg-primary border-4 border-black py-4 font-black uppercase text-xl neo-shadow neo-shadow-hover neo-shadow-active transition-all">
                         View Details
                     </button>
-</div>
-</div>
-</div>
-</main>
-<!-- Footer -->
-<footer class="mt-12 bg-black text-white p-8 md:p-16 border-t-8 border-primary">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-<div>
-<h3 class="text-4xl font-black uppercase tracking-tighter mb-6">Join the Lab</h3>
-<p class="font-bold text-lg mb-6">Drop your email for exclusive discovery kit drops and limited editions.</p>
-<div class="flex">
-<input class="w-full border-4 border-white bg-transparent p-4 font-bold text-white placeholder-zinc-500 focus:ring-0 focus:outline-none" placeholder="YOUR@EMAIL.COM" type="email"/>
-<button class="bg-primary text-black font-black px-8 border-y-4 border-r-4 border-white uppercase hover:bg-white transition-colors">Join</button>
-</div>
-</div>
-<div class="space-y-4">
-<h4 class="font-black uppercase text-xl text-primary">Explore</h4>
-<ul class="font-bold space-y-2">
-<li><a class="hover:underline" href="#">THE COLLECTION</a></li>
-<li><a class="hover:underline" href="#">INGREDIENT GLOSSARY</a></li>
-<li><a class="hover:underline" href="#">MARKETPLACE</a></li>
-<li><a class="hover:underline" href="#">LAB JOURNALS</a></li>
-</ul>
-</div>
-<div class="space-y-4">
-<h4 class="font-black uppercase text-xl text-primary">Connect</h4>
-<div class="flex gap-4">
-<a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all" href="#">INSTA</a>
-<a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all" href="#">TWTR</a>
-<a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all" href="#">TIKTK</a>
-</div>
-<p class="text-zinc-500 font-bold mt-8">©2024 SCENT.LAB ALL RIGHTS RESERVED. DESIGNED FOR THE BOLD.</p>
-</div>
-</div>
-</footer>
-</body></html>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="mt-12 bg-black text-white p-8 md:p-16 border-t-8 border-primary">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+                <h3 class="text-4xl font-black uppercase tracking-tighter mb-6">Join the Lab</h3>
+                <p class="font-bold text-lg mb-6">Drop your email for exclusive discovery kit drops and limited
+                    editions.</p>
+                <div class="flex">
+                    <input
+                        class="w-full border-4 border-white bg-transparent p-4 font-bold text-white placeholder-zinc-500 focus:ring-0 focus:outline-none"
+                        placeholder="YOUR@EMAIL.COM" type="email" />
+                    <button
+                        class="bg-primary text-black font-black px-8 border-y-4 border-r-4 border-white uppercase hover:bg-white transition-colors">Join</button>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <h4 class="font-black uppercase text-xl text-primary">Explore</h4>
+                <ul class="font-bold space-y-2">
+                    <li><a class="hover:underline" href="#">THE COLLECTION</a></li>
+                    <li><a class="hover:underline" href="#">INGREDIENT GLOSSARY</a></li>
+                    <li><a class="hover:underline" href="#">MARKETPLACE</a></li>
+                    <li><a class="hover:underline" href="#">LAB JOURNALS</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h4 class="font-black uppercase text-xl text-primary">Connect</h4>
+                <div class="flex gap-4">
+                    <a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all"
+                        href="#">INSTA</a>
+                    <a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all"
+                        href="#">TWTR</a>
+                    <a class="border-4 border-white p-3 hover:bg-white hover:text-black transition-all"
+                        href="#">TIKTK</a>
+                </div>
+                <p class="text-zinc-500 font-bold mt-8">©2024 SCENT.LAB ALL RIGHTS RESERVED. DESIGNED FOR THE BOLD.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

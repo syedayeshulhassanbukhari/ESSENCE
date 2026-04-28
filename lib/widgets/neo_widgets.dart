@@ -47,9 +47,16 @@ class _NeoButtonState extends State<NeoButton> {
     final borderColor =
       brightness == Brightness.light ? colors.black : colors.primaryYellow;
 
-    final shadow =
-      _isPressed ? <BoxShadow>[] : [AppTheme.neoShadow(colors, brightness)];
-    final offset = _isPressed ? Offset(2, 2) : Offset.zero;
+    final shadow = _isPressed
+      ? [
+          AppTheme.neoShadow(
+            colors,
+            brightness,
+            offset: AppTheme.shadowSmall,
+          ),
+        ]
+      : [AppTheme.neoShadow(colors, brightness)];
+    final scale = _isPressed ? 0.985 : 1.0;
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
@@ -58,9 +65,13 @@ class _NeoButtonState extends State<NeoButton> {
         if (!widget.isLoading) widget.onPressed();
       },
       onTapCancel: () => setState(() => _isPressed = false),
-      child: Transform.translate(
-        offset: offset,
-        child: Container(
+      child: AnimatedScale(
+        scale: scale,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOutCubic,
           width: widget.isFullWidth ? double.infinity : null,
           height: widget.height,
           decoration: BoxDecoration(
@@ -302,15 +313,21 @@ class _NeoIconButtonState extends State<NeoIconButton> {
       (brightness == Brightness.light ? colors.black : colors.white);
 
     final shadow = _isPressed
-        ? <BoxShadow>[]
-        : [
-            AppTheme.neoShadow(
-              colors,
-              brightness,
-              offset: AppTheme.shadowSmall,
-            )
-          ];
-    final offset = _isPressed ? const Offset(1, 1) : Offset.zero;
+      ? [
+          AppTheme.neoShadow(
+            colors,
+            brightness,
+            offset: AppTheme.shadowSmall,
+          ),
+        ]
+      : [
+          AppTheme.neoShadow(
+            colors,
+            brightness,
+            offset: AppTheme.shadowSmall,
+          )
+        ];
+    final scale = _isPressed ? 0.96 : 1.0;
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
@@ -319,9 +336,13 @@ class _NeoIconButtonState extends State<NeoIconButton> {
         widget.onPressed();
       },
       onTapCancel: () => setState(() => _isPressed = false),
-      child: Transform.translate(
-        offset: offset,
-        child: Container(
+      child: AnimatedScale(
+        scale: scale,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOutCubic,
           width: 48,
           height: 48,
           decoration: BoxDecoration(
