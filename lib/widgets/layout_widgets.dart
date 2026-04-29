@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../theme/app_theme.dart';
 import '../providers/theme_provider.dart';
 import '../providers/responsive_provider.dart';
-import '../utils/open_admin_panel.dart';
+import '../routing/app_router.dart';
 import 'neo_widgets.dart';
 
 // ===== APP HEADER =====
@@ -14,14 +14,7 @@ class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
 
   Future<void> _onUploadTap(BuildContext context) async {
-    final opened = await openAdminPanelPage();
-    if (!opened && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Admin panel is available on web only.'),
-        ),
-      );
-    }
+    context.read<AppRouter>().replaceWithFade('/admin');
   }
 
   void _onMobileMenuSelected(BuildContext context, String value) {
@@ -52,7 +45,12 @@ class AppHeader extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: borderColor, width: AppTheme.borderWidth)),
+        border: Border(
+          bottom: BorderSide(
+            color: borderColor,
+            width: AppTheme.navBarBorderWidth,
+          ),
+        ),
       ),
       padding: EdgeInsets.symmetric(
         horizontal: AppTheme.spacing4.w,
@@ -74,25 +72,11 @@ class AppHeader extends StatelessWidget {
           const Spacer(),
           if (!isSmall) ...[
             ..._buildNavButtons(context),
-          ],
-          if (!isSmall) ...[
-            SizedBox(width: AppTheme.spacing4.w),
-            SizedBox(
-              width: AppTheme.navUploadButtonWidth.w,
-              child: NeoButton(
-                label: 'Upload Your Perfume',
-                onPressed: () {
-                  _onUploadTap(context);
-                },
-                height: AppTheme.navButtonHeight.h,
-                textStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.0,
-                    ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppTheme.spacing4.w,
-                ),
-              ),
+            SizedBox(width: AppTheme.spacing2.w),
+            _NavBarButton(
+              label: 'Upload Your Perfume',
+              isActive: true,
+              onPressed: () => _onUploadTap(context),
             ),
           ],
           if (isSmall)
@@ -134,43 +118,109 @@ class AppHeader extends StatelessWidget {
   void _onNavTap(BuildContext context, String routeName) {
     final currentName = ModalRoute.of(context)?.settings.name;
     if (currentName == routeName) return;
-    Navigator.of(context).pushReplacementNamed(routeName);
+    context.read<AppRouter>().replaceWithFade(routeName);
   }
 
   List<Widget> _buildNavButtons(BuildContext context) {
     final colors = context.watch<ThemeProvider>().colors;
+    final currentRoute = ModalRoute.of(context)?.settings.name;
     final items = const [
       {'label': 'Home', 'route': '/home'},
       {'label': 'Discover', 'route': '/discover'},
       {'label': 'Marketplace', 'route': '/marketplace'},
     ];
 
-    final navTextStyle = Theme.of(context).textTheme.labelMedium?.copyWith(
-          fontWeight: FontWeight.w700,
-          letterSpacing: 1.0,
-        );
-
     return items
         .map(
           (item) => Padding(
             padding: EdgeInsets.only(right: AppTheme.spacing2.w),
-            child: SizedBox(
-              width: AppTheme.navButtonWidth.w,
-              child: NeoButton(
-                label: item['label'] as String,
-                onPressed: () => _onNavTap(context, item['route'] as String),
-                backgroundColor: colors.white,
-                textColor: colors.black,
-                height: AppTheme.navButtonHeight.h,
-                textStyle: navTextStyle,
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppTheme.spacing2.w,
-                ),
-              ),
+            child: _NavBarButton(
+              label: item['label'] as String,
+              isActive: currentRoute == item['route'],
+              onPressed: () => _onNavTap(context, item['route'] as String),
             ),
           ),
         )
         .toList();
+  }
+}
+
+class _NavBarButton extends StatefulWidget {
+  const _NavBarButton({
+    required this.label,
+    required this.onPressed,
+    required this.isActive,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+  final bool isActive;
+
+  @override
+  State<_NavBarButton> createState() => _NavBarButtonState();
+}
+
+class _NavBarButtonState extends State<_NavBarButton> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
+    final brightness = Theme.of(context).brightness;
+    final borderColor =
+        brightness == Brightness.light ? colors.black : colors.primaryYellow;
+    final bgColor = widget.isActive ? colors.primaryYellow : colors.white;
+    final textColor = colors.black;
+    final shadow = _isPressed
+        ? <BoxShadow>[]
+        : [
+            BoxShadow(
+              color: borderColor,
+              offset: Offset(
+                AppTheme.navButtonShadowOffset,
+                AppTheme.navButtonShadowOffset,
+              ),
+              blurRadius: 0,
+              spreadRadius: 0,
+            )
+          ];
+
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        widget.onPressed();
+      },
+      onTapCancel: () => setState(() => _isPressed = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOutCubic,
+        height: AppTheme.navButtonHeight.h,
+        padding: EdgeInsets.symmetric(
+          horizontal: AppTheme.navButtonHorizontalPadding.w,
+          vertical: AppTheme.navButtonVerticalPadding.h,
+        ),
+        decoration: BoxDecoration(
+          color: bgColor,
+          border: Border.all(
+            color: borderColor,
+            width: AppTheme.navBarBorderWidth,
+          ),
+          boxShadow: shadow,
+        ),
+        child: Center(
+          child: Text(
+            widget.label.toUpperCase(),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: textColor,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: AppTheme.navButtonLetterSpacing,
+                  fontSize: AppTheme.navButtonFontSize.sp,
+                ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

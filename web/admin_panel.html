@@ -266,7 +266,7 @@
   </style>
 </head>
 <body>
-  <header class="top-nav">
+  <header class="top-nav" id="topNav">
     <a class="brand" href="/">ESSENCE.</a>
     <nav class="nav-links">
       <a class="nav-link" href="/#/home">Home</a>
@@ -339,6 +339,14 @@
   </main>
 
   <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('embed') === '1') {
+      const topNav = document.getElementById('topNav');
+      if (topNav) {
+        topNav.style.display = 'none';
+      }
+    }
+
     const form = document.getElementById('createForm');
     const statusEl = document.getElementById('status');
 

@@ -20,6 +20,7 @@ import 'providers/discover_provider.dart';
 import 'providers/home_featured_provider.dart';
 import 'services/fragella_api_client.dart';
 import 'config/fragella_config.dart';
+import 'routing/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +47,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider(create: (_) => AppRouter()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => ResponsiveProvider()),
         Provider(create: (_) => AuthController()),
@@ -83,6 +85,7 @@ class ScentSwapApp extends StatelessWidget {
           minTextAdapt: true,
           splitScreenMode: true,
           builder: (context, child) {
+            final appRouter = context.read<AppRouter>();
             return MaterialApp(
               title: 'ESSENCE - Perfume Marketplace',
               theme: AppTheme.lightTheme(themeProvider.colors),
@@ -99,13 +102,8 @@ class ScentSwapApp extends StatelessWidget {
                 });
                 return child ?? const SizedBox.shrink();
               },
-              routes: {
-                '/login': (context) => const LoginScreen(),
-                '/register': (context) => const RegisterScreen(),
-                '/home': (context) => const HomeScreen(),
-                '/discover': (context) => const DiscoverScreen(),
-                '/marketplace': (context) => MarketplaceScreen(),
-                '/individualDetails' : (context) => IndividualPerfumeDetails(),              },
+              navigatorKey: appRouter.navigatorKey,
+              onGenerateRoute: appRouter.onGenerateRoute,
               home: const _AuthGate(),
             );
           },
