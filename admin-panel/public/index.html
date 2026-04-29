@@ -24,11 +24,12 @@
 
       <form id="createForm" class="layout">
         <section class="left-col">
-          <label class="upload-box" for="image">
+          <label class="upload-box" for="image" id="uploadBox">
             <input id="image" name="image" type="file" accept="image/*" required />
-            <div class="upload-icon">⬆</div>
-            <p class="upload-title">DRAG ESSENCE BLUEPRINT</p>
-            <p class="upload-sub">RAW IMAGE OR DESIGN FILE (MAX 50MB)</p>
+            <div class="upload-icon" id="uploadIcon">⬆</div>
+            <p class="upload-title" id="uploadTitle">DRAG ESSENCE BLUEPRINT</p>
+            <p class="upload-sub" id="uploadSub">RAW IMAGE OR DESIGN FILE (MAX 50MB)</p>
+            <img id="imagePreview" src="" alt="Image Preview" style="display: none; max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 8px;" />
             <span class="tag">REQUIRED</span>
           </label>
 

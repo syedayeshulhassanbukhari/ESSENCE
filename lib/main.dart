@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:scentswapwebsite/screens/auth/login_screen.dart';
 // import 'package:scentswapwebsite/screens/auth/register_screen.dart';
 // import 'package:scentswapwebsite/screens/discover_screen.dart';
@@ -9,7 +10,7 @@ import 'package:scentswapwebsite/screens/home_screen.dart';
 // import 'package:scentswapwebsite/screens/individual_perfume_details.dart';
 // import 'package:scentswapwebsite/screens/marketplace_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'firebase_options.dart';
 import 'config/marketplace_exchange_config.dart';
 import 'theme/app_theme.dart';
@@ -40,9 +41,7 @@ Future<void> main() async {
     url: MarketplaceExchangeConfig.supabaseUrl,
     anonKey: MarketplaceExchangeConfig.supabasePublishableKey,
   );
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     MultiProvider(
@@ -58,9 +57,8 @@ Future<void> main() async {
           ),
         ),
         ChangeNotifierProvider(
-          create: (context) => DiscoverProvider(
-            apiClient: context.read<FragellaApiClient>(),
-          ),
+          create: (context) =>
+              DiscoverProvider(apiClient: context.read<FragellaApiClient>()),
         ),
         ChangeNotifierProvider(
           create: (context) => HomeFeaturedProvider(
@@ -90,7 +88,9 @@ class ScentSwapApp extends StatelessWidget {
               title: 'ESSENCE - Perfume Marketplace',
               theme: AppTheme.lightTheme(themeProvider.colors),
               darkTheme: AppTheme.darkTheme(themeProvider.colors),
-              themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              themeMode: themeProvider.isDarkMode
+                  ? ThemeMode.dark
+                  : ThemeMode.light,
               // Keep a short, smooth theme transition
               themeAnimationDuration: const Duration(milliseconds: 200),
               themeAnimationCurve: Curves.easeInOut,
@@ -119,25 +119,24 @@ class _AuthGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Dev bypass: show the post-auth screen directly.
-    return const HomeScreen();
+    // return const HomeScreen();
 
     // Original auth gate logic (kept for re-enable):
-    // return StreamBuilder<User?>(
-    //   stream: FirebaseAuth.instance.authStateChanges(),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return const Scaffold(
-    //         body: Center(child: CircularProgressIndicator()),
-    //       );
-    //     }
-    //
-    //     if (snapshot.hasData) {
-    //       return const HomeScreen();
-    //     }
-    //
-    //     return const LoginScreen();
-    //   },
-    // );
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasData) {
+          return const HomeScreen();
+        }
+
+        return const LoginScreen();
+      },
+    );
   }
 }
-
