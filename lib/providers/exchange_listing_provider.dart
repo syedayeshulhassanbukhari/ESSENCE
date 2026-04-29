@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/exchange_listing.dart';
 import '../services/exchange_marketplace_service.dart';
@@ -55,6 +56,12 @@ class ExchangeListingProvider extends ChangeNotifier {
     required String price,
     required XFile image,
   }) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      _errorMessage = 'Sign in to create a listing.';
+      notifyListeners();
+      return false;
+    }
     final normalizedName = name.trim();
     final normalizedDescription = description.trim();
     final normalizedPrice = price.trim();
@@ -89,6 +96,7 @@ class ExchangeListingProvider extends ChangeNotifier {
         description: normalizedDescription,
         price: normalizedPrice,
         image: image,
+        ownerId: currentUser.uid,
       );
       _items.insert(0, listing);
       return true;

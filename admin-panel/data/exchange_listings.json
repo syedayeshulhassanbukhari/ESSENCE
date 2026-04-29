@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "id": "bf395db8-2b12-4ed5-813e-2ac100e4885c",
+    "name": "Chrome Ozone",
+    "description": "Want to exchange it with a good spicy perfume",
+    "price": 1520,
+    "imageUrl": "https://eabadufvluraqyaljkuj.supabase.co/storage/v1/object/public/exchange-images/exchange-listings/bf395db8-2b12-4ed5-813e-2ac100e4885c_aura_monsters_vol.2_____ambition_____what_would_you_become_for_your_ambitionvol._1_was_rage__raw_e__4_.jpg",
+    "createdAt": "2026-04-29T12:54:42.607Z"
+  },
+  {
+    "id": "6bf5efc7-5898-4cb9-b533-f05727a6e9cf",
+    "name": "Chrome Ozone",
+    "description": "Want to exchange it with a good spicy perfume",
+    "price": 1520,
+    "imageUrl": "https://eabadufvluraqyaljkuj.supabase.co/storage/v1/object/public/exchange-images/exchange-listings/6bf5efc7-5898-4cb9-b533-f05727a6e9cf_aura_monsters_vol.2_____ambition_____what_would_you_become_for_your_ambitionvol._1_was_rage__raw_e__4_.jpg",
+    "createdAt": "2026-04-29T12:54:39.360Z"
+  },
+  {
+    "id": "1777466706379_917878",
+    "name": "Chrome Ozone",
+    "description": "Exchange with dior",
+    "price": 150,
+    "imageUrl": "/uploads/1777466706369_aura_monsters_vol.2_____ambition_____what_would_you_become_for_your_ambitionvol._1_was_rage__raw_e.jpg",
+    "createdAt": "2026-04-29T12:45:06.379Z"
+  },
+  {
+    "id": "1777466602901_579889",
+    "name": "Edward Newgate",
+    "description": "Exchange with Dior",
+    "price": 500,
+    "imageUrl": "/uploads/1777466602894_color.jpg",
+    "createdAt": "2026-04-29T12:43:22.901Z"
+  }
+]

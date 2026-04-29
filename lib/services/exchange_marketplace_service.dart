@@ -45,11 +45,15 @@ class ExchangeMarketplaceService {
     required String description,
     required String price,
     required XFile image,
+    required String ownerId,
   }) async {
     try {
       final parsedPrice = double.tryParse(price.trim());
       if (parsedPrice == null || parsedPrice <= 0) {
         throw const ExchangeMarketplaceException('Enter a valid PKR price.');
+      }
+      if (ownerId.trim().isEmpty) {
+        throw const ExchangeMarketplaceException('Sign in to create a listing.');
       }
 
       final listingId = _uuid.v4();
@@ -73,6 +77,7 @@ class ExchangeMarketplaceService {
           .from(_tableName)
           .insert({
             'id': listingId,
+            'owner_id': ownerId.trim(),
             'name': name.trim(),
             'description': description.trim(),
             'price': parsedPrice,

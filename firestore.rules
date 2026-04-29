@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function threadDoc(threadId) {
+      return get(/databases/$(database)/documents/exchange_threads/$(threadId));
+    }
+
+    function isParticipant(data) {
+      return isSignedIn()
+          && (request.auth.uid == data.buyerId
+              || request.auth.uid == data.sellerId);
+    }
+
+    function isThreadParticipant(threadId) {
+      return isSignedIn()
+          && threadDoc(threadId).exists()
+          && (request.auth.uid == threadDoc(threadId).data.buyerId
+              || request.auth.uid == threadDoc(threadId).data.sellerId);
+    }
+
+    match /exchange_threads/{threadId} {
+      allow read: if isParticipant(resource.data);
+      allow create: if isParticipant(request.resource.data);
+      allow update: if isParticipant(resource.data);
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if isThreadParticipant(threadId);
+        allow create: if isSignedIn()
+            && request.auth.uid == request.resource.data.senderId
+            && isThreadParticipant(threadId);
+        allow update, delete: if false;
+      }
+    }
+  }
+}

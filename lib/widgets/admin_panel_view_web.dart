@@ -14,8 +14,12 @@ class AdminPanelView extends StatelessWidget {
       return;
     }
     ui.platformViewRegistry.registerViewFactory(_viewType, (int viewId) {
+      final origin = html.window.location.origin;
+      final serverOrigin = origin.contains('localhost') || origin.contains('127.0.0.1')
+          ? '${html.window.location.protocol}//${html.window.location.hostname}:5050'
+          : origin;
       final iframe = html.IFrameElement()
-        ..src = 'admin_panel.html?embed=1'
+        ..src = '$serverOrigin/?embed=1'
         ..style.border = 'none'
         ..style.width = '100%'
         ..style.height = '100%';

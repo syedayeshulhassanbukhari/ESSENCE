@@ -280,7 +280,12 @@ class _ExchangeListingCard extends StatelessWidget {
                   SizedBox(height: AppTheme.spacing2.h),
                   NeoButton(
                     label: 'Request Exchange',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        '/exchangeListingDetail',
+                        arguments: listing,
+                      );
+                    },
                     height: isSmall ? 44.h : 48.h,
                     isFullWidth: true,
                   ),

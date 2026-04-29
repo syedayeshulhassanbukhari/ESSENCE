@@ -1,6 +1,7 @@
 class ExchangeListing {
   const ExchangeListing({
     required this.id,
+    required this.ownerId,
     required this.name,
     required this.description,
     required this.price,
@@ -9,6 +10,7 @@ class ExchangeListing {
   });
 
   final String id;
+  final String ownerId;
   final String name;
   final String description;
   final double price;
@@ -24,6 +26,7 @@ class ExchangeListing {
         : double.tryParse('${json['price'] ?? ''}') ?? 0;
     final createdValue = json['created_at'] ?? json['createdAt'];
     final imageValue = json['image_url'] ?? json['imageUrl'];
+    final ownerValue = json['owner_id'] ?? json['ownerId'];
     DateTime? parsedDate;
     if (createdValue is DateTime) {
       parsedDate = createdValue;
@@ -33,6 +36,7 @@ class ExchangeListing {
 
     return ExchangeListing(
       id: '${json['id'] ?? ''}',
+      ownerId: ownerValue is String ? ownerValue : '',
       name: json['name'] is String ? json['name'] as String : '',
       description: json['description'] is String ? json['description'] as String : '',
       price: parsedPrice,

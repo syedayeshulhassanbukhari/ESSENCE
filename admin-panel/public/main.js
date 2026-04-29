@@ -1,5 +1,7 @@
 const form = document.getElementById('createForm');
 const statusEl = document.getElementById('status');
+const submitButton = form ? form.querySelector('button[type="submit"]') : null;
+let isSubmitting = false;
 
 function setStatus(message, isError = false) {
   if (!statusEl) {
@@ -12,6 +14,15 @@ function setStatus(message, isError = false) {
 if (form) {
   form.addEventListener('submit', async (event) => {
   event.preventDefault();
+
+  if (isSubmitting) {
+    return;
+  }
+
+  isSubmitting = true;
+  if (submitButton) {
+    submitButton.disabled = true;
+  }
 
   try {
     const fd = new FormData(form);
@@ -30,6 +41,11 @@ if (form) {
     form.reset();
   } catch (error) {
     setStatus(error.message, true);
+  } finally {
+    isSubmitting = false;
+    if (submitButton) {
+      submitButton.disabled = false;
+    }
   }
   });
 }

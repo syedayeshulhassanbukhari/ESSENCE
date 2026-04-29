@@ -72,7 +72,7 @@ class AppHeader extends StatelessWidget {
           const Spacer(),
           if (!isSmall) ...[
             ..._buildNavButtons(context),
-            SizedBox(width: AppTheme.spacing2.w),
+            SizedBox(width: AppTheme.navButtonGap.w),
             _NavBarButton(
               label: 'Upload Your Perfume',
               isActive: true,
@@ -108,7 +108,7 @@ class AppHeader extends StatelessWidget {
                 size: AppTheme.navMenuIconSize.sp,
               ),
             ),
-          SizedBox(width: AppTheme.spacing2.w),
+          SizedBox(width: AppTheme.navButtonGap.w),
           const _UserProfileAvatar(),
         ],
       ),
@@ -133,7 +133,7 @@ class AppHeader extends StatelessWidget {
     return items
         .map(
           (item) => Padding(
-            padding: EdgeInsets.only(right: AppTheme.spacing2.w),
+            padding: EdgeInsets.only(right: AppTheme.navButtonGap.w),
             child: _NavBarButton(
               label: item['label'] as String,
               isActive: currentRoute == item['route'],
@@ -195,7 +195,6 @@ class _NavBarButtonState extends State<_NavBarButton> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeOutCubic,
-        height: AppTheme.navButtonHeight.h,
         padding: EdgeInsets.symmetric(
           horizontal: AppTheme.navButtonHorizontalPadding.w,
           vertical: AppTheme.navButtonVerticalPadding.h,

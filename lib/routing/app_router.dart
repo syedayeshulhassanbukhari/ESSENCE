@@ -7,6 +7,7 @@ import '../screens/home_screen.dart';
 import '../screens/individual_perfume_details.dart';
 import '../screens/marketplace_screen.dart';
 import '../screens/admin_panel_screen.dart';
+import '../screens/exchange_listing_detail_screen.dart';
 
 class AppRouter {
   AppRouter({
@@ -26,6 +27,7 @@ class AppRouter {
     '/marketplace': (_) => MarketplaceScreen(),
     '/individualDetails': (_) => IndividualPerfumeDetails(),
     '/admin': (_) => const AdminPanelScreen(),
+    '/exchangeListingDetail': (_) => const ExchangeListingDetailScreen(),
   };
 
   Route<dynamic> onGenerateRoute(RouteSettings settings) {

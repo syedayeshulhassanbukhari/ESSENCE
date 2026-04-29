@@ -4,16 +4,28 @@ const path = require('path');
 const fs = require('fs/promises');
 const multer = require('multer');
 const dotenv = require('dotenv');
+const { createClient } = require('@supabase/supabase-js');
+const { randomUUID } = require('crypto');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5050;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
+const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || 'exchange-images';
 
 const DATA_DIR = path.join(__dirname, 'data');
 const EXCHANGE_DB_FILE = path.join(DATA_DIR, 'exchange_listings.json');
 const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
+
+const supabaseKey = SUPABASE_SERVICE_ROLE_KEY || SUPABASE_PUBLISHABLE_KEY || SUPABASE_ANON_KEY;
+const supabase = SUPABASE_URL && supabaseKey
+  ? createClient(SUPABASE_URL, supabaseKey)
+  : null;
 
 app.use(cors());
 app.use(express.json());
@@ -44,15 +56,11 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: 50 * 1024 * 1024,
   },
   fileFilter: (req, file, cb) => {
-    const allowedMimeTypes = new Set(['image/jpeg', 'image/jpg', 'image/png']);
-    const extension = path.extname(file.originalname || '').toLowerCase();
-    const allowedExtensions = new Set(['.jpg', '.jpeg', '.png']);
-
-    if (!allowedMimeTypes.has(file.mimetype) || !allowedExtensions.has(extension)) {
-      cb(new Error('Only JPG, JPEG, and PNG files are allowed.'));
+    if (!file.mimetype || !file.mimetype.startsWith('image/')) {
+      cb(new Error('Only image files are allowed.'));
       return;
     }
     cb(null, true);
@@ -119,19 +127,60 @@ app.post('/api/exchange-listings', upload.single('image'), async (req, res) => {
       return res.status(400).json({ message: 'Price must be a valid positive number.' });
     }
 
+    if (!supabase) {
+      return res.status(500).json({
+        message: 'Missing SUPABASE_URL and a Supabase key (SERVICE_ROLE, PUBLISHABLE, or ANON) in admin-panel .env.',
+      });
+    }
+
+    const listingId = randomUUID();
+    const safeName = safeFileName(req.file.originalname || 'image.jpg');
+    const objectPath = `exchange-listings/${listingId}_${safeName}`;
+    const imageBuffer = await fs.readFile(req.file.path);
+
+    const uploadResult = await supabase.storage
+      .from(SUPABASE_BUCKET)
+      .upload(objectPath, imageBuffer, {
+        contentType: req.file.mimetype || 'image/jpeg',
+        upsert: false,
+      });
+
+    if (uploadResult.error) {
+      return res.status(500).json({ message: uploadResult.error.message });
+    }
+
+    const imageUrl = supabase.storage.from(SUPABASE_BUCKET).getPublicUrl(objectPath).data
+      .publicUrl;
+
+    const insertResult = await supabase
+      .from('exchange_listings')
+      .insert({
+        id: listingId,
+        name: String(name).trim(),
+        description: String(description).trim(),
+        price: parsedPrice,
+        image_url: imageUrl,
+      })
+      .select()
+      .single();
+
+    if (insertResult.error) {
+      return res.status(500).json({ message: insertResult.error.message });
+    }
+
     const items = await readExchangeListings();
     const item = {
-      id: `${Date.now()}_${Math.floor(Math.random() * 1000000)}`,
+      id: listingId,
       name: String(name).trim(),
       description: String(description).trim(),
       price: parsedPrice,
-      imageUrl: `/uploads/${req.file.filename}`,
+      imageUrl,
       createdAt: new Date().toISOString(),
     };
 
     items.unshift(item);
     await writeExchangeListings(items);
-    res.status(201).json(item);
+    res.status(201).json(insertResult.data);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create listing.' });
   }
