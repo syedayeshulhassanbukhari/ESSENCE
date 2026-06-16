@@ -320,6 +320,7 @@ class DiscoverCard extends StatelessWidget {
                       ? Image.network(
                           fragrance.imageUrl,
                           fit: BoxFit.contain,
+                          webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                         )
                       : const Icon(Icons.local_florist, size: 48),
                 ),

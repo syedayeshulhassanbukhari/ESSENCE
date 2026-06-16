@@ -6,7 +6,6 @@ import '../models/exchange_listing.dart';
 import '../providers/exchange_listing_provider.dart';
 import '../providers/responsive_provider.dart';
 import '../providers/theme_provider.dart';
-import '../services/exchange_marketplace_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/layout_widgets.dart';
 import '../widgets/neo_widgets.dart';
@@ -18,7 +17,8 @@ class MarketplaceScreen extends StatefulWidget {
   final Widget? footer;
 
   @override
-  State<MarketplaceScreen> createState() => _MarketplaceScreenState();
+  State<MarketplaceScreen> createState() =>
+      _MarketplaceScreenState();
 }
 
 class _MarketplaceScreenState extends State<MarketplaceScreen> {
@@ -26,70 +26,60 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider(create: (_) => ExchangeMarketplaceService()),
-        ChangeNotifierProvider(
-          create: (context) => ExchangeListingProvider(
-            service: context.read<ExchangeMarketplaceService>(),
-          ),
-        ),
-      ],
-      child: Builder(
-        builder: (context) {
-          final exchangeProvider = context.watch<ExchangeListingProvider>();
-          if (!_queuedInitialLoad) {
-            _queuedInitialLoad = true;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!mounted) {
-                return;
-              }
-              context.read<ExchangeListingProvider>().ensureLoaded();
-            });
-          }
+    return Builder(
+      builder: (context) {
+        final exchangeProvider = context.watch<ExchangeListingProvider>();
+        if (!_queuedInitialLoad) {
+          _queuedInitialLoad = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) {
+              return;
+            }
+            context.read<ExchangeListingProvider>().ensureLoaded();
+          });
+        }
 
-          final brightness = Theme.of(context).brightness;
-          final colors = context.watch<ThemeProvider>().colors;
-          final responsive = context.watch<ResponsiveProvider>();
-          final isSmall = responsive.isSmall;
-          final isMedium = responsive.isMedium;
+        final brightness = Theme.of(context).brightness;
+        final colors = context.watch<ThemeProvider>().colors;
+        final responsive = context.watch<ResponsiveProvider>();
+        final isSmall = responsive.isSmall;
+        final isMedium = responsive.isMedium;
 
-          final bgColor = brightness == Brightness.light
-              ? colors.backgroundLight
-              : colors.backgroundDark;
+        final bgColor = brightness == Brightness.light
+            ? colors.backgroundLight
+            : colors.backgroundDark;
 
-          return Scaffold(
-            backgroundColor: bgColor,
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  widget.header ?? const AppHeader(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppTheme.spacing6.w,
-                      vertical: AppTheme.spacing6.h,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTopSection(context, exchangeProvider, isSmall),
-                        SizedBox(height: AppTheme.spacing6.h),
-                        _buildListingsGrid(
-                          context,
-                          exchangeProvider,
-                          isSmall: isSmall,
-                          isMedium: isMedium,
-                        ),
-                      ],
-                    ),
+        return Scaffold(
+          backgroundColor: bgColor,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                widget.header ?? const AppHeader(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppTheme.spacing6.w,
+                    vertical: AppTheme.spacing6.h,
                   ),
-                  widget.footer ?? const AppFooter(),
-                ],
-              ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTopSection(context, exchangeProvider, isSmall),
+                      SizedBox(height: AppTheme.spacing6.h),
+                      _buildListingsGrid(
+                        context,
+                        exchangeProvider,
+                        isSmall: isSmall,
+                        isMedium: isMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                widget.footer ?? const AppFooter(),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -220,6 +210,7 @@ class _ExchangeListingCard extends StatelessWidget {
               child: Image.network(
                 listing.imageUrl,
                 fit: BoxFit.cover,
+                webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: colors.gray400,
@@ -279,10 +270,10 @@ class _ExchangeListingCard extends StatelessWidget {
                   ),
                   SizedBox(height: AppTheme.spacing2.h),
                   NeoButton(
-                    label: 'Request Exchange',
+                    label: 'Chat With Seller',
                     onPressed: () {
                       Navigator.of(context).pushNamed(
-                        '/exchangeListingDetail',
+                        '/exchangeChat',
                         arguments: listing,
                       );
                     },

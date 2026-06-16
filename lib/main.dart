@@ -3,12 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:scentswapwebsite/screens/auth/login_screen.dart';
-// import 'package:scentswapwebsite/screens/auth/register_screen.dart';
-// import 'package:scentswapwebsite/screens/discover_screen.dart';
+import 'package:scentswapwebsite/screens/auth/login_screen.dart';
 import 'package:scentswapwebsite/screens/home_screen.dart';
-// import 'package:scentswapwebsite/screens/individual_perfume_details.dart';
-// import 'package:scentswapwebsite/screens/marketplace_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'firebase_options.dart';
@@ -19,9 +15,15 @@ import 'providers/responsive_provider.dart';
 import 'providers/auth_controller.dart';
 import 'providers/discover_provider.dart';
 import 'providers/home_featured_provider.dart';
+import 'providers/exchange_listing_provider.dart';
 import 'services/fragella_api_client.dart';
+import 'services/auth_service.dart';
+import 'services/firestore_exchange_service.dart';
+import 'providers/exchange_chat_provider.dart';
+import 'services/exchange_chat_service.dart';
 import 'config/fragella_config.dart';
 import 'routing/app_router.dart';
+import 'widgets/perfume_chatbot_fab.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,14 +44,18 @@ Future<void> main() async {
     anonKey: MarketplaceExchangeConfig.supabasePublishableKey,
   );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   runApp(
     MultiProvider(
       providers: [
         Provider(create: (_) => AppRouter()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => ResponsiveProvider()),
-        Provider(create: (_) => AuthController()),
+        Provider(create: (_) => AuthService()),
+        Provider(
+          create: (context) => AuthController(
+            authService: context.read<AuthService>(),
+          ),
+        ),
         Provider(
           create: (_) => FragellaApiClient(
             apiKey: FragellaConfig.apiKey,
@@ -57,18 +63,36 @@ Future<void> main() async {
           ),
         ),
         ChangeNotifierProvider(
-          create: (context) =>
-              DiscoverProvider(apiClient: context.read<FragellaApiClient>()),
+          create: (context) => DiscoverProvider(
+            apiClient: context.read<FragellaApiClient>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (context) => HomeFeaturedProvider(
             apiClient: context.read<FragellaApiClient>(),
           ),
         ),
+        Provider(
+          create: (_) => FirestoreExchangeService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ExchangeListingProvider(
+            service: context.read<FirestoreExchangeService>(),
+          ),
+        ),
+        Provider(
+          create: (_) => ExchangeChatService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ExchangeChatProvider(
+            service: context.read<ExchangeChatService>(),
+          ),
+        ),
       ],
       child: const ScentSwapApp(),
     ),
   );
+
 }
 
 class ScentSwapApp extends StatelessWidget {
@@ -88,9 +112,7 @@ class ScentSwapApp extends StatelessWidget {
               title: 'ESSENCE - Perfume Marketplace',
               theme: AppTheme.lightTheme(themeProvider.colors),
               darkTheme: AppTheme.darkTheme(themeProvider.colors),
-              themeMode: themeProvider.isDarkMode
-                  ? ThemeMode.dark
-                  : ThemeMode.light,
+              themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
               // Keep a short, smooth theme transition
               themeAnimationDuration: const Duration(milliseconds: 200),
               themeAnimationCurve: Curves.easeInOut,
@@ -100,7 +122,12 @@ class ScentSwapApp extends StatelessWidget {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   context.read<ResponsiveProvider>().updateWidth(width);
                 });
-                return child ?? const SizedBox.shrink();
+                return Stack(
+                  children: [
+                    child ?? const SizedBox.shrink(),
+                    const PerfumeChatbotFab(),
+                  ],
+                );
               },
               navigatorKey: appRouter.navigatorKey,
               onGenerateRoute: appRouter.onGenerateRoute,
@@ -125,18 +152,49 @@ class _AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
+        print('[_AuthGate] Connection: ${snapshot.connectionState}');
+        print('[_AuthGate] Has data: ${snapshot.hasData}');
+        print('[_AuthGate] Has error: ${snapshot.hasError}');
+        print('[_AuthGate] User: ${snapshot.data?.uid}');
+        
         if (snapshot.connectionState == ConnectionState.waiting) {
+          print('[_AuthGate] Showing loading...');
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        if (snapshot.hasData) {
+        if (snapshot.hasError) {
+          print('[_AuthGate] Auth error: ${snapshot.error}');
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  const Text('Auth Error'),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Error: ${snapshot.error}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (snapshot.hasData && snapshot.data != null) {
+          print('[_AuthGate] User logged in: ${snapshot.data!.uid}, routing to HomeScreen');
           return const HomeScreen();
         }
 
+        print('[_AuthGate] No user, showing LoginScreen');
         return const LoginScreen();
       },
     );
   }
 }
+ 

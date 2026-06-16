@@ -70,6 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   Image.network(
                                     'https://lh3.googleusercontent.com/aida-public/AB6AXuBMdvwApHp3zBcymz7XT6oxbymkrSmImhI4gx9HzcYnEAu_xPQUXVUC-8nHfDStJb9efKpy_-I_VBu3yvqRvbQgo1CYIq_5gOdoQCoUYCHJIiN_9haWb-N_jLYkB4x7X-qZ94Mj4KUCECCYqHNaquj-78e92lQO5v2jyy8y9Kk3GHYRrx0Zew1st7_pHHcrP6S9MEqOD5ryTRjaDSumeuqb7E_-KU75w3kTNaCtmNLzSqllSxXt8Wq35R4foDwI7sg0jbtF4rULGmo',
                                     fit: BoxFit.cover,
+                                    webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                                   ),
                                   IgnorePointer(
                                     child: Opacity(
@@ -77,6 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       child: Image.network(
                                         'https://lh3.googleusercontent.com/aida-public/AB6AXuDUZ1K6kRs0xs46m6YbFvvL9cXvZBVmBvEw_ZKcNsws0lWdcBOQRmBsUb0BiwzNZK-7Rmt0vnU3TYd_yfmN9K2Nrtxzs8L2Q6-r56VSteXSMv1d3b_Cy4MZB-3ApA1Eaz0G7L_YLx177TMZ-QEmapj_Pffh9Gje6fWuO1v2H-YplxBlhnVKBnCRJS-ykuQNm0t3Sy5cPV6jFSwWhPdKAyer75oEI91dnCuNI0Xw4_VLAFK_9a6h7Jx6w1zydhi7LmccGkwL91UBPHQ',
                                         fit: BoxFit.cover,
+                                        webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                                       ),
                                     ),
                                   ),

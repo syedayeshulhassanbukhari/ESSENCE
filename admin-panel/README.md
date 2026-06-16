@@ -4,7 +4,10 @@ This is a standalone Node.js admin panel for marketplace exchange listings.
 
 ## Features
 
+- Seller sign-in with Firebase Auth in the browser
+- Each upload is tied to the signed-in user UID automatically
 - Admin-protected endpoints using `x-admin-password`
+- Optional default seller UID from `DEFAULT_OWNER_UID` for fallback/local testing
 - Upload perfume images with `multer`
 - Create listing fields: name, description, price, image
 - View current listings
@@ -28,13 +31,14 @@ copy .env.example .env
 ```
 
 4. Update `ADMIN_PASSWORD` in `.env`
-5. Start server:
+5. If you want a fallback owner, set `DEFAULT_OWNER_UID`; otherwise each signed-in user will publish as themselves
+6. Start server:
 
 ```bash
 npm run dev
 ```
 
-6. Open:
+7. Open:
 
 `http://localhost:5050`
 

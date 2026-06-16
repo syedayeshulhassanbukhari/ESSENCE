@@ -7,7 +7,6 @@ import '../theme/app_theme.dart';
 import '../providers/theme_provider.dart';
 import '../providers/responsive_provider.dart';
 import '../routing/app_router.dart';
-import 'neo_widgets.dart';
 
 // ===== APP HEADER =====
 class AppHeader extends StatelessWidget {
@@ -22,6 +21,7 @@ class AppHeader extends StatelessWidget {
       case '/home':
       case '/discover':
       case '/marketplace':
+      case '/messages':
         _onNavTap(context, value);
         return;
       case 'upload':
@@ -36,6 +36,7 @@ class AppHeader extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     final textColor =
       brightness == Brightness.light ? colors.black : colors.white;
+    final currentRoute = ModalRoute.of(context)?.settings.name;
     // Discover.html nav: border is black; dark border is primary yellow
     final borderColor =
       brightness == Brightness.light ? colors.black : colors.primaryYellow;
@@ -73,6 +74,13 @@ class AppHeader extends StatelessWidget {
           if (!isSmall) ...[
             ..._buildNavButtons(context),
             SizedBox(width: AppTheme.navButtonGap.w),
+            _NavIconButton(
+              icon: Icons.chat_bubble_outline,
+              tooltip: 'Messages',
+              isActive: currentRoute == '/messages' || currentRoute == '/exchangeChat' || currentRoute == '/exchangeListingDetail',
+              onPressed: () => _onNavTap(context, '/messages'),
+            ),
+            SizedBox(width: AppTheme.navButtonGap.w),
             _NavBarButton(
               label: 'Upload Your Perfume',
               isActive: true,
@@ -95,6 +103,10 @@ class AppHeader extends StatelessWidget {
                 PopupMenuItem<String>(
                   value: '/marketplace',
                   child: Text('Marketplace'),
+                ),
+                PopupMenuItem<String>(
+                  value: '/messages',
+                  child: Text('Messages'),
                 ),
                 PopupMenuDivider(),
                 PopupMenuItem<String>(
@@ -122,7 +134,6 @@ class AppHeader extends StatelessWidget {
   }
 
   List<Widget> _buildNavButtons(BuildContext context) {
-    final colors = context.watch<ThemeProvider>().colors;
     final currentRoute = ModalRoute.of(context)?.settings.name;
     final items = const [
       {'label': 'Home', 'route': '/home'},
@@ -223,6 +234,79 @@ class _NavBarButtonState extends State<_NavBarButton> {
   }
 }
 
+class _NavIconButton extends StatefulWidget {
+  const _NavIconButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onPressed,
+    required this.isActive,
+  });
+
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onPressed;
+  final bool isActive;
+
+  @override
+  State<_NavIconButton> createState() => _NavIconButtonState();
+}
+
+class _NavIconButtonState extends State<_NavIconButton> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.watch<ThemeProvider>().colors;
+    final brightness = Theme.of(context).brightness;
+    final borderColor = brightness == Brightness.light ? colors.black : colors.primaryYellow;
+    final bgColor = widget.isActive ? colors.primaryYellow : colors.white;
+    final shadow = _isPressed
+        ? <BoxShadow>[]
+        : [
+            BoxShadow(
+              color: borderColor,
+              offset: Offset(
+                AppTheme.navButtonShadowOffset,
+                AppTheme.navButtonShadowOffset,
+              ),
+              blurRadius: 0,
+              spreadRadius: 0,
+            )
+          ];
+
+    return Tooltip(
+      message: widget.tooltip,
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) {
+          setState(() => _isPressed = false);
+          widget.onPressed();
+        },
+        onTapCancel: () => setState(() => _isPressed = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOutCubic,
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: bgColor,
+            border: Border.all(
+              color: borderColor,
+              width: AppTheme.navBarBorderWidth,
+            ),
+            boxShadow: shadow,
+          ),
+          child: Icon(
+            widget.icon,
+            color: colors.black,
+            size: 22,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _UserProfileAvatar extends StatelessWidget {
   const _UserProfileAvatar();
 
@@ -264,6 +348,7 @@ class _UserProfileAvatar extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: AppTheme.navAvatarInnerSize.w,
                   height: AppTheme.navAvatarInnerSize.w,
+                  webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                   errorBuilder: (context, error, stackTrace) => Icon(
                     Icons.person,
                     color: brightness == Brightness.light

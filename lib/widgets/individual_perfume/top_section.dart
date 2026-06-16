@@ -36,6 +36,7 @@ class PerfumeTopSection extends StatelessWidget {
           imageUrl: data.imageUrl,
           isDark: isDark,
           colors: colors,
+          imageFallbacks: data.imageFallbacks,
         );
         final detail = _buildDetailCard(context);
 

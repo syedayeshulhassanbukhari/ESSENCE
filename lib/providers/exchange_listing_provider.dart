@@ -3,13 +3,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/exchange_listing.dart';
-import '../services/exchange_marketplace_service.dart';
+import '../services/firestore_exchange_service.dart';
 
 class ExchangeListingProvider extends ChangeNotifier {
-  ExchangeListingProvider({required ExchangeMarketplaceService service})
+  ExchangeListingProvider({required FirestoreExchangeService service})
       : _service = service;
 
-  final ExchangeMarketplaceService _service;
+  final FirestoreExchangeService _service;
 
   final List<ExchangeListing> _items = [];
   bool _isLoading = false;
@@ -40,7 +40,7 @@ class ExchangeListingProvider extends ChangeNotifier {
       _items
         ..clear()
         ..addAll(data);
-    } on ExchangeMarketplaceException catch (e) {
+    } on FirestoreExchangeException catch (e) {
       _errorMessage = e.message;
     } catch (_) {
       _errorMessage = 'Could not load exchange listings.';
@@ -100,7 +100,7 @@ class ExchangeListingProvider extends ChangeNotifier {
       );
       _items.insert(0, listing);
       return true;
-    } on ExchangeMarketplaceException catch (e) {
+    } on FirestoreExchangeException catch (e) {
       _errorMessage = e.message;
       return false;
     } catch (_) {

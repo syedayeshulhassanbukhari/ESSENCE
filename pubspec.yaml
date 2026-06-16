@@ -27,6 +27,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   image_picker: ^1.1.2
   responsive_builder: ^0.7.1
+  socket_io_client: ^3.1.2
 
 dev_dependencies:
   flutter_test:

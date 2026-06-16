@@ -5,35 +5,54 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function threadDoc(threadId) {
-      return get(/databases/$(database)/documents/exchange_threads/$(threadId));
+    function isOwnUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
     }
 
-    function isParticipant(data) {
-      return isSignedIn()
-          && (request.auth.uid == data.buyerId
-              || request.auth.uid == data.sellerId);
+    function isListingOwner(ownerId) {
+      return isSignedIn() && request.auth.uid == ownerId;
     }
 
-    function isThreadParticipant(threadId) {
-      return isSignedIn()
-          && threadDoc(threadId).exists()
-          && (request.auth.uid == threadDoc(threadId).data.buyerId
-              || request.auth.uid == threadDoc(threadId).data.sellerId);
+    // Users collection: each user can read/write only their own profile
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isOwnUser(uid);
+      allow update: if isOwnUser(uid);
+      allow delete: if false;
+    }
+
+    // Exchange listings: all signed-in users can read; only owner can write/delete
+    match /exchange_listings/{listingId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isListingOwner(resource.data.ownerId);
+      allow delete: if isListingOwner(resource.data.ownerId);
+    }
+
+    // Legacy exchange chat collections remain read-only for signed-in clients.
+    // Node.js Admin SDK bypasses these rules and performs all chat writes.
+    match /chats/{chatId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    match /messages/{chatId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+
+      match /items/{messageId} {
+        allow read: if isSignedIn();
+        allow write: if false;
+      }
     }
 
     match /exchange_threads/{threadId} {
-      allow read: if isParticipant(resource.data);
-      allow create: if isParticipant(request.resource.data);
-      allow update: if isParticipant(resource.data);
-      allow delete: if false;
+      allow read: if isSignedIn();
+      allow write: if false;
 
       match /messages/{messageId} {
-        allow read: if isThreadParticipant(threadId);
-        allow create: if isSignedIn()
-            && request.auth.uid == request.resource.data.senderId
-            && isThreadParticipant(threadId);
-        allow update, delete: if false;
+        allow read: if isSignedIn();
+        allow write: if false;
       }
     }
   }

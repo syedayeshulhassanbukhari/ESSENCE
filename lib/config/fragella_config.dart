@@ -4,4 +4,5 @@ class FragellaConfig {
   static String get apiKey => dotenv.env['FRAGELLA_API_KEY'] ?? '';
   static String get baseUrl =>
       dotenv.env['FRAGELLA_BASE_URL'] ?? 'https://api.fragella.com/api/v1';
+  static String get widgetId => dotenv.env['FRAGELLA_WIDGET_ID'] ?? '';
 }

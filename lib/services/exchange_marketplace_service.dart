@@ -32,9 +32,13 @@ class ExchangeMarketplaceService {
           .map(ExchangeListing.fromJson)
           .toList();
     } on PostgrestException catch (e) {
-      throw ExchangeMarketplaceException(e.message ?? 'Failed to load exchange listings.');
+      throw ExchangeMarketplaceException(
+        e.message.isNotEmpty ? e.message : 'Failed to load exchange listings.',
+      );
     } on StorageException catch (e) {
-      throw ExchangeMarketplaceException(e.message);
+      throw ExchangeMarketplaceException(
+        e.message.isNotEmpty ? e.message : 'Failed to load exchange listings.',
+      );
     } catch (_) {
       throw const ExchangeMarketplaceException('Failed to load exchange listings.');
     }
@@ -88,9 +92,13 @@ class ExchangeMarketplaceService {
 
       return ExchangeListing.fromJson(inserted);
     } on PostgrestException catch (e) {
-      throw ExchangeMarketplaceException(e.message ?? 'Failed to upload your perfume listing.');
+      throw ExchangeMarketplaceException(
+        e.message.isNotEmpty ? e.message : 'Failed to upload your perfume listing.',
+      );
     } on StorageException catch (e) {
-      throw ExchangeMarketplaceException(e.message);
+      throw ExchangeMarketplaceException(
+        e.message.isNotEmpty ? e.message : 'Failed to upload your perfume listing.',
+      );
     } on ExchangeMarketplaceException {
       rethrow;
     } catch (_) {

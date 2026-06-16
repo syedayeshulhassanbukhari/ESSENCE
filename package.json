@@ -1,0 +1,15 @@
+{
+  "name": "scentswapwebsite",
+  "version": "1.0.0",
+  "description": "ScentSwap - Neo-Brutalism Perfume Marketplace",
+  "main": "index.js",
+  "scripts": {
+    "migrate": "node scripts/migrate-supabase-to-firestore.js",
+    "start": "node admin-panel/server.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "@supabase/supabase-js": "^2.105.1",
+    "dotenv": "^16.5.0"
+  }
+}

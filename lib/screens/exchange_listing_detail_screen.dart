@@ -52,16 +52,7 @@ class _ExchangeListingDetailScreenState
       );
     }
 
-    return MultiProvider(
-      providers: [
-        Provider(create: (_) => ExchangeChatService()),
-        ChangeNotifierProvider(
-          create: (context) => ExchangeChatProvider(
-            service: context.read<ExchangeChatService>(),
-          ),
-        ),
-      ],
-      child: Builder(
+    return Builder(
         builder: (context) {
           final colors = context.watch<ThemeProvider>().colors;
           final brightness = Theme.of(context).brightness;
@@ -81,6 +72,16 @@ class _ExchangeListingDetailScreenState
                 return;
               }
               final chatProvider = context.read<ExchangeChatProvider>();
+              final chatService = context.read<ExchangeChatService>();
+              final generatedChatId = chatService.generateChatId(
+                listingId: listing.id,
+                userA: currentUser.uid,
+                userB: listing.ownerId,
+              );
+              debugPrint('Current userId: ${currentUser.uid}');
+              debugPrint('Seller userId from listing: ${listing.ownerId}');
+              debugPrint('Generated chatId: $generatedChatId');
+              debugPrint('Active chatId BEFORE navigation: ${chatProvider.activeChatId ?? 'none'}');
               if (isSeller) {
                 chatProvider.ensureSellerThreads(
                   listingId: listing.id,
@@ -93,6 +94,7 @@ class _ExchangeListingDetailScreenState
                   sellerId: listing.ownerId,
                 );
               }
+              debugPrint('Active chatId AFTER navigation: $generatedChatId');
             });
           }
 
@@ -137,8 +139,7 @@ class _ExchangeListingDetailScreenState
             ),
           );
         },
-      ),
-    );
+      );
   }
 
   User? _currentUser() {
@@ -164,6 +165,7 @@ class _ExchangeListingDetailScreenState
       child: Image.network(
         listing.imageUrl,
         fit: BoxFit.cover,
+        webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: colors.gray400,
@@ -391,7 +393,7 @@ class _ExchangeListingDetailScreenState
     } else {
       content = ListView.separated(
         itemCount: provider.threads.length,
-        separatorBuilder: (_, __) => const Divider(height: 1),
+        separatorBuilder: (context, index) => const Divider(height: 1),
         itemBuilder: (context, index) {
           final thread = provider.threads[index];
           final isActive = provider.activeThread?.id == thread.id;

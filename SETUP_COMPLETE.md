@@ -239,3 +239,48 @@ Your ESSENCE perfume marketplace is production-ready with:
 ---
 
 For detailed architecture documentation, see `FLUTTER_ARCHITECTURE.md`
+
+
+
+
+Launching lib\main.dart on Chrome in debug mode...
+Debug service listening on ws://127.0.0.1:50162/Kc7JJJwdlM4=/ws
+A Dart VM Service on Chrome is available at: http://127.0.0.1:50162/Kc7JJJwdlM4=
+The Flutter DevTools debugger and profiler on Chrome is available at: http://127.0.0.1:9100?uri=ws://127.0.0.1:50162/Kc7JJJwdlM4=/ws
+Connecting to VM Service at ws://127.0.0.1:50162/Kc7JJJwdlM4=/ws
+Connected to the VM Service.
+Starting application from main method in: org-dartlang-app:/web_entrypoint.dart.
+supabase.supabase_flutter: INFO: ***** Supabase init completed ***** 
+[_AuthGate] Connection: ConnectionState.waiting
+[_AuthGate] Has data: false
+[_AuthGate] Has error: false
+[_AuthGate] User: null
+[_AuthGate] Showing loading...
+[_AuthGate] Connection: ConnectionState.active
+[_AuthGate] Has data: false
+[_AuthGate] Has error: false
+[_AuthGate] User: null
+[_AuthGate] No user, showing LoginScreen
+[AuthController] Attempting Google sign-in
+[AuthController] Google sign-in successful: kdRWGMYlaBgoa1MLzsmSNHdJP3B2
+[AuthController] Syncing Google user to Firestore...
+[_AuthGate] Connection: ConnectionState.active
+[_AuthGate] Has data: true
+[_AuthGate] Has error: false
+[_AuthGate] User: kdRWGMYlaBgoa1MLzsmSNHdJP3B2
+[_AuthGate] User logged in: kdRWGMYlaBgoa1MLzsmSNHdJP3B2, routing to HomeScreen
+[AuthController] Google user synced to Firestore
+[ExchangeChat] Fetching chat info for listing 0874ae2b-d2e7-4e2d-9d51-c899836889ec from http://localhost:5051
+[ExchangeChat] Creating new socket connection to http://localhost:5051
+[ExchangeChat] Socket connected successfully
+RethrownDartError: [cloud_firestore/permission_denied] You are not allowed to join this chat room.
+2
+
+dart-sdk/lib/_internal/js_dev_runtime/private/ddc_runtime/errors.dart 307:10      createErrorWithStack
+dart-sdk/lib/_internal/js_dev_runtime/patch/core_patch.dart 280:28                _throw
+dart-sdk/lib/core/errors.dart 120:5                                               throwWithStackTrace
+dart-sdk/lib/async/zone_root.dart 22:11                                           <fn>
+dart-sdk/lib/async/schedule_microtask.dart 40:34                                  _microtaskLoop
+dart-sdk/lib/async/schedule_microtask.dart 49:5                                   _startMicrotaskLoop
+dart-sdk/lib/_internal/js_dev_runtime/private/ddc_runtime/operations.dart 118:77  tear
+dart-sdk/lib/_internal/js_dev_runtime/patch/async_patch.dart 188:69               <fn>

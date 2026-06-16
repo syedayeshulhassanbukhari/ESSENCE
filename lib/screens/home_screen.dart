@@ -238,6 +238,7 @@ Widget _buildHeroImageCard(BuildContext context) {
               child: Image.network(
                 'https://lh3.googleusercontent.com/aida-public/AB6AXuAiTkqgXPglCr3WEjYRotSXa6boRrK_qVjj3J2cUPl8jVgA99DRFMOdhRNlmaIbungENOOLZS-47bjYCcbe-KH483JrhYK6FcnT-t9ZyJuO2PDZqdrft56gJJe5XWqfJWqY33U41QRIjSV-E26hBN_QWUhy5LssS9F2ZnY_eMNS6xGHS9ApWaIlvV2cTorH7AUodxcdodyJjJ6zfg75sDgZ4uHKPunUqsHPMNoR68dG1jBb3-58LkuDgbq-ByjoHZO0M9ancC3oH8k',
                 fit: BoxFit.cover,
+                webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
               ),
             ),
           ),
@@ -385,6 +386,7 @@ Widget _buildHeroImageCard(BuildContext context) {
                     ? Image.network(
                         fragrance.imageUrl,
                         fit: BoxFit.cover,
+                        webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                         errorBuilder: (context, error, stackTrace) {
                           return Center(
                             child: Text(

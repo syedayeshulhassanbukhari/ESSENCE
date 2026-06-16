@@ -8,6 +8,8 @@ import '../screens/individual_perfume_details.dart';
 import '../screens/marketplace_screen.dart';
 import '../screens/admin_panel_screen.dart';
 import '../screens/exchange_listing_detail_screen.dart';
+import '../screens/exchange_messages_screen.dart';
+import '../models/exchange_listing.dart';
 
 class AppRouter {
   AppRouter({
@@ -27,7 +29,16 @@ class AppRouter {
     '/marketplace': (_) => MarketplaceScreen(),
     '/individualDetails': (_) => IndividualPerfumeDetails(),
     '/admin': (_) => const AdminPanelScreen(),
-    '/exchangeListingDetail': (_) => const ExchangeListingDetailScreen(),
+    // All chat entry-points lead to the unified messages hub.
+    '/messages': (settings) => ExchangeMessagesScreen(
+          initialListing: settings.arguments as ExchangeListing?,
+        ),
+    '/exchangeChat': (settings) => ExchangeMessagesScreen(
+          initialListing: settings.arguments as ExchangeListing?,
+        ),
+        '/exchangeListingDetail': (settings) => ExchangeListingDetailScreen(
+          listing: settings.arguments as ExchangeListing?,
+        ),
   };
 
   Route<dynamic> onGenerateRoute(RouteSettings settings) {

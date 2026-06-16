@@ -24,6 +24,20 @@
 
       <form id="createForm" class="layout">
         <section class="left-col">
+          <div class="auth-panel">
+            <div>
+              <p class="auth-kicker">SELLER ACCESS</p>
+              <h2 class="auth-title">SIGN IN TO PUBLISH LISTINGS</h2>
+              <p class="auth-copy" id="authCopy">Connect your Firebase account so every upload is tied to your seller UID.</p>
+            </div>
+            <div class="auth-actions">
+              <button type="button" id="signInBtn" class="auth-btn">SIGN IN WITH GOOGLE</button>
+              <button type="button" id="signOutBtn" class="auth-btn auth-btn-secondary" style="display: none;">SIGN OUT</button>
+            </div>
+            <p class="auth-meta" id="authMeta">Not signed in.</p>
+            <input id="ownerId" name="ownerId" type="hidden" />
+          </div>
+
           <label class="upload-box" for="image" id="uploadBox">
             <input id="image" name="image" type="file" accept="image/*" required />
             <div class="upload-icon" id="uploadIcon">⬆</div>
@@ -74,8 +88,28 @@
           <p id="status" class="status"></p>
         </section>
       </form>
+
+      <section class="your-listings" id="yourListingsSection" style="display: none;">
+        <div class="listings-header">
+          <h2 class="listings-title">YOUR LISTINGS</h2>
+          <p class="listings-copy">Perfumes you've published to the marketplace</p>
+        </div>
+        <div class="listings-container" id="listingsContainer"></div>
+      </section>
     </main>
 
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script>
+      window.__FIREBASE_CONFIG__ = {
+        apiKey: 'AIzaSyBaXtDcBdu1S8CxNoyhl5uuvyvt2-pl4as',
+        authDomain: 'scentswapperfumes.firebaseapp.com',
+        projectId: 'scentswapperfumes',
+        storageBucket: 'scentswapperfumes.firebasestorage.app',
+        messagingSenderId: '411760394041',
+        appId: '1:411760394041:web:a54b8c2e31e2e96d9472e8',
+      };
+    </script>
     <script src="/main.js"></script>
   </body>
 </html>
