@@ -63,7 +63,7 @@ async function loadUserListings(userId) {
           <div class="listing-card">
             <img src="${listing.imageUrl || '/uploads/placeholder.jpg'}" alt="${listing.name}" class="listing-image" />
             <h3 class="listing-name">${listing.name || 'Untitled'}</h3>
-            <p class="listing-price">$${Number(listing.price || 0).toFixed(2)}</p>
+            <p class="listing-price">PKR ${Number(listing.price || 0).toFixed(2)}</p>
             <div class="listing-actions">
               <button type="button" class="listing-delete-btn" onclick="deleteListing('${listing.id}')">DELETE</button>
             </div>

@@ -79,6 +79,21 @@ class AuthController {
     }
   }
 
+  Future<String?> signOut() async {
+    try {
+      print('[AuthController] Signing out');
+      await _auth.signOut();
+      print('[AuthController] Sign out successful');
+      return null;
+    } on FirebaseAuthException catch (e) {
+      print('[AuthController] Sign out error: ${e.code} - ${e.message}');
+      return _mapFirebaseError(e);
+    } catch (e) {
+      print('[AuthController] Sign out exception: $e');
+      return 'Could not sign out. Please try again.';
+    }
+  }
+
   Future<String?> registerWithEmail({
     required String name,
     required String email,

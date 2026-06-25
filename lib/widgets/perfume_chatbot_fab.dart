@@ -38,8 +38,13 @@ class _PerfumeChatbotFabState extends State<PerfumeChatbotFab>
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final isCompact = MediaQuery.sizeOf(context).width < 700;
+    final viewHeight = MediaQuery.sizeOf(context).height;
     final panelWidth = isCompact ? MediaQuery.sizeOf(context).width - 24 : 380.0;
-    final panelHeight = isCompact ? 520.0 : 560.0;
+    final preferredHeight = isCompact ? 520.0 : 560.0;
+    // Keep the panel within the viewport above the FAB.
+    final maxPanelHeight = viewHeight - 120;
+    final panelHeight =
+        preferredHeight.clamp(360.0, maxPanelHeight).toDouble();
 
     return SafeArea(
       child: Align(
@@ -84,10 +89,11 @@ class _PerfumeChatbotFabState extends State<PerfumeChatbotFab>
                           ],
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             _buildHeader(context),
                             Expanded(child: _buildMessageList(context)),
-                            _buildQuickPrompts(context),
+                            if (_messages.length <= 1) _buildQuickPrompts(context),
                             _buildComposer(context),
                           ],
                         ),
@@ -137,58 +143,63 @@ class _PerfumeChatbotFabState extends State<PerfumeChatbotFab>
   Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.fromLTRB(14, 10, 6, 10),
       decoration: const BoxDecoration(
         color: Color(0xFFFFD84D),
         border: Border(bottom: BorderSide(color: Colors.black, width: 3)),
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              'ESSENCE BOT',
-              style: GoogleFonts.syne(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                letterSpacing: 1.1,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Perfume Assistant',
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  'ESSENCE BOT',
                   style: GoogleFonts.syne(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  'Ask only fragrance-related questions',
-                  style: GoogleFonts.spaceGrotesk(
                     fontSize: 11.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: 1.1,
                   ),
                 ),
-              ],
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () => setState(() => _isOpen = false),
+                icon: const Icon(Icons.remove, color: Colors.black),
+                splashRadius: 18,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Perfume Assistant',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.syne(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w800,
+              color: Colors.black,
             ),
           ),
-          IconButton(
-            onPressed: () => setState(() => _isOpen = false),
-            icon: const Icon(Icons.remove, color: Colors.black),
-            splashRadius: 18,
+          Text(
+            'Ask only fragrance-related questions',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
           ),
         ],
       ),
@@ -248,34 +259,35 @@ class _PerfumeChatbotFabState extends State<PerfumeChatbotFab>
       'How do I layer scents?',
     ];
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: prompts
-            .map(
-              (prompt) => ActionChip(
-                label: Text(
-                  prompt,
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.black, width: 2),
-                onPressed: _isSending
-                    ? null
-                    : () {
-                        _controller.text = prompt;
-                        _controller.selection = TextSelection.fromPosition(
-                          TextPosition(offset: prompt.length),
-                        );
-                      },
+    return SizedBox(
+      height: 44,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+        itemCount: prompts.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final prompt = prompts[index];
+          return ActionChip(
+            label: Text(
+              prompt,
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w700,
               ),
-            )
-            .toList(growable: false),
+            ),
+            backgroundColor: Colors.white,
+            side: const BorderSide(color: Colors.black, width: 2),
+            onPressed: _isSending
+                ? null
+                : () {
+                    _controller.text = prompt;
+                    _controller.selection = TextSelection.fromPosition(
+                      TextPosition(offset: prompt.length),
+                    );
+                  },
+          );
+        },
       ),
     );
   }

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:scentswapwebsite/screens/auth/login_screen.dart';
-import 'package:scentswapwebsite/screens/home_screen.dart';
+import 'package:scentswapwebsite/screens/auth/auth_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import 'firebase_options.dart';
@@ -131,7 +129,7 @@ class ScentSwapApp extends StatelessWidget {
               },
               navigatorKey: appRouter.navigatorKey,
               onGenerateRoute: appRouter.onGenerateRoute,
-              home: const _AuthGate(),
+              home: const AuthGate(),
             );
           },
         );
@@ -139,62 +137,3 @@ class ScentSwapApp extends StatelessWidget {
     );
   }
 }
-
-class _AuthGate extends StatelessWidget {
-  const _AuthGate();
-
-  @override
-  Widget build(BuildContext context) {
-    // Dev bypass: show the post-auth screen directly.
-    // return const HomeScreen();
-
-    // Original auth gate logic (kept for re-enable):
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        print('[_AuthGate] Connection: ${snapshot.connectionState}');
-        print('[_AuthGate] Has data: ${snapshot.hasData}');
-        print('[_AuthGate] Has error: ${snapshot.hasError}');
-        print('[_AuthGate] User: ${snapshot.data?.uid}');
-        
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          print('[_AuthGate] Showing loading...');
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        if (snapshot.hasError) {
-          print('[_AuthGate] Auth error: ${snapshot.error}');
-          return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  const Text('Auth Error'),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Error: ${snapshot.error}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        if (snapshot.hasData && snapshot.data != null) {
-          print('[_AuthGate] User logged in: ${snapshot.data!.uid}, routing to HomeScreen');
-          return const HomeScreen();
-        }
-
-        print('[_AuthGate] No user, showing LoginScreen');
-        return const LoginScreen();
-      },
-    );
-  }
-}
- 

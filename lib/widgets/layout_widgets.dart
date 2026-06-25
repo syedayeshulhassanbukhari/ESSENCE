@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../theme/app_theme.dart';
 import '../providers/theme_provider.dart';
 import '../providers/responsive_provider.dart';
+import '../providers/auth_controller.dart';
 import '../routing/app_router.dart';
 
 // ===== APP HEADER =====
@@ -378,13 +379,23 @@ class _UserProfileAvatar extends StatelessWidget {
       shape: RoundedRectangleBorder(
         side: BorderSide(color: borderColor, width: AppTheme.borderWidth),
       ),
-      onSelected: (value) {
+      onSelected: (value) async {
         if (value == 1) {
           themeProvider.toggleDarkMode();
           return;
         }
         if (value == 2) {
-          FirebaseAuth.instance.signOut();
+          final error = await context.read<AuthController>().signOut();
+          if (!context.mounted) {
+            return;
+          }
+          if (error != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(error)),
+            );
+            return;
+          }
+          context.read<AppRouter>().resetToAuthGate();
         }
       },
       itemBuilder: (context) => [

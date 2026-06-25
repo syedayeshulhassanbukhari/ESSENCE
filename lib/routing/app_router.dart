@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
+import '../screens/auth/auth_gate.dart';
 import '../screens/discover_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/individual_perfume_details.dart';
@@ -22,6 +23,7 @@ class AppRouter {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   static final Map<String, Widget Function(RouteSettings settings)> _routes = {
+    '/auth': (_) => const AuthGate(),
     '/login': (_) => const LoginScreen(),
     '/register': (_) => const RegisterScreen(),
     '/home': (_) => const HomeScreen(),
@@ -68,5 +70,14 @@ class AppRouter {
     final settings = RouteSettings(name: routeName, arguments: arguments);
     final route = onGenerateRoute(settings);
     navigator.pushReplacement(route);
+  }
+
+  /// Clears the navigation stack and returns to the auth gate (login when signed out).
+  void resetToAuthGate() {
+    final navigator = navigatorKey.currentState;
+    if (navigator == null) {
+      return;
+    }
+    navigator.pushNamedAndRemoveUntil('/auth', (route) => false);
   }
 }
