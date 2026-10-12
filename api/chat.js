@@ -48,9 +48,10 @@ module.exports = async (req, res) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: process.env.PERFUME_CHATBOT_MODEL || 'llama-3.1-8b-instant',
+        model: process.env.PERFUME_CHATBOT_MODEL || 'openai/gpt-oss-20b',
         temperature: 0.4,
         max_tokens: 350,
+        reasoning_effort: 'low',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           ...sanitizeHistory(history),
