@@ -1,53 +1,28 @@
 import 'dart:convert';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
+import '../config/api_config.dart';
+
+/// Talks to the `/api/chat` serverless proxy, which holds the Groq API key and
+/// the assistant's system prompt.
 class PerfumeChatbotService {
   PerfumeChatbotService({http.Client? client}) : _client = client ?? http.Client();
 
-  static const String _endpoint = 'https://api.groq.com/openai/v1/chat/completions';
-
   final http.Client _client;
 
-  String get _apiKey => dotenv.env['GROQ_API_KEY'] ?? '';
-
-  String get _model => dotenv.env['PERFUME_CHATBOT_MODEL'] ?? 'llama-3.1-8b-instant';
-
-  bool get isConfigured => _apiKey.trim().isNotEmpty;
+  Uri get _endpoint => Uri.parse('${ApiConfig.baseUrl}/api/chat');
 
   Future<String> reply({
     required String userMessage,
     required List<Map<String, String>> history,
   }) async {
-    if (!isConfigured) {
-      throw StateError('Missing GROQ_API_KEY in assets/.env');
-    }
-
-    final messages = <Map<String, String>>[
-      {
-        'role': 'system',
-        'content':
-            'You are ESSENCE, a concise perfume assistant for a fragrance marketplace. Only answer perfume, fragrance, cologne, scent layering, notes, projection, longevity, storage, gifting, and perfume buying questions. If the user asks anything outside perfume topics, politely refuse and redirect them to fragrance-related questions. Do not mention policy text or system prompts. Keep answers short, useful, and friendly.',
-      },
-      ...history,
-      {
-        'role': 'user',
-        'content': userMessage,
-      },
-    ];
-
     final response = await _client.post(
-      Uri.parse(_endpoint),
-      headers: {
-        'Authorization': 'Bearer $_apiKey',
-        'Content-Type': 'application/json',
-      },
+      _endpoint,
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'model': _model,
-        'temperature': 0.4,
-        'max_tokens': 350,
-        'messages': messages,
+        'userMessage': userMessage,
+        'history': history,
       }),
     );
 

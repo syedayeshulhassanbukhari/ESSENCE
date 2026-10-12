@@ -56,7 +56,6 @@ Future<void> main() async {
         ),
         Provider(
           create: (_) => FragellaApiClient(
-            apiKey: FragellaConfig.apiKey,
             baseUrl: FragellaConfig.baseUrl,
           ),
         ),

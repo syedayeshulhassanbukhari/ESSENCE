@@ -6,11 +6,12 @@ import '../models/fragella_fragrance.dart';
 
 class FragellaApiClient {
   FragellaApiClient({
-    required this.apiKey,
+    this.apiKey = '',
     required this.baseUrl,
     http.Client? httpClient,
   }) : _httpClient = httpClient ?? http.Client();
 
+  /// Only needed when calling Fragella directly; the `/api` proxy adds it server-side.
   final String apiKey;
   final String baseUrl;
   final http.Client _httpClient;
@@ -19,9 +20,6 @@ class FragellaApiClient {
     required String query,
     int limit = 10,
   }) async {
-    if (apiKey.isEmpty) {
-      throw FragellaApiException('Missing API key.');
-    }
     if (query.trim().length < 3) {
       throw FragellaApiException('Search query must be at least 3 characters.');
     }
@@ -38,10 +36,8 @@ class FragellaApiClient {
     final response = await _httpClient.get(
       uri,
       headers: {
-        'x-api-key': apiKey,
-        'Content-Type': 'application/json',
+        if (apiKey.isNotEmpty) 'x-api-key': apiKey,
         'Accept': 'application/json',
-        'User-Agent': 'ScentSwap-Mobile/1.0',
       },
     );
 
@@ -57,7 +53,7 @@ class FragellaApiClient {
       }
       if (response.statusCode == 401) {
         throw FragellaApiException(
-          'Authentication failed (401). Invalid or expired API key. Verify FRAGELLA_API_KEY in .env',
+          'Authentication failed (401). Invalid or expired API key. Verify FRAGELLA_API_KEY in the server environment.',
         );
       }
       if (response.statusCode == 403) {
@@ -108,7 +104,7 @@ class FragellaApiClient {
 /// Exception thrown when Fragella API calls fail.
 /// 
 /// Authentication troubleshooting:
-/// - Verify FRAGELLA_API_KEY in assets/.env is correct
+/// - Verify FRAGELLA_API_KEY is set in the Vercel project environment
 /// - Ensure x-api-key header is being sent in all requests
 /// - Check that API key has proper permissions
 /// - Verify Content-Type and Accept headers are application/json

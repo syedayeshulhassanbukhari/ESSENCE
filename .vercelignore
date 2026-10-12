@@ -1,0 +1,16 @@
+# Upload only what the Flutter web build and /api functions need.
+/*
+!api
+!assets
+!lib
+!scripts
+!web
+!pubspec.yaml
+!pubspec.lock
+!analysis_options.yaml
+!vercel.json
+
+# Never upload local secrets; the build regenerates assets/.env from Vercel env vars.
+.env
+.env.*
+!.env.example

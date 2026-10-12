@@ -48,3 +48,13 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 node_modules
+
+# Secrets: never commit env files or Firebase service-account keys
+assets/.env
+chat-backend/.env
+**/service-account-key.json
+*firebase-adminsdk*.json
+
+# Vercel
+.vercel
+.flutter-sdk/
