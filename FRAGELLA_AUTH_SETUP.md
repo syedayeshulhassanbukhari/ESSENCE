@@ -4,7 +4,7 @@
 
 ### 1. **API Key Configuration**
 - **Location:** `assets/.env`
-- **Variable:** `FRAGELLA_API_KEY=e51f8ab32fbe96a7db3cd1700334df2f58d8f3e2fdc7ec7534513571efa8ea16`
+- **Variable:** `FRAGELLA_API_KEY=<your-fragella-api-key>`
 - **Status:** ✅ Configured
 - **Usage:** Loaded via `flutter_dotenv` and passed to `FragellaApiClient`
 
@@ -91,7 +91,7 @@
    ```
    Expected output:
    ```
-   FRAGELLA_API_KEY=e51f8ab32fbe96a7db3cd1700334df2f58d8f3e2fdc7ec7534513571efa8ea16
+   FRAGELLA_API_KEY=<your-fragella-api-key>
    FRAGELLA_BASE_URL=https://api.fragella.com/api/v1
    FRAGELLA_WIDGET_ID=pub_9ca057c2a8c4520d9d4e98836947c2eee4b4dabb8fa32ead
    ```
@@ -119,7 +119,7 @@
 
 | Variable | Value | Location | Purpose |
 |----------|-------|----------|---------|
-| FRAGELLA_API_KEY | e51f8ab32fbe96a7db3cd1700334df2f58d8f3e2fdc7ec7534513571efa8ea16 | assets/.env | API authentication |
+| FRAGELLA_API_KEY | <your-fragella-api-key> | assets/.env | API authentication |
 | FRAGELLA_BASE_URL | https://api.fragella.com/api/v1 | assets/.env | API endpoint base |
 | FRAGELLA_WIDGET_ID | pub_9ca057c2a8c4520d9d4e98836947c2eee4b4dabb8fa32ead | assets/.env | Widget embeddable ID |
 
